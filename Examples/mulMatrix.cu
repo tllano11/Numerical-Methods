@@ -6,87 +6,108 @@
 
 using namespace std;
 
-const int N = 5;
+const long N = 12800;
+const int THREADS_PER_BLOCK = 32;
 
 // CPU copies of a, b, c
-double a_cpu[N][N], b_cpu[N][N], c_cpu[N][N];
+float *a_cpu, *b_cpu, *c_cpu;
 
-__global__ void mul(double *a, double *b, double *c,\
-	     unsigned int a_width, unsigned int a_height) {
-  int row = blockIdx.y * blockDim.y + threadIdx.y;
-  int col = blockIdx.x * blockDim.x + threadIdx.x;
+__global__ void matrixMultiplicationKernel(float* A, float* B, float* C, long N) {
 
-  double cellValue = 0;
+    int ROW = blockIdx.y*blockDim.y+threadIdx.y;
+    int COL = blockIdx.x*blockDim.x+threadIdx.x;
 
-  for (unsigned int i = 0; i < a_width; ++i) {
-    if (row < a_height) {
-      cellValue += *(a + a_width*row + i) * *(b + i);
+    float tmpSum = 0;
+
+    if (ROW < N && COL < N) {
+        // each thread computes one element of the block sub-matrix
+        for (int i = 0; i < N; i++) {
+            tmpSum += A[ROW * N + i] * B[i * N + COL];
+        }
     }
-  }
-
-  __syncthreads();
-
-  if (row < a_height) {
-    *(c + row) = cellValue;
-    __syncthreads();
-  }
+    C[ROW * N + COL] = tmpSum;
 }
 
-void random_elements (int N) {
+void matrixMultiplication(float *A, float *B, float *C, int N){
+
+    // declare the number of blocks per grid and the number of threads per block
+    // use 1 to 512 threads per block
+  int blockDim = N/THREADS_PER_BLOCK;
+
+
+    dim3 threadsPerBlock(THREADS_PER_BLOCK, THREADS_PER_BLOCK);
+    dim3 blocksPerGrid(blockDim, blockDim);
+        // if (N*N > 512){
+        //     threadsPerBlock.x = 512;
+        //     threadsPerBlock.y = 512;
+        //     blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
+        //     blocksPerGrid.y = ceil(double(N)/double(threadsPerBlock.y));
+        // }
+
+    matrixMultiplicationKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, C, N);
+}
+
+void random_elements (long N) {
   int i;
   int j;
   for (i = 0; i < N; ++i) {
     for (j = 0; j < N; ++j) {
-      a_cpu[i][j] = 1;
-      b_cpu[i][j] = 1;
+      a_cpu[i * N + j] = 1.0f;
+      b_cpu[i * N + j] = 1.0f;
     }
   }
 }
 
-void print_matrix(int N) {
+void print_matrix(float *m, long N) {
   int i;
   int j;
   cout << "Matrix:" << endl;
   for (i = 0; i < N; ++i) {
     for (j = 0; j < N; ++j) {
-      cout << c_cpu[i][j] << endl;
+      cout << m[i * N + j] << "-";
     }
+    cout << endl;
   }
 }
 
-#define THREADS_PER_BLOCK 64
 int main (void) {
 
   // GPU copies of a, b, c
-  double *a_gpu, *b_gpu, *c_gpu;
-  int size = N * N * sizeof(int);
+  float *a_gpu, *b_gpu, *c_gpu;
+  long size = N * N * sizeof(float);
 
   cudaMalloc((void **)&a_gpu, size);
   cudaMalloc((void **)&b_gpu, size);
   cudaMalloc((void **)&c_gpu, size);
 
+  // Allocate GPU space for CPU copies of a, b, c
+    a_cpu = (float *)malloc(size);
+    b_cpu = (float *)malloc(size);
+    c_cpu = (float *)malloc(size);
+
   // Set up random input variables
   random_elements(N);
+
+  //print_matrix(c_cpu, N);
 
   // Copy inputs to device
   cudaMemcpy(a_gpu, a_cpu, size, cudaMemcpyHostToDevice);
   cudaMemcpy(b_gpu, b_cpu, size, cudaMemcpyHostToDevice);
 
-  int blockDimension = (N*N)/THREADS_PER_BLOCK;
-  dim3 dimBlock(blockDimension, blockDimension);
-  dim3 dimThread(THREADS_PER_BLOCK);
+  matrixMultiplication(a_gpu, b_gpu, c_gpu, N);
 
-  // Exec add function on GPU
-  mul<<<dimBlock, dimThread>>>(a_gpu, b_gpu, c_gpu, N, N);
+  cudaDeviceSynchronize();
 
   // Copy results to CPU copy of c
   cudaMemcpy(c_cpu, c_gpu, size, cudaMemcpyDeviceToHost);
 
     // Print
-  print_matrix(N);
+  //print_matrix(c_cpu, N);
+  cout << c_cpu[0] << endl;
 
   // Cleanup
   cudaFree(a_gpu); cudaFree(b_gpu); cudaFree(c_gpu);
+  delete a_cpu, b_cpu, c_cpu;
 
   return 0;
 }
