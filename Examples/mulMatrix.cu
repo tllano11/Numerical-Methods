@@ -3,6 +3,7 @@
 #include <cuda.h>
 #include <inttypes.h>
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ void matrixMultiplication(float *A, float *B, float *C, int N){
 
     // declare the number of blocks per grid and the number of threads per block
     // use 1 to 512 threads per block
-  int blockDim = N/THREADS_PER_BLOCK;
+  int blockDim = (N*N)/THREADS_PER_BLOCK;
 
 
     dim3 threadsPerBlock(THREADS_PER_BLOCK, THREADS_PER_BLOCK);
@@ -71,6 +72,7 @@ void print_matrix(float *m, long N) {
 }
 
 int main (void) {
+  clock_t begin = clock();
 
   // GPU copies of a, b, c
   float *a_gpu, *b_gpu, *c_gpu;
@@ -108,6 +110,8 @@ int main (void) {
   // Cleanup
   cudaFree(a_gpu); cudaFree(b_gpu); cudaFree(c_gpu);
   delete a_cpu, b_cpu, c_cpu;
-
+  clock_t end = clock();
+  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+   cout << elapsed_secs;
   return 0;
 }

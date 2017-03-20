@@ -1,78 +1,90 @@
-#include <cstdint>
+#include <stdio.h>
+#include <stdint.h>
 #include <cuda.h>
+#include <inttypes.h>
 #include <iostream>
 
 using namespace std;
 
-const int N = 512;
-int a_cpu[N][N], b_cpu[N][N], c_cpu[N][N];
-
 __global__ void add(int *a, int *b, int *c, int N) {
-  int row = blockIdx.y * blockDim.y + threadIdx.y;
-  int col = blockIdx.x * blockDim.x + threadIdx.x;
-  int index = row * N + col;
 
-  if (row < N && col < N){
-    c[index] = a[index] + b[index];
-  }
+  int index = threadIdx.x + blockIdx.x * blockDim.x;
+
+  c[index] = a[index] + b[index];
+
 }
 
-void random_ints (int N) {
-  int i;
-  int j;
+void random_ints(int *a, int N) {
+  int i,j;
   for (i = 0; i < N; ++i) {
     for (j = 0; j < N; ++j) {
-      a_cpu[i][j] = 1;
-      b_cpu[i][j] = 1;
+      a[i * N + j] = 1;
     }
   }
 }
 
-void print_matrix(int N) {
+void print_vector(int *a, int N) {
   int i;
   int j;
   cout << "Matrix:" << endl;
   for (i = 0; i < N; ++i) {
     for (j = 0; j < N; ++j) {
-      cout << c_cpu[i][j] << endl;
+      cout << a[i * N + j] << " ";
     }
+    cout << endl;
   }
 }
 
-#define THREADS_PER_BLOCK 64
-int main(void) {
-  // CPU copies of a, b, c
-  int *a_gpu, *b_gpu, *c_gpu;
-  int size = N * N * sizeof(int);
+int main(int argc, char* argv[]) {
 
-  // GPU copies of a, b, c
-  cudaMalloc((void **)&a_gpu, size);
-  cudaMalloc((void **)&b_gpu, size);
-  cudaMalloc((void **)&c_gpu, size);
+    // CPU copies of a, b, c
+    int N;
+    const int THREADS_PER_BLOCK = 32;
+    int *a, *b, *c;
+    int *d_a, *d_b, *d_c;
 
-  // Setup random input variables
-  random_ints(N);
+    if (argc != 2) {
+      fprintf(stderr, "usage: %s <size>\n", argv[0]);
+      exit(0);
+    }
 
-  // Copy inputs to device
-  cudaMemcpy(a_gpu, a_cpu, size, cudaMemcpyHostToDevice);
-  cudaMemcpy(b_gpu, b_cpu, size, cudaMemcpyHostToDevice);
+    N = strtol(argv[1], NULL, 10);
+    size_t size = sizeof(int) * N * N;
 
-  int blockDimension = (N*N)/THREADS_PER_BLOCK;
-  dim3 dimBlock(blockDimension, blockDimension);
-  dim3 dimThread(THREADS_PER_BLOCK);
+    // GPU copies of a, b, c
+    cudaMalloc(&d_a, size);
+    cudaMalloc(&d_b, size);
+    cudaMalloc(&d_c, size);
 
-  // Exec add function on GPU
-  add<<<dimBlock, dimThread>>>(a_gpu, b_gpu, c_gpu, N);
+    // Allocate GPU space for CPU copies of a, b, c
+    a = (int*)malloc(size);
+    b = (int*)malloc(size);
+    c = (int*)malloc(size);
 
-  // Copy results to CPU copy of c
-  cudaMemcpy(c_cpu, c_gpu, size, cudaMemcpyDeviceToHost);
+    // Setup random input variables
+    random_ints(a, N);
+    random_ints(b, N);
 
-  // Print
-  print_matrix(N);
+    //print_vector(a, N);
+    //print_vector(b, N);
 
-  // Cleanup
-  cudaFree(a_gpu); cudaFree(b_gpu); cudaFree(c_gpu);
-  //delete[] a_cpu, b_cpu, c_cpu;
+    // Copy inputs to device
+    cudaMemcpy(d_a, a, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, b, size, cudaMemcpyHostToDevice);
 
-  return 0;
+    // Exec add function on GPU
+    add<<<(N*N)/THREADS_PER_BLOCK,THREADS_PER_BLOCK>>>(d_a, d_b, d_c, N);
+
+    cudaDeviceSynchronize();
+
+    // Copy results to CPU copy of c
+    cudaMemcpy(c, d_c, size, cudaMemcpyDeviceToHost);
+
+    print_vector(c, N);
+
+    // Cleanup
+    free(a); free(b); free(c);
+    cudaFree(d_a); cudaFree(d_b); cudaFree(d_c);
+
+    return 0;
 }
