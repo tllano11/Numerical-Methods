@@ -1,4 +1,6 @@
-#!/opt/anaconda3/bin/python3.6
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
+
 from numba import cuda
 import numpy as np
 import time, csv, sys
