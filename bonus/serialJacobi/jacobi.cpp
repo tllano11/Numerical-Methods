@@ -124,13 +124,13 @@ int main(int argc, char** argv){
 
 
 
-    ifstream f("matrixA.txt");
+    ifstream f("../../a.csv");
     for (int i = 0; i < N; i++){
 		for (int j = 0; j < N; j++){
 			f >> matrix[i][j];
 		}
     }
-    ifstream fin("vectorB.txt");
+    ifstream fin("../../b.csv");
     double x;
     for(int i = 0; i < N; i ++){
     	fin >> x;
@@ -150,7 +150,7 @@ int main(int argc, char** argv){
 		//printVector(vectorX);
 	}
 	clock_t end = clock();
-  	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;	
+  	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
 
 	/*cout << "A" << endl;

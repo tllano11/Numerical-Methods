@@ -17,6 +17,26 @@ def jacobi(A, b, x_current, x_next, rows, columns):
 
     x_next[idx] = (b[idx] - sigma) / A[index + idx]
 
+def start(A, b):
+  tpb = 32
+  bpg = len(A) + (tpb - 1) // tpb
+  length = len(b)
+  x_current = np.zeros(length, dtype=np.float64)
+  x_next    = np.zeros(length, dtype=np.float64)
+  gpu_A = cuda.to_device(A)
+  gpu_b = cuda.to_device(b)
+  gpu_x_current = cuda.to_device(x_current)
+  gpu_x_next = cuda.to_device(x_next)
+  for i in range(0, 100):
+    if i % 2:
+      jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length, length)
+    else:
+      jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length, length)
+
+  x_next = gpu_x_next.copy_to_host()
+
+  return x_next
+
 def main(argv):
   if len(argv) != 3:
     print("Usage: python3.6 jacobi.py <A_matrix> <b_matrix>")
@@ -25,27 +45,25 @@ def main(argv):
   A_name = argv[1]
   b_name = argv[2]
 
-  with open(A_name) as fd:
-    A_matrix = fd.readlines()
+  with open(A_name) as csvfile:
+    reader = csv.reader(csvfile, delimiter=' ')
+    matrix = list(reader)
+    A_matrix = np.array(matrix).astype("float64")
+    A = A_matrix.flatten()
 
-  with open(b_name) as fd:
-    b_matrix = fd.readlines()
+  with open(b_name) as csvfile:
+    reader = csv.reader(csvfile, delimiter=' ')
+    matrix = list(reader)
+    b_matrix = np.array(matrix).astype("float64")
+    b = b_matrix.flatten()
 
-  rows      = len(b_matrix)
-  columns   = len(b_matrix)
+  rows      = len(b)
+  columns   = len(b)
   tpb       = 32
   matrix_size = rows * columns
-  A = np.array(A_matrix, "float64")
-  b = np.array(b_matrix, "float64")
-# A 	    = np.array([[8,-1,7],[-2,3,1],[0,1,9]])
-# A         = np.random.random((rows, columns))
-# A         = A.flatten()
-# b         = np.array([4,0,1])
-# b         = np.random.random((rows, 1))
-# b         = b.flatten()
+
   x_current = np.zeros(columns, dtype=np.float64)
   x_next    = np.zeros(columns, dtype=np.float64)
-
   gpu_A = cuda.to_device(A)
   gpu_b = cuda.to_device(b)
   gpu_x_current = cuda.to_device(x_current)

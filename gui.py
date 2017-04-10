@@ -6,8 +6,7 @@ from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
 import csv
 import numpy as np
-from jacobi import jacobi
-from cuda_utils import to_gpu
+import jacobi
 
 np_matrix = None
 np_b_matrix = None
@@ -42,32 +41,25 @@ class MyFrame(Frame):
         self.quit_b = Button(self,
                              text="QUIT",
                              fg="red",
-                             command=self.destroy,
+                             command=self.master.destroy,
                              width=10)
         self.quit_b.grid(row=4, column=0)
 
     def start_jacobi(self):
         global np_matrix, np_b_matrix
-        if np_matrix != None and np_b_matrix != None:
-            length = len(np_b_matrix)
-            x_current = np.zeros(length, dtype=np.float64)
-            x_next = np.zeros(length, dtype=np.float64)
-            gpu_x_current = to_gpu(x_current)
-            gpu_x_next = to_gpu(x_next)
-            gpu_A = to_gpu(np_matrix)
-            gpu_b = to_gpu(np_b_matrix)
-            jacobi(gpu_A, gpu_b, gpu_x_current, gpu_x_next, length, length)
-            x_next = to_cpu(gpu_x_next)
-            np.savetxt("result.csv", x_next, fmt="%1.9f", delimiter=",")
+        if np_matrix is not None and np_b_matrix is not None:
+            x_next = jacobi.start(np_matrix, np_b_matrix)
+            print("Jacobi Done")
+            np.savetxt("result.csv", x_next, fmt="%1.9f", delimiter=" ")
         else:
             print("error")
 
     def load_file(self):
         global np_matrix
-        fname = askopenfilename(filetypes=[("Comma Separated Values", "*.csv")])
+        fname = askopenfilename(filetypes=[("Comma Separated Values", "*.txt")])
         if fname:
             with open(fname) as csvfile:
-                reader = csv.reader(csvfile, delimiter=',')
+                reader = csv.reader(csvfile, delimiter=' ')
                 matrix = list(reader)
                 np_matrix = np.array(matrix).astype("float64")
                 np_matrix = np_matrix.flatten()
@@ -75,13 +67,13 @@ class MyFrame(Frame):
 
     def load_b_matrix(self):
         global np_b_matrix
-        fname = askopenfilename(filetypes=[("Comma Separated Values", "*.csv")])
+        fname = askopenfilename(filetypes=[("Comma Separated Values", "*.txt")])
         if fname:
             with open(fname) as csvfile:
-                reader = csv.reader(csvfile, delimiter=',')
+                reader = csv.reader(csvfile, delimiter=' ')
                 matrix = list(reader)
                 np_b_matrix = np.array(matrix).astype("float64")
-                np_b_matrix = np_matrix.flatten()
+                np_b_matrix = np_b_matrix.flatten()
             return
 
 
