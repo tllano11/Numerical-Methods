@@ -1,5 +1,5 @@
 import gtk
-from sparse_matrix import create_sparse_matrix
+from sparse_matrix import SparseMatrix
 class PyApp(gtk.Window):
 
   def create_sparse_matrix_page(self):
@@ -12,11 +12,13 @@ class PyApp(gtk.Window):
     sparse_matrix_box.pack_start(filename_entry, True, True, 10)
 
     generate_matrix_btn = gtk.Button("Generate matrix")
-    generate_matrix_btn.connect("clicked", self.say_hello, None)
+    generate_matrix_btn.connect("clicked", self.sparseMatrix.create_sparse_matrix, "hey")
     sparse_matrix_box.pack_start(generate_matrix_btn, True, True, 10)
+
     return sparse_matrix_box
 
   def __init__(self):
+    self.sparseMatrix = SparseMatrix()
     super(PyApp, self).__init__()
     self.set_title("Methods")
     self.set_default_size(250, 200)
@@ -25,12 +27,12 @@ class PyApp(gtk.Window):
     notebook.set_tab_pos(gtk.POS_TOP)
     vbox = gtk.VBox(False, 5)
         
-    #sparse_matrix_box = gtk.VBox()
+    sparse_matrix_box = gtk.VBox()
     hbox = gtk.HBox(True, 3)
         
     valign = gtk.Alignment(0.5,0.25, 0, 0)
 
-    '''
+    
     filename_lbl = gtk.Label("Filename")
     sparse_matrix_box.pack_start(filename_lbl, True, True, 10)
 
@@ -42,8 +44,8 @@ class PyApp(gtk.Window):
     sparse_matrix_box.pack_start(generate_matrix_btn, True, True, 10)
 
     valign.add(sparse_matrix_box)
-    '''
-    valign.add(creat_sparse_matrix_page())
+
+    #valign.add(self.create_sparse_matrix_page())
     vbox.pack_start(valign)
     notebook.append_page(vbox)
     notebook.set_tab_label_text(vbox, "Sparse matrix")
@@ -72,6 +74,7 @@ class PyApp(gtk.Window):
     self.show_all()
 
   def say_hello(self, widget, data=None):
+        self.sparseMatrix.create_sparse_matrix("kyk")
         print("Hello World")
 
 if __name__ == '__main__':
