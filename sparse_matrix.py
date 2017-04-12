@@ -1,13 +1,17 @@
 import numpy as np
 import random
+import json
+import sys
+from pprint import pprint
 
-matrix_length = 10
-density = 0.1
+matrix_length = 20
+density = 0.2
 
-def create_format_matrix():
+def create_sparse_matrix(filename):
 	val = 0 
 	pos = 0 
 	aux_pos = 0
+	matrix = []
 	pointerB = []
 	pointerE = []
 	columns = []
@@ -15,6 +19,7 @@ def create_format_matrix():
 
 	pointerB.append(pos)
 	for i in range(0, matrix_length):
+		row = []
 		if(pos != aux_pos):
 			pointerB.append(pos)
 		aux_pos = pos
@@ -25,16 +30,34 @@ def create_format_matrix():
 				val = random.randint(1,10)
 				values.append(val)
 				columns.append(j)
-		pointerE.append(pos)
+			else:
+				val = 0
+			row.append(val)
+		if(pos != aux_pos):
+			pointerE.append(pos)
+		matrix.append(row)
+		
+	data = {"values": values, "columns": columns, "pointerB":pointerB, "pointerE":pointerE}
+	data_json = json.dumps(data)
+	file = open(filename, 'w')
+	file.write(data_json)
+	file.close()
+	print("Matrix")
+	print(matrix)
 
-	print("values")
+def load_sparse_matrix(filename):
+	with open(filename) as data_file:    
+		data = json.load(data_file)
+	values = data["values"]
+	print("JSON")
 	print(values)
-	print("columns")
-	print(columns)
-	print("pointerB")
-	print(pointerB)
-	print("pointerE")
-	print(pointerE)
+
+def main(argv):
+	if len(argv) != 2:
+		print("Unsage: ./program filename")
+		sys.exit()
+	create_sparse_matrix(argv[1])
+	load_sparse_matrix(argv[1])
 
 if __name__ == '__main__':
-	create_format_matrix()
+	main(sys.argv)
