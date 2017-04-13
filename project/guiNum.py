@@ -1,7 +1,9 @@
 import gtk
 import sys
 sys.path.append("/home/jocamp18/Desktop/gitHub/Numerical-Methods/project/sparseMatrices")
+sys.path.append("/home/jocamp18/Desktop/gitHub/Numerical-Methods/project/coefficientGenerator")
 from sparse_matrix_tab import SparseMatrixTab
+from coefficient_generator_tab import CoefficientGeneratorTab
 
 class PyApp(gtk.Window):
 
@@ -10,6 +12,7 @@ class PyApp(gtk.Window):
 
     # Tabs of the window.
     self.sparse_matrix_tab = SparseMatrixTab()
+    self.coefficient_generator_tab = CoefficientGeneratorTab()
 
     # Elements of the current window.
     self.set_title("Methods")
@@ -19,17 +22,25 @@ class PyApp(gtk.Window):
     notebook = gtk.Notebook()
     notebook.set_tab_pos(gtk.POS_TOP)
     vbox_sparse_matrix = gtk.VBox(False, 5)
-        
+    
     sparse_matrix_box = gtk.VBox()
-    hbox = gtk.HBox(True, 3)
         
-    valign = gtk.Alignment(0.5,0.25, 0, 0)
+    valign_sparse_matrix = gtk.Alignment(0.5,0.25, 0, 0)
 
     # Adding sparse matrix
-    valign.add(self.sparse_matrix_tab.get_sparse_tab())
-    vbox_sparse_matrix.pack_start(valign)
+    valign_sparse_matrix.add(self.sparse_matrix_tab.get_sparse_tab())
+    vbox_sparse_matrix.pack_start(valign_sparse_matrix)
     notebook.append_page(vbox_sparse_matrix)
     notebook.set_tab_label_text(vbox_sparse_matrix, "Sparse matrix")
+
+
+    vbox_coefficient_generator = gtk.VBox(False, 5)
+    valign_coefficient_generator = gtk.Alignment(0.5,0.25,0,0)
+
+    valign_coefficient_generator.add(self.coefficient_generator_tab.get_tab())
+    vbox_coefficient_generator.pack_start(valign_coefficient_generator)
+    notebook.append_page(vbox_coefficient_generator)
+    notebook.set_tab_label_text(vbox_coefficient_generator, "Coefficient Generator")
 
 
     hb = gtk.HButtonBox()
