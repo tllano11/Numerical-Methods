@@ -4,10 +4,8 @@ import json
 import sys
 from pprint import pprint
 
-matrix_length = 20
-density = 0.2
 class SparseMatrix():
-	def create_sparse_matrix(self, filename):
+	def create_sparse_matrix(self, filename, matrix_length, density):
 		val = 0 
 		pos = 0 
 		aux_pos = 0
