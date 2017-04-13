@@ -3,6 +3,7 @@ import numpy
 from random import randrange
 
 class CoefficientGenerator():
+    # Generates matrix A
     def gen_matrix(self, filename, size):
         matrix = []
         for i in range(size):
@@ -13,15 +14,18 @@ class CoefficientGenerator():
             # ensure diagonal dominance here:
             row[i] = sum(row) + 1
             matrix.append(row)
-        numpy.savetxt(filename, matrix, fmt="%1.9f", delimiter=",")
+        # Save file with numpy
+        numpy.savetxt(filename, matrix, fmt="%1.9f", delimiter=" ")
         return matrix
 
+    # Generates vector b
     def gen_vector(self, filename, size):
         solution = []
         for i in range(size):
             rand_num = randrange(1,size+1)
             solution.append(rand_num)
-        numpy.savetxt(filename, solution, fmt="%1.9f", delimiter=",")
+        # Save file with numpy
+        numpy.savetxt(filename, solution, fmt="%1.9f", delimiter=" ")
         return solution
 
 

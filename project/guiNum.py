@@ -1,9 +1,11 @@
 import gtk
 import sys
-sys.path.append("/home/jocamp18/Desktop/gitHub/Numerical-Methods/project/sparseMatrices")
-sys.path.append("/home/jocamp18/Desktop/gitHub/Numerical-Methods/project/coefficientGenerator")
+sys.path.append("./sparseMatrices")
+sys.path.append("./coefficientGenerator")
+sys.path.append("./jacobiSerial")
 from sparse_matrix_tab import SparseMatrixTab
 from coefficient_generator_tab import CoefficientGeneratorTab
+from jacobi_serial_tab import JacobiSerialTab
 
 class PyApp(gtk.Window):
 
@@ -13,6 +15,7 @@ class PyApp(gtk.Window):
     # Tabs of the window.
     self.sparse_matrix_tab = SparseMatrixTab()
     self.coefficient_generator_tab = CoefficientGeneratorTab()
+    self.jacobi_serial_tab = JacobiSerialTab()
 
     # Elements of the current window.
     self.set_title("Methods")
@@ -41,6 +44,14 @@ class PyApp(gtk.Window):
     vbox_coefficient_generator.pack_start(valign_coefficient_generator)
     notebook.append_page(vbox_coefficient_generator)
     notebook.set_tab_label_text(vbox_coefficient_generator, "Coefficient Generator")
+
+    vbox_jacobi_serial = gtk.VBox(False, 5)
+    valign_jacobi_serial = gtk.Alignment(0.5,0.25,0,0)
+
+    valign_jacobi_serial.add(self.jacobi_serial_tab.get_tab())
+    vbox_jacobi_serial.pack_start(valign_jacobi_serial)
+    notebook.append_page(vbox_jacobi_serial)
+    notebook.set_tab_label_text(vbox_jacobi_serial, "Jacobi serial")
 
 
     hb = gtk.HButtonBox()
