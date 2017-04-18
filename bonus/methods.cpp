@@ -1,11 +1,13 @@
 #include <iostream>
 #include <math.h>
 #include <iomanip>
+#include <cmath>
 
 using namespace std;
 
 double f(double x){
-	return pow((x - 3), 3);
+	return exp(-x)-x;
+	//return pow((x - 3), 3);
 	//return pow(M_E, -x) - x;
 	//return pow(x, 3) - 4 * pow(x, 2) - 10;
 	//return pow(M_E, -pow(x, 2) + 1) - 4 * pow(x, 3) + 25;
