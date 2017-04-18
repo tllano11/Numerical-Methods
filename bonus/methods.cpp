@@ -20,6 +20,10 @@ double g(double x){
 	return sqrt(10/(x + 4));
 }
 
+double ddf(double x){
+	return x;
+}
+
 void incrementalSearches(){
 	double x0, x1, fx0, fx1, delta;
 	int niter, cont;
@@ -35,12 +39,14 @@ void incrementalSearches(){
 	}else if(niter == 0){
 		cout << "Cannot continue because number of iteratios is 0" << endl;
 	}else{
-		x1 = x0 + delta;
-		fx1 = f(x1);
-		cont = 1;
 		cout << "+-----------------------------------+" << endl;
 		cout << '|'<< setw(11) << " iteration " << '|' << setw(11) << " x " << '|' << setw(11) << " f(x) " << '|' <<  endl;
 		cout << "+-----------------------------------+" << endl;
+		cout << '|'<< setw(11) << 0 << '|' << setw(11) << x0 << '|' << setw(11) << fx0 <<  '|' << endl;
+		cout << "+-----------------------------------+" << endl;
+		x1 = x0 + delta;
+		fx1 = f(x1);
+		cont = 1;
 		while(fx1 * fx0 > 0 && cont < niter){
 			cout << '|'<< setw(11) << cont << '|' << setw(11) << x1 << '|' << setw(11) << fx1 <<  '|' << endl;
 			cout << "+-----------------------------------+" << endl;
@@ -301,8 +307,49 @@ void secant(){
 }
 
 void multipleRoots(){
-
+	double x0, x1, tol, error, fx, dfx, den, ddfx;
+	int niter, cont;
+	cout << "Enter initial value" << endl;
+	cin >> x0;
+	cout << "Enter tolerance" << endl;
+	cin >> tol;
+	cout << "Enter maximum number of iterations" << endl;
+	cin >> niter;
+	fx = f(x0);
+	dfx = df(x0);
+	ddfx = ddf(x0);
+	if(fx == 0){
+		cout << x0 << " is a root" << endl;
+	}else if(niter <= 0){
+		cout << "Cannot continue because maximum number of iterations is incorrect" << endl;
+	}else if(tol < 0){
+		cout << "Invalid tolerance" << endl;
+	}else{
+		error = tol + 1;
+		cont = 0;
+		den = (pow(dfx, 2) - (fx*ddfx));
+		while(fx != 0 && error > tol && dfx != 0 && cont < niter && den != 0){
+			x1 = x0 - ((fx*dfx)/den);
+			fx = f(x1);
+			dfx = df(x1);
+			ddfx = ddf(x1);
+			den = (pow(dfx, 2) - (fx * ddfx));
+			error = abs(x1 - x0);
+			x0 = x1;
+			cont++;
+		}
+		if(fx == 0){
+			cout << x0 << " is a root" << endl;
+		}else if(error < tol){
+			cout << x0 << " is near a root" << endl;
+		}else if(dfx == 0){
+			cout << x0 << " can be a multiple root" << endl;
+		}else{
+			cout << "Sorry, it failed" << endl;
+		}
+	}
 }
+
 
 int main(){
 	while(cin){
