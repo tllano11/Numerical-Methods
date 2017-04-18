@@ -5,7 +5,8 @@
 using namespace std;
 
 double f(double x){
-	return pow(M_E, -x) - x;
+	return pow((x - 3), 3);
+	//return pow(M_E, -x) - x;
 	//return pow(x, 3) - 4 * pow(x, 2) - 10;
 	//return pow(M_E, -pow(x, 2) + 1) - 4 * pow(x, 3) + 25;
 	//return pow(M_E, 3 * x - 12) + x * cos(3 * x) - pow(x, 2) + 4;
@@ -13,7 +14,8 @@ double f(double x){
 }
 
 double df(double x){
-	return -pow(M_E, -x) -1;
+	return 3 * pow((x - 3), 2);
+	//return -pow(M_E, -x) -1;
 }
 
 double g(double x){
@@ -21,7 +23,8 @@ double g(double x){
 }
 
 double ddf(double x){
-	return x;
+	return 6 * (x - 3);
+	//return x;
 }
 
 void incrementalSearches(){
