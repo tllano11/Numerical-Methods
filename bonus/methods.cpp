@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <iomanip>
+#include <cmath>
 
 using namespace std;
 
@@ -279,7 +280,7 @@ void secant(){
 	cin >> x1;
 	cout << "Enter tolerance" << endl;
 	cin >> tol;
-	cout << "Enter maximum number of iterations" << endl;
+he	cout << "Enter maximum number of iterations" << endl;
 	cin >> niter;
 	fx0 = f(x0);
 	fx1 = f(x1);
