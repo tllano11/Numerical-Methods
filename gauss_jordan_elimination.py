@@ -3,7 +3,7 @@
 
 from numba import cuda
 import numpy as np
-import time, csv, sys
+import time, csv, sys, copy
 """
 def gauss_jordan3(A, b, size):
   idx = cuda.threadIdx.x
@@ -24,6 +24,10 @@ def gauss_jordan(A, size, i):
 
   if idx < size and idy < size:
     if idx > i:
+      pivot = A[idx*size+i]/A[i*size+i]
+      if idy >= i:
+        A[idx*size+idy]-= A[i*size+idy] * pivot
+    elif idx < i:
       pivot = A[idx*size+i]/A[i*size+i]
       if idy >= i:
         A[idx*size+idy]-= A[i*size+idy] * pivot
@@ -97,7 +101,6 @@ def main(argv):
 
   A = gpu_A.copy_to_host()
   print(A.reshape(rows, (columns+1))[:, columns])
-  print(A.reshape(rows, (columns+1)))
 
   """
   b = gpu_b.copy_to_host()
