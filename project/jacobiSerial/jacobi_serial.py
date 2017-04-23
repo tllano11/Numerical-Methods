@@ -5,7 +5,7 @@ import time, csv
 class JacobiSerial():
 
     def jacobi(self, A_matrix,b_vector,niter):
-        """Solves the equati)n Ax=b via the Jacobi iterative method."""
+        #Solves the equation Ax=b via the Jacobi iterative method.
         # Create an initial guess if needed
         x_vector = zeros(len(b_vector))
 

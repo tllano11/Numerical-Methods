@@ -30,7 +30,7 @@ class JacobiSerialTab():
                 self.niter_entry = Gtk.Entry()
                 jacobi_serial_box.pack_start(self.niter_entry, True, True, 10)
 
-                jacobi_button = Gtk.Button("Jacobi")
+                jacobi_button = Gtk.Button("Run Serial Jacobi")
                 jacobi_button.connect("clicked", self.jacobi, None)
                 jacobi_serial_box.pack_start(jacobi_button, True, True, 10)
                 return jacobi_serial_box

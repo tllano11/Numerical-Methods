@@ -32,23 +32,34 @@ class PyApp(Gtk.Window):
     notebook.set_tab_pos(Gtk.PositionType.TOP)
 
     # Adding sparse matrix
-    vbox_sparse_matrix = self.sparse_matrix_tab.get_sparse_tab()
+    vbox_sparse_matrix = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    valign_sparse_matrix = Gtk.Alignment.new(0.5,0.25, 0, 0)
+
+    valign_sparse_matrix.add(self.sparse_matrix_tab.get_sparse_tab())
+    vbox_sparse_matrix.pack_start(valign_sparse_matrix, True, True, 6)
     notebook.append_page(vbox_sparse_matrix)
     notebook.set_tab_label_text(vbox_sparse_matrix, "Sparse matrix")
 
 
     # Adding Matrix generator
-    vbox_coefficient_generator = self.coefficient_generator_tab.get_tab()
+    vbox_coefficient_generator = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    valign_coefficient_generator = Gtk.Alignment.new(0.5,0.25, 0, 0)
+
+    valign_coefficient_generator.add(self.coefficient_generator_tab.get_tab())
+    vbox_coefficient_generator.pack_start(valign_coefficient_generator, True, True, 6)
     notebook.append_page(vbox_coefficient_generator)
     notebook.set_tab_label_text(vbox_coefficient_generator, "Coefficient Generator")
 
 
     jacobi_box_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    valign_jacobi_box_outer1 = Gtk.Alignment.new(0.5,0.25, 0, 0)
+    valign_jacobi_box_outer2 = Gtk.Alignment.new(0.5,0.5, 0, 0)
 
     # Adding serial Jacobi solver
     listbox_jacobi_serial = Gtk.ListBox()
     listbox_jacobi_serial.set_selection_mode(Gtk.SelectionMode.NONE)
-    jacobi_box_outer.pack_start(listbox_jacobi_serial, True, True, 0)
+    valign_jacobi_box_outer1.add(listbox_jacobi_serial)
+    #jacobi_box_outer.pack_start(listbox_jacobi_serial, True, True, 0)
 
     row = Gtk.ListBoxRow()
     vbox_jacobi_serial = self.jacobi_serial_tab.get_tab()
@@ -60,7 +71,8 @@ class PyApp(Gtk.Window):
     # Adding parallel Jacobi solver
     listbox_jacobi_parallel = Gtk.ListBox()
     listbox_jacobi_parallel.set_selection_mode(Gtk.SelectionMode.NONE)
-    jacobi_box_outer.pack_start(listbox_jacobi_parallel, True, True, 0)
+    #jacobi_box_outer.pack_start(listbox_jacobi_parallel, True, True, 0)
+    valign_jacobi_box_outer2.add(listbox_jacobi_parallel)
 
     # Adding Jacobi serial solver
     row = Gtk.ListBoxRow()
@@ -69,7 +81,8 @@ class PyApp(Gtk.Window):
 
     listbox_jacobi_parallel.add(row)
 
-
+    jacobi_box_outer.pack_start(valign_jacobi_box_outer1, True, True, 1)
+    jacobi_box_outer.pack_start(valign_jacobi_box_outer2, True, True, 1)
     notebook.append_page(jacobi_box_outer)
     notebook.set_tab_label_text(jacobi_box_outer, "Jacobi's Method")
 
