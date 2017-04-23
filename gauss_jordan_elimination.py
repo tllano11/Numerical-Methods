@@ -1,21 +1,20 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.6
 #-*- coding: utf-8 -*-
+
+'''
+    File name: gauss_jordan_elimination.py
+    Authors: Tomás Felipe Llano Ríos,
+             Juan Diego Ocampo García,
+             Johan Sebastián Yepes Ríos
+    Date created: 13-April-2017
+    Date last modified: 23-April-2017
+    Python Version: 3.6.0
+'''
 
 from numba import cuda
 import numpy as np
 import time, csv, sys, copy
-"""
-def gauss_jordan3(A, b, size):
-  idx = cuda.threadIdx.x
-  idy = cuda.threadIdx.y
-  if idx < size and idy < size:
-    for i in range(1, size):
-      if (idy+1) < size:
-        var = (-1) * (A[(i-1)*size+(i-1)]/A[(i+idy)*size+(i-1)])
-        A[(i+idy)*size+idx] = A[(i-1)*size+idx] + ((var) * A[(i+idy)*size+idx])
-      cuda.syncthreads()
-    b[idy * (size+1) + idx] = A[idy*size + idx]
-"""
+
 @cuda.jit
 def gauss_jordan(A, size, i):
   idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
@@ -45,24 +44,7 @@ def normalize(A, size):
     if pivot != 0:
       A[index + idy] /= pivot
   cuda.syncthreads()
-"""
-@cuda.jit
-def gauss_jordan1(A, size):
-  idx = cuda.threadIdx.x
-  idy = cuda.threadIdx.y
-  size += 1
 
-  cuda.syncthreads()
-
-  if idx < size and idy < size:
-    for j in range(0, size):
-      pivot = A[j*size + j]
-      A[idx*size + j] /= pivot
-      cuda.syncthreads()
-      if idy != j:
-        A[idx*size+idy] -= A[j*size+idy] * A[idx*size+j]
-      cuda.syncthreads()
-"""
 def main(argv):
   if len(argv) != 3:
     print("Usage: python3.6 gauss_jordan_elimination.py <A_matrix> <b_matrix>")
@@ -75,12 +57,12 @@ def main(argv):
     reader = csv.reader(csvfile, delimiter=' ')
     matrix = list(reader)
     A_matrix = np.array(matrix).astype("float64")
-    #A = A_matrix.flatten()
+
   with open(b_name) as csvfile:
     reader = csv.reader(csvfile, delimiter=' ')
     matrix = list(reader)
     b_matrix = np.array(matrix).astype("float64")
-    #b = b_matrix.flatten()
+
 
   b = b_matrix.reshape(len(b_matrix), 1)
   A = np.hstack((A_matrix, b))
@@ -92,7 +74,7 @@ def main(argv):
   matrix_size = rows * columns
 
   gpu_A = cuda.to_device(A)
-  #gpu_b = cuda.to_device(b)
+
   bpg = matrix_size + (tpb - 1) // tpb
 
   for i in range(0, rows):
@@ -101,13 +83,6 @@ def main(argv):
 
   A = gpu_A.copy_to_host()
   print(A.reshape(rows, (columns+1))[:, columns])
-
-  """
-  b = gpu_b.copy_to_host()
-  A = gpu_A.copy_to_host()
-  print(b)
-  print(A)
-  """
 
 if __name__ == "__main__":
   main(sys.argv)
