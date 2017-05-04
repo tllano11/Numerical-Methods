@@ -29,14 +29,19 @@ class JacobiParallel():
     gpu_b = cuda.to_device(b)
     gpu_x_current = cuda.to_device(x_current)
     gpu_x_next = cuda.to_device(x_next)
+
+    start = time.time()
     for i in range(niter):
       if i % 2:
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length)
       else:
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length)
 
+    end = time.time()
+
     x_next = gpu_x_next.copy_to_host()
 
+    print ("Jacobis's algorithm computation time was: {} sec".format(end - start))
     print(x_next)
     return x_next
 
