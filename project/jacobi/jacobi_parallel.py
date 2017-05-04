@@ -8,18 +8,18 @@ import time, csv, sys
 class JacobiParallel():
 
   @cuda.jit
-  def jacobi(A, b, x_current, x_next, rows, columns):
+  def jacobi(A, b, x_current, x_next, n):
     idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
-    if idx < rows:
+    if idx < n:
       sigma = 0.0
-      index = idx * columns
-      for j in range(0, columns):
+      index = idx * n
+      for j in range(0, n):
         if idx != j:
           sigma += A[index + j] * x_current[j]
 
       x_next[idx] = (b[idx] - sigma) / A[index + idx]
 
-  def start(A, b, niter):
+  def start(self, A, b, niter):
     tpb = 32
     bpg = len(A) + (tpb - 1) // tpb
     length = len(b)
@@ -31,12 +31,13 @@ class JacobiParallel():
     gpu_x_next = cuda.to_device(x_next)
     for i in range(niter):
       if i % 2:
-        jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length, length)
+        self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length)
       else:
-        jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length, length)
+        self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length)
 
     x_next = gpu_x_next.copy_to_host()
 
+    print(x_next)
     return x_next
 
 def main(argv):
@@ -59,26 +60,26 @@ def main(argv):
     b_matrix = np.array(matrix).astype("float64")
     b = b_matrix.flatten()
 
-  rows      = len(b)
-  columns   = len(b)
-  tpb       = 32
-  matrix_size = rows * columns
+  n   = len(b)
+  tpb = 32
+  matrix_size = n * n
 
-  x_current = np.zeros(columns, dtype=np.float64)
-  x_next    = np.zeros(columns, dtype=np.float64)
+  x_current = np.zeros(n, dtype=np.float64)
+  x_next    = np.zeros(n, dtype=np.float64)
   gpu_A = cuda.to_device(A)
   gpu_b = cuda.to_device(b)
   gpu_x_current = cuda.to_device(x_current)
   gpu_x_next = cuda.to_device(x_next)
 
   bpg = matrix_size + (tpb - 1) // tpb
+  jacobiParallel = JacobiParallel()
 
   start = time.time()
   for i in range(0, 100):
     if i % 2:
-      jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, rows, columns)
+      jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, n)
     else:
-      jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, rows, columns)
+      jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, n)
 
   end = time.time()
 
