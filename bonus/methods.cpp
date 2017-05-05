@@ -316,11 +316,11 @@ he	cout << "Enter maximum number of iterations" << endl;
 			cout << "+-----------------------------------------------------+" << endl;
 		}
 		if(fx1 == 0){
-			cout << x0 << " is a root" << endl;
+			cout << x1 << " is a root" << endl;
 		}else if(error < tol){
-			cout << x0 << " is near a root" << endl;
+			cout << x1 << " is near a root" << endl;
 		}else if(den == 0){
-			cout << x0 << " can be a multiple root" << endl;
+			cout << "There is a possible multiple root" << endl;
 		}else{
 			cout << "Sorry, it failed" << endl;
 		}
@@ -354,7 +354,7 @@ void multipleRoots(){
 		cout << "+-----------------------------------------------------------------------------+" << endl;
 		cout << '|' << setw(11) << cont << '|' << setw(11) << x0  << '|' << setw(13) << fx << "|" << setw(13) << dfx << "|" << setw(13) << ddfx << "|" << setw(13) << "" << '|' << endl;
 		cout << "+-----------------------------------------------------------------------------+" << endl;
-		while(fx != 0 && error > tol && dfx != 0 && cont < niter && den != 0){
+		while(fx != 0 && error > tol  && cont < niter && den != 0){
 			x1 = x0 - ((fx*dfx)/den);
 			fx = f(x1);
 			dfx = df(x1);
@@ -370,8 +370,6 @@ void multipleRoots(){
 			cout << x0 << " is a root" << endl;
 		}else if(error < tol){
 			cout << x0 << " is near a root" << endl;
-		}else if(dfx == 0){
-			cout << x0 << " can be a multiple root" << endl;
 		}else{
 			cout << "Sorry, it failed" << endl;
 		}
