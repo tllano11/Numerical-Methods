@@ -6,7 +6,7 @@ from gi.repository import Gtk
 import csv
 from jacobi_parallel import JacobiParallel
 from jacobi_serial import JacobiSerial
-from numpy import array
+import numpy as np
 
 class JacobiTab():
   def __init__(self):
@@ -38,6 +38,11 @@ class JacobiTab():
     jacobi_box.pack_start(niter_lbl, True, True, 10)
     self.niter_entry = Gtk.Entry()
     jacobi_box.pack_start(self.niter_entry, True, True, 10)
+
+    error_lbl = Gtk.Label("Tolerance")
+    jacobi_box.pack_start(error_lbl, True, True, 10)
+    self.error_entry = Gtk.Entry()
+    jacobi_box.pack_start(self.error_entry, True, True, 10)
 
     out_lbl = Gtk.Label("Output Filename")
     jacobi_box.pack_start(out_lbl, True, True, 10)
@@ -74,8 +79,8 @@ class JacobiTab():
       with open(filename) as matrix_file:
         reader = csv.reader(matrix_file, delimiter=' ')
         matrix = list(reader)
-        self.A_matrix = array(matrix).astype("float")
-        self.A_matrix = self.A_matrix.flatten()
+        self.A_matrix = np.array(matrix).astype("float")
+        #self.A_matrix = self.A_matrix.flatten()
 
     matrix_chooser.destroy()
 
@@ -91,20 +96,24 @@ class JacobiTab():
       with open(filename) as vector_file:
         reader = csv.reader(vector_file, delimiter=' ')
         vector = list(reader)
-        self.b_vector = array(vector).astype("float")
-        self.b_vector = self.b_vector.flatten()
+        self.b_vector = np.array(vector).astype("float")
+        #self.b_vector = self.b_vector.flatten()
 
     vector_chooser.destroy()
 
   def jacobiParallel(self, widget, data=None):
     niter = int(self.niter_entry.get_text())
-    filename = self.out_entry.get_text())
-    x_vector = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter)
-    numpy.savetxt(filename, x_vector, delimiter=" ")
+    tol = float(self.error_entry.get_text())
+    filename = self.out_entry.get_text()
+    x_vector = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter, tol)
+    if x_vector is not None:
+      np.savetxt(filename, x_vector, delimiter=" ")
 
 
   def jacobiSerial(self, widget, data=None):
     niter = int(self.niter_entry.get_text())
-    filename = self.out_entry.get_text())
-    x_vector = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter)
-    numpy.savetxt(filename, x_vector, delimiter=" ")
+    tol = float(self.error_entry.get_text())
+    filename = self.out_entry.get_text()
+    x_vector = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter, tol)
+    if x_vector is not None:
+      np.savetxt(filename, x_vector, delimiter=" ")

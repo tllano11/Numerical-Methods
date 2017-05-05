@@ -19,31 +19,56 @@ class JacobiParallel():
 
       x_next[idx] = (b[idx] - sigma) / A[index + idx]
 
-  def start(self, A, b, niter):
+  @cuda.jit
+  def get_error(x_current, x_next, x_error, rows):
+    idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
+    if idx < rows:
+      x_error[idx] = abs(x_next[idx] - x_current[idx])
+
+  def start(self, A, b, niter, tol):
+    A = A.flatten()
+    b = b.flatten()
     tpb = 32
     bpg = len(A) + (tpb - 1) // tpb
     length = len(b)
     x_current = np.zeros(length, dtype=np.float64)
     x_next    = np.zeros(length, dtype=np.float64)
+    x_error   = np.zeros(length, dtype=np.float64)
     gpu_A = cuda.to_device(A)
     gpu_b = cuda.to_device(b)
     gpu_x_current = cuda.to_device(x_current)
     gpu_x_next = cuda.to_device(x_next)
+    gpu_x_error = cuda.to_device(x_error)
+    count = 0
+    error = tol + 1
 
     start = time.time()
-    for i in range(niter):
-      if i % 2:
+    while error > tol and count < niter:
+      if count % 2:
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length)
+        self.get_error[bpg, tpb](gpu_x_current, gpu_x_next, gpu_x_error, length)
       else:
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length)
+        self.get_error[bpg, tpb](gpu_x_next, gpu_x_current, gpu_x_error, length)
 
+      x_error = gpu_x_error.copy_to_host()
+      error = max(x_error)
+      count += 1
     end = time.time()
 
-    x_next = gpu_x_next.copy_to_host()
+    if error < tol:
+      if count % 2:
+        x_next = gpu_x_next.copy_to_host()
+      else:
+        x_next = gpu_x_current.copy_to_host()
 
-    print ("Jacobis's algorithm computation time was: {} sec".format(end - start))
-    print(x_next)
-    return x_next
+      print("Jacobis's algorithm computation time was: {} sec".format(end - start))
+      print("Jacobi done with an error of {} and iter {}".format(error, count))
+      print(x_next)
+      return x_next
+    else:
+      print("Jacobi failed")
+      return None
 
 def main(argv):
   if len(argv) != 3:
