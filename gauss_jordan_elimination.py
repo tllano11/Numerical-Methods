@@ -73,15 +73,18 @@ def main(argv):
   tpb       = 32
   matrix_size = rows * columns
 
-  gpu_A = cuda.to_device(A)
+  with cuda.pinned(A):
+    stream = cuda.stream()
+    gpu_A = cuda.to_device(A, stream=stream)
+    bpg = matrix_size + (tpb - 1) // tpb
 
-  bpg = matrix_size + (tpb - 1) // tpb
+    for i in range(0, rows):
+      gauss_jordan[(bpg, bpg), (tpb, tpb)](gpu_A, rows, i)
+      normalize[(bpg, bpg), (tpb, tpb)](gpu_A, rows)
 
-  for i in range(0, rows):
-    gauss_jordan[(bpg, bpg), (tpb, tpb)](gpu_A, rows, i)
-    normalize[(bpg, bpg), (tpb, tpb)](gpu_A, rows)
+  gpu_A.copy_to_host(A, stream)
 
-  A = gpu_A.copy_to_host()
+
   print(A.reshape(rows, (columns+1))[:, columns])
 
 if __name__ == "__main__":
