@@ -37,7 +37,7 @@ void incrementalSearches(){
 	if(fx0 == 0){
 		cout << x0 << " is a root " << endl;
 	}else if(niter == 0){
-		cout << "Cannot continue because number of iteratios is 0" << endl;
+		cout << "Cannot continue because number of iterations is 0" << endl;
 	}else{
 		cout << "+-----------------------------------+" << endl;
 		cout << '|'<< setw(11) << " iteration " << '|' << setw(11) << " x " << '|' << setw(11) << " f(x) " << '|' <<  endl;
@@ -87,7 +87,7 @@ void bisection(){
 	}else if (fxs == 0){
 		cout << xs << " is a root" << endl;
 	}else if (niter == 0){
-		cout << "Cannot continue because number of iteratios is 0" << endl;
+		cout << "Cannot continue because number of iterations is 0" << endl;
 	}else if (fxi*fxs < 0){
 		xm = (xi + xs)/2;
 		fxm = f(xm);
@@ -122,7 +122,7 @@ void bisection(){
 			cout << "Sorry, it failed in " << niter << " iterations " << endl;
 		}
 	}else{
-		cout << "The interval is inappropiate" << endl;
+		cout << "The interval is inappropriate" << endl;
 	}
 }
 
@@ -144,7 +144,7 @@ void falseRule(){
 	}else if (fxs == 0){
 		cout << xs << " is a root" << endl;
 	}else if (niter == 0){
-		cout << "Cannot continue because number of iteratios is 0" << endl;
+		cout << "Cannot continue because number of iterations is 0" << endl;
 	}else if (fxi*fxs < 0){
 		xm = xi -((fxi * (xs - xi))/(fxs -fxi));
 		fxm = f(xm);
@@ -179,7 +179,7 @@ void falseRule(){
 			cout << "Sorry, it failed in " << niter << " iterations " << endl;
 		}
 	}else{
-		cout << "The interval is inappropiate" << endl;
+		cout << "The interval is inappropriate" << endl;
 	}
 }
 
@@ -196,7 +196,7 @@ void fixedPoint(){
 	if(fx0 == 0){
 		cout << x0 << " is a root" << endl;
 	}else if(niter <= 0){
-		cout << "Cannot coninue because maximum number of iterations is incorrect" << endl;
+		cout << "Cannot continue because maximum number of iterations is incorrect" << endl;
 	}else{
 		error = tol + 1;
 		cont = 0;

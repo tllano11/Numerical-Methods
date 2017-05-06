@@ -1,7 +1,7 @@
 all: implementations
 
 implementations:
-	g++ -o implementations methods.cpp
+	g++ -o implementations bonusMethods.cpp
 
 clean:
 	rm -f implementations
