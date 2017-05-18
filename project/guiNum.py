@@ -1,14 +1,18 @@
 import sys
 sys.path.append("/usr/lib/python3.6/site-packages/")
 sys.path.append("./sparseMatrices")
-sys.path.append("./coefficientGenerator")
+sys.path.append("./matrixGenerator")
 sys.path.append("./jacobi")
+sys.path.append("./gauss_jordan")
+sys.path.append("./gaussian_elimination")
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sparse_matrix_tab import SparseMatrixTab
-from coefficient_generator_tab import CoefficientGeneratorTab
+from matrix_generator_tab import MatrixGeneratorTab
 from jacobi_tab import JacobiTab
+from gauss_jordan_tab import GaussJordanTab
+from gaussian_elimination_tab import GaussianEliminationTab
 
 class PyApp(Gtk.Window):
 
@@ -17,8 +21,10 @@ class PyApp(Gtk.Window):
 
     # Tabs of the window.
     self.sparse_matrix_tab = SparseMatrixTab()
-    self.coefficient_generator_tab = CoefficientGeneratorTab()
+    self.matrix_generator_tab = MatrixGeneratorTab()
     self.jacobi_tab = JacobiTab()
+    self.gauss_jordan_tab = GaussJordanTab()
+    self.gaussian_elimination_tab = GaussianEliminationTab()
 
     # Elements of the current window.
     self.set_title("Methods")
@@ -39,59 +45,48 @@ class PyApp(Gtk.Window):
 
 
     # Adding Matrix generator
-    vbox_coefficient_generator = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    valign_coefficient_generator = Gtk.Alignment.new(0.5,0.25, 0, 0)
+    vbox_matrix_generator = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    valign_matrix_generator = Gtk.Alignment.new(0.5,0.25, 0, 0)
 
-    valign_coefficient_generator.add(self.coefficient_generator_tab.get_tab())
-    vbox_coefficient_generator.pack_start(valign_coefficient_generator, True, True, 6)
-    notebook.append_page(vbox_coefficient_generator)
-    notebook.set_tab_label_text(vbox_coefficient_generator, "Coefficient Generator")
+    valign_matrix_generator.add(self.matrix_generator_tab.get_tab())
+    vbox_matrix_generator.pack_start(valign_matrix_generator, True, True, 6)
+    notebook.append_page(vbox_matrix_generator)
+    notebook.set_tab_label_text(vbox_matrix_generator, "Matrix Generator")
 
 
     jacobi_box_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     valign_jacobi_box_outer1 = Gtk.Alignment.new(0.5,0.25, 0, 0)
     valign_jacobi_box_outer2 = Gtk.Alignment.new(0.5,0.5, 0, 0)
 
-    # Adding serial Jacobi solver
+    # Adding Jacobi solver
     vbox_jacobi = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     valign_jacobi = Gtk.Alignment.new(0.5,0.25, 0, 0)
 
     valign_jacobi.add(self.jacobi_tab.get_tab())
     vbox_jacobi.pack_start(valign_jacobi, True, True, 6)
 
-    '''
-    listbox_jacobi_serial = Gtk.ListBox()
-    listbox_jacobi_serial.set_selection_mode(Gtk.SelectionMode.NONE)
-    valign_jacobi_box_outer1.add(listbox_jacobi_serial)
-    #jacobi_box_outer.pack_start(listbox_jacobi_serial, True, True, 0)
-
-    row = Gtk.ListBoxRow()
-    vbox_jacobi_serial = self.jacobi_serial_tab.get_tab()
-    row.add(vbox_jacobi_serial)
-
-    listbox_jacobi_serial.add(row)
-
-
-    # Adding parallel Jacobi solver
-    listbox_jacobi_parallel = Gtk.ListBox()
-    listbox_jacobi_parallel.set_selection_mode(Gtk.SelectionMode.NONE)
-    #jacobi_box_outer.pack_start(listbox_jacobi_parallel, True, True, 0)
-    valign_jacobi_box_outer2.add(listbox_jacobi_parallel)
-
-    # Adding Jacobi serial solver
-    row = Gtk.ListBoxRow()
-    vbox_jacobi_parallel = self.jacobi_parallel_tab.get_tab()
-    row.add(vbox_jacobi_parallel)
-
-    listbox_jacobi_parallel.add(row)
-
-    jacobi_box_outer.pack_start(valign_jacobi_box_outer1, True, True, 1)
-    jacobi_box_outer.pack_start(valign_jacobi_box_outer2, True, True, 1)
-    '''
     notebook.append_page(vbox_jacobi)
     notebook.set_tab_label_text(vbox_jacobi, "Jacobi's Method")
 
-    # Adding Jacobi Parallel solver
+    # Adding Gauss Jordan Tab
+    vbox_gauss_jordan = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    valign_gauss_jordan = Gtk.Alignment.new(0.5,0.25, 0, 0)
+
+    valign_gauss_jordan.add(self.gauss_jordan_tab.get_tab())
+    vbox_gauss_jordan.pack_start(valign_gauss_jordan, True, True, 6)
+
+    notebook.append_page(vbox_gauss_jordan)
+    notebook.set_tab_label_text(vbox_gauss_jordan, "Gauss Jordan's Method")
+
+    # Adding Gaussian Elimination Tab
+    vbox_gaussian_elimination = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    valign_gaussian_elimination = Gtk.Alignment.new(0.5,0.25, 0, 0)
+
+    valign_gaussian_elimination.add(self.gaussian_elimination_tab.get_tab())
+    vbox_gaussian_elimination.pack_start(valign_gaussian_elimination, True, True, 6)
+
+    notebook.append_page(vbox_gaussian_elimination)
+    notebook.set_tab_label_text(vbox_gaussian_elimination, "Gaussian Elimination's Method")
 
 
 

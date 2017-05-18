@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from numba import cuda
 import numpy as np
@@ -8,7 +8,7 @@ import time, csv, sys
 class JacobiParallel():
 
   @cuda.jit
-  def jacobi(A, b, x_current, x_next, n):
+  def jacobi(A, b, x_current, x_next, n, rel=1):
     idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     if idx < n:
       sigma = 0.0
@@ -18,6 +18,7 @@ class JacobiParallel():
           sigma += A[index + j] * x_current[j]
 
       x_next[idx] = (b[idx] - sigma) / A[index + idx]
+      x_next[idx] = rel * x_next[idx] + (1-rel) * x_current[idx]
 
   @cuda.jit
   def get_error(x_current, x_next, x_error, rows):
@@ -25,7 +26,7 @@ class JacobiParallel():
     if idx < rows:
       x_error[idx] = abs(x_next[idx] - x_current[idx])
 
-  def start(self, A, b, niter, tol):
+  def start(self, A, b, niter, tol, rel):
     A = A.flatten()
     b = b.flatten()
     tpb = 32
@@ -45,8 +46,8 @@ class JacobiParallel():
     start = time.time()
     while error > tol and count < niter:
       if count % 2:
-        self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length)
-        self.get_error[bpg, tpb](gpu_x_current, gpu_x_next, gpu_x_error, length)
+        self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length, rel)
+        self.get_error[bpg, tpb](gpu_x_current, gpu_x_next, gpu_x_error, length, rel)
       else:
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length)
         self.get_error[bpg, tpb](gpu_x_next, gpu_x_current, gpu_x_error, length)
@@ -90,7 +91,7 @@ def main(argv):
     b_matrix = np.array(matrix).astype("float64")
     b = b_matrix.flatten()
 
-  n   = len(b)
+  n = len(b)
   tpb = 32
   matrix_size = n * n
 
