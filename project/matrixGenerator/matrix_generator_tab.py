@@ -31,10 +31,15 @@ class MatrixGeneratorTab():
         self.matrix_filename_entry = Gtk.Entry()
         gen_matrix_box.pack_start(self.matrix_filename_entry, True, True, 10)
 
-        vector_filename_lbl = Gtk.Label("Vector filename")
+        vector_filename_lbl = Gtk.Label("Vector B filename")
         gen_matrix_box.pack_start(vector_filename_lbl, True, True, 10)
         self.vector_filename_entry = Gtk.Entry()
         gen_matrix_box.pack_start(self.vector_filename_entry, True, True, 10)
+
+        vectorx_filename_lbl = Gtk.Label("Vector X filename")
+        gen_matrix_box.pack_start(vectorx_filename_lbl, True, True, 10)
+        self.vectorx_filename_entry = Gtk.Entry()
+        gen_matrix_box.pack_start(self.vectorx_filename_entry, True, True, 10)
 
         button1 = Gtk.RadioButton.new_with_label_from_widget(None, "Diagonally dominant")
         button1.connect("toggled", self.set_generator, "1")
@@ -85,10 +90,11 @@ class MatrixGeneratorTab():
     def gen_matrix(self, widget, data=None):
         matrix_filename = self.matrix_filename_entry.get_text()
         vector_filename = self.vector_filename_entry.get_text()
+        vectorx_filename = self.vectorx_filename_entry.get_text()
         length = int(self.length_entry.get_text())
 
         if self.selected_generator == 1:
-            matrix, b = MatrixGenerator.gen_dominant(length)
+            matrix,x , b = MatrixGenerator.gen_dominant(length)
             print(matrix)
         elif self.selected_generator == 2:
             matrix, b = MatrixGenerator.gen_symmetric_matrix(length)
@@ -109,8 +115,5 @@ class MatrixGeneratorTab():
 
         # Save file with numpy
         np.savetxt(matrix_filename, matrix, fmt="%1.9f", delimiter=" ")
-
-        #b = MatrixGenerator.gen_vector(length)
-
-        # Save file with numpy
+        np.savetxt(vectorx_filename, x, fmt="%1.9f", delimiter=" ")
         np.savetxt(vector_filename, b, fmt="%1.9f", delimiter=" ")

@@ -11,7 +11,7 @@ class MatrixGenerator():
         for i in range(size):
             rand_num = uniform(-size, size)
             solution.append(rand_num)
-        return solution
+        return np.array(solution)
 
     # gens matrix A
     @staticmethod
@@ -29,12 +29,10 @@ class MatrixGenerator():
 
             row[i] += 1
             matrix.append(row)
-        vector = MatrixGenerator.gen_vector(size)
+        vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_x = np.array(vector)
         vector_b = np.dot(matrix_A, vector_x)
-        np.savetxt("vector_x.txt", vector_x, fmt="%1.9f", delimiter=" ")
-        return (matrix_A, vector_b)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_symmetric_matrix(size):
@@ -134,9 +132,7 @@ def main(argv):
     fname2 = argv[3]
 
     matrix_generator = MatrixGenerator()
-    matrix, vector = matrix_generator.gen_dominant(size)
-    print(matrix)
-    print(vector)
+    matrix, x, vector = matrix_generator.gen_dominant(size)
     # vector = matrix_generator.gen_vector(fname2, size)
 
 if __name__ == "__main__":
