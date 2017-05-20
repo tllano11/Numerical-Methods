@@ -1,3 +1,16 @@
+#!/usr/bin/env python3.6
+#-*- coding: utf-8 -*-
+
+'''
+    File name: guiNum.py
+    Authors: Tomás Felipe Llano Ríos,
+             Juan Diego Ocampo García,
+             Johan Sebastián Yepes Ríos
+    Date created: 13-April-2017
+    Date last modified: 20-May-2017
+    Python Version: 3.6.0
+'''
+
 import sys
 sys.path.append("/usr/lib/python3.6/site-packages/")
 sys.path.append("./sparseMatrices")
@@ -53,11 +66,6 @@ class PyApp(Gtk.Window):
     notebook.append_page(vbox_matrix_generator)
     notebook.set_tab_label_text(vbox_matrix_generator, "Matrix Generator")
 
-
-    jacobi_box_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    valign_jacobi_box_outer1 = Gtk.Alignment.new(0.5,0.25, 0, 0)
-    valign_jacobi_box_outer2 = Gtk.Alignment.new(0.5,0.5, 0, 0)
-
     # Adding Jacobi solver
     vbox_jacobi = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     valign_jacobi = Gtk.Alignment.new(0.5,0.25, 0, 0)
@@ -66,7 +74,7 @@ class PyApp(Gtk.Window):
     vbox_jacobi.pack_start(valign_jacobi, True, True, 6)
 
     notebook.append_page(vbox_jacobi)
-    notebook.set_tab_label_text(vbox_jacobi, "Jacobi's Method")
+    notebook.set_tab_label_text(vbox_jacobi, "Jacobi")
 
     # Adding Gauss Jordan Tab
     vbox_gauss_jordan = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -76,7 +84,7 @@ class PyApp(Gtk.Window):
     vbox_gauss_jordan.pack_start(valign_gauss_jordan, True, True, 6)
 
     notebook.append_page(vbox_gauss_jordan)
-    notebook.set_tab_label_text(vbox_gauss_jordan, "Gauss Jordan's Method")
+    notebook.set_tab_label_text(vbox_gauss_jordan, "Gauss Jordan")
 
     # Adding Gaussian Elimination Tab
     vbox_gaussian_elimination = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -86,7 +94,7 @@ class PyApp(Gtk.Window):
     vbox_gaussian_elimination.pack_start(valign_gaussian_elimination, True, True, 6)
 
     notebook.append_page(vbox_gaussian_elimination)
-    notebook.set_tab_label_text(vbox_gaussian_elimination, "Gaussian Elimination's Method")
+    notebook.set_tab_label_text(vbox_gaussian_elimination, "Gaussian Elimination")
 
 
 
@@ -95,7 +103,7 @@ class PyApp(Gtk.Window):
 
 
 
-
+    '''
     hb = Gtk.HButtonBox()
 
     btn1 = Gtk.RadioButton(None,"Degree")
@@ -113,7 +121,7 @@ class PyApp(Gtk.Window):
     tv = Gtk.TextView()
     notebook.append_page(tv)
     notebook.set_tab_label_text(tv, "about")
-
+    '''
     self.add(notebook)
     self.connect("destroy", Gtk.main_quit)
     self.show_all()

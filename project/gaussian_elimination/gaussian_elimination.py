@@ -7,7 +7,7 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 13-April-2017
-    Date last modified: 03-May-2017
+    Date last modified: 20-May-2017
     Python Version: 3.6.0
 '''
 
@@ -26,9 +26,9 @@ class GaussianElimination():
 
     if idx < size and idy < size:
       if idx > i:
-        pivot = A[idx*size+i]/A[i*size+i]
+        mul = A[idx*size+i]/A[i*size+i]
         if idy >= i:
-          A[idx*size+idy]-= A[i*size+idy] * pivot
+          A[idx*size+idy] -= A[i*size+idy] * mul
       cuda.syncthreads()
 
   @cuda.jit
@@ -65,8 +65,6 @@ class GaussianElimination():
 
     gpu_A.copy_to_host(A, stream)
 
-    del stream, gpu_A
-
     b = A.reshape(rows, (columns+1))[:, columns]
     A = A.reshape(rows, (columns+1))[..., :-1]
 
@@ -74,9 +72,6 @@ class GaussianElimination():
     print(x)
     return x
 
-  def __exit__(self, exc_type, exc_val, exc_tb):
-    cuda.close()
-    self.close()
 
 def main(argv):
   if len(argv) != 3:
