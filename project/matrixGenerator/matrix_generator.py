@@ -111,9 +111,12 @@ class MatrixGenerator():
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             for j in range(0, i+1):
-                value = uniform(-size, size)
-                matrix[i][j] = value
-                matrix[j][i] = -value
+                if(i == j):
+                    matrix[i][j] = 0
+                else:
+                    value = uniform(-size, size)
+                    matrix[i][j] = value
+                    matrix[j][i] = -value
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
         vector_b = np.dot(matrix_A, vector_x)
@@ -156,7 +159,7 @@ def main(argv):
     fname2 = argv[3]
 
     matrix_generator = MatrixGenerator()
-    matrix, x, vector = matrix_generator.gen_antisymmetric_matrix(size)
+    matrix, x, vector = matrix_generator.gen_band_matrix(size, 8)
     print(matrix)
     print(x)
     print(vector)
