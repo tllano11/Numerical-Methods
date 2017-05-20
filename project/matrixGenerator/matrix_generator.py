@@ -42,7 +42,10 @@ class MatrixGenerator():
                 value = uniform(-size, size)
                 matrix[i][j] = value
                 matrix[j][i] = value
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_band_matrix(size, band):
@@ -52,7 +55,10 @@ class MatrixGenerator():
             for j in range(i - width, i + width + 1):
                 if 0 <= j < size:
                     matrix[i][j] = 1  # uniform(-size, size)
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_identity_matrix(size):
@@ -61,7 +67,10 @@ class MatrixGenerator():
             for j in range(0, size):
                 if i == j:
                     matrix[i][j] = 1
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_diagonal_matrix(size):
@@ -80,7 +89,10 @@ class MatrixGenerator():
             for j in range(0, size):
                 if i == j:
                     matrix[i][j] = value
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_scalar_matrix(size):
@@ -89,7 +101,10 @@ class MatrixGenerator():
             for j in range(0, size):
                 if i == j:
                     matrix[i][j] = uniform(-size, size)
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_antisymmetric_matrix(size):
@@ -99,7 +114,10 @@ class MatrixGenerator():
                 value = uniform(-size, size)
                 matrix[i][j] = value
                 matrix[j][i] = -value
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_lower_matrix(size):
@@ -109,7 +127,10 @@ class MatrixGenerator():
                 if i > j:
                     rand_num = uniform(-size, size)
                     matrix[i][j] = rand_num
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_upper_matrix(size):
@@ -119,7 +140,10 @@ class MatrixGenerator():
                 if i < j:
                     rand_num = uniform(-size, size)
                     matrix[i][j] = rand_num
-        return matrix
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
 
 def main(argv):
@@ -132,7 +156,10 @@ def main(argv):
     fname2 = argv[3]
 
     matrix_generator = MatrixGenerator()
-    matrix, x, vector = matrix_generator.gen_dominant(size)
+    matrix, x, vector = matrix_generator.gen_antisymmetric_matrix(size)
+    print(matrix)
+    print(x)
+    print(vector)
     # vector = matrix_generator.gen_vector(fname2, size)
 
 if __name__ == "__main__":
