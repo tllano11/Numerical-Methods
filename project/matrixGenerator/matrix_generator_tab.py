@@ -94,26 +94,26 @@ class MatrixGeneratorTab():
         length = int(self.length_entry.get_text())
 
         if self.selected_generator == 1:
-            matrix,x , b = MatrixGenerator.gen_dominant(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_dominant(length)
             print(matrix)
         elif self.selected_generator == 2:
-            matrix, b = MatrixGenerator.gen_symmetric_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_symmetric_matrix(length)
         elif self.selected_generator == 3:
-            matrix, b = MatrixGenerator.gen_band_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_band_matrix(length)
         elif self.selected_generator == 4:
-            matrix, b = MatrixGenerator.gen_identity_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_identity_matrix(length)
         elif self.selected_generator == 5:
-            matrix, b = MatrixGenerator.gen_diagonal_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_diagonal_matrix(length)
         elif self.selected_generator == 6:
-            matrix, b = MatrixGenerator.gen_scalar_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_scalar_matrix(length)
         elif self.selected_generator == 7:
-            matrix, b = MatrixGenerator.gen_antisymmetric_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_antisymmetric_matrix(length)
         elif self.selected_generator == 8:
-            matrix, b = MatrixGenerator.gen_lower_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_lower_matrix(length)
         elif self.selected_generator == 9:
-            matrix, b = MatrixGenerator.gen_upper_matrix(length)
+            matrix_A,vector_x , vector_b = MatrixGenerator.gen_upper_matrix(length)
 
         # Save file with numpy
-        np.savetxt(matrix_filename, matrix, fmt="%1.9f", delimiter=" ")
-        np.savetxt(vectorx_filename, x, fmt="%1.9f", delimiter=" ")
-        np.savetxt(vector_filename, b, fmt="%1.9f", delimiter=" ")
+        np.savetxt(matrix_filename, matrix_A, fmt="%1.9f", delimiter=" ")
+        np.savetxt(vectorx_filename, vector_x, fmt="%1.9f", delimiter=" ")
+        np.savetxt(vector_filename, vector_b, fmt="%1.9f", delimiter=" ")
