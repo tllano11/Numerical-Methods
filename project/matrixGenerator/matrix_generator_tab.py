@@ -88,28 +88,28 @@ class MatrixGeneratorTab():
         length = int(self.length_entry.get_text())
 
         if self.selected_generator == 1:
-            matrix = MatrixGenerator.gen_dominant(length)
+            matrix, b = MatrixGenerator.gen_dominant(length)
         elif self.selected_generator == 2:
-            matrix = MatrixGenerator.gen_symmetric_matrix(length)
+            matrix, b = MatrixGenerator.gen_symmetric_matrix(length)
         elif self.selected_generator == 3:
-            matrix = MatrixGenerator.gen_band_matrix(length)
+            matrix, b = MatrixGenerator.gen_band_matrix(length)
         elif self.selected_generator == 4:
-            matrix = MatrixGenerator.gen_identity_matrix(length)
+            matrix, b = MatrixGenerator.gen_identity_matrix(length)
         elif self.selected_generator == 5:
-            matrix = MatrixGenerator.gen_diagonal_matrix(length)
+            matrix, b = MatrixGenerator.gen_diagonal_matrix(length)
         elif self.selected_generator == 6:
-            matrix = MatrixGenerator.gen_scalar_matrix(length)
+            matrix, b = MatrixGenerator.gen_scalar_matrix(length)
         elif self.selected_generator == 7:
-            matrix = MatrixGenerator.gen_antisymmetric_matrix(length)
+            matrix, b = MatrixGenerator.gen_antisymmetric_matrix(length)
         elif self.selected_generator == 8:
-            matrix = MatrixGenerator.gen_lower_matrix(length)
+            matrix, b = MatrixGenerator.gen_lower_matrix(length)
         elif self.selected_generator == 9:
-            matrix = MatrixGenerator.gen_upper_matrix(length)
+            matrix, b = MatrixGenerator.gen_upper_matrix(length)
 
         # Save file with numpy
         np.savetxt(matrix_filename, matrix, fmt="%1.9f", delimiter=" ")
 
-        b = MatrixGenerator.gen_vector(length)
+        #b = MatrixGenerator.gen_vector(length)
 
         # Save file with numpy
         np.savetxt(vector_filename, b, fmt="%1.9f", delimiter=" ")
