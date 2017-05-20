@@ -1,3 +1,16 @@
+#!/usr/bin/env python3.6
+#-*- coding: utf-8 -*-
+
+'''
+    File name: gaussian_lu_decomposition.py
+    Authors: Tomás Felipe Llano Ríos,
+             Juan Diego Ocampo García,
+             Johan Sebastián Yepes Ríos
+    Date created: 20-May-2017
+    Date last modified: 20-May-2017
+    Python Version: 3.6.0
+'''
+
 from numba import cuda
 import numpy as np
 import sys
