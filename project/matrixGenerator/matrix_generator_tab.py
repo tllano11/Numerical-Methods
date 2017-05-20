@@ -95,7 +95,6 @@ class MatrixGeneratorTab():
 
         if self.selected_generator == 1:
             matrix_A,vector_x , vector_b = MatrixGenerator.gen_dominant(length)
-            print(matrix)
         elif self.selected_generator == 2:
             matrix_A,vector_x , vector_b = MatrixGenerator.gen_symmetric_matrix(length)
         elif self.selected_generator == 3:
