@@ -16,7 +16,7 @@ class MatrixGeneratorTab():
         self.matrix_filename_entry = None
         self.vector_filename_entry = None
         self.length_entry = None
-        self.selected_generator = None
+        self.selected_generator = 1
 
     def get_tab(self):
         gen_matrix_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -89,6 +89,7 @@ class MatrixGeneratorTab():
 
         if self.selected_generator == 1:
             matrix, b = MatrixGenerator.gen_dominant(length)
+            print(matrix)
         elif self.selected_generator == 2:
             matrix, b = MatrixGenerator.gen_symmetric_matrix(length)
         elif self.selected_generator == 3:

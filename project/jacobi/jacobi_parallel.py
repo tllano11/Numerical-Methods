@@ -47,9 +47,9 @@ class JacobiParallel():
     while error > tol and count < niter:
       if count % 2:
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length, rel)
-        self.get_error[bpg, tpb](gpu_x_current, gpu_x_next, gpu_x_error, length, rel)
+        self.get_error[bpg, tpb](gpu_x_current, gpu_x_next, gpu_x_error, length)
       else:
-        self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length)
+        self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length, rel)
         self.get_error[bpg, tpb](gpu_x_next, gpu_x_current, gpu_x_error, length)
 
       x_error = gpu_x_error.copy_to_host()

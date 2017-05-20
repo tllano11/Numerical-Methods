@@ -44,7 +44,7 @@ class JacobiTab():
     self.error_entry = Gtk.Entry()
     main_box.pack_start(self.error_entry, True, True, 10)
 
-    rel_lbl = Gtk.Label("Tolerance")
+    rel_lbl = Gtk.Label("Relaxation (default = 1)")
     main_box.pack_start(rel_lbl, True, True, 10)
     self.rel_entry = Gtk.Entry()
     main_box.pack_start(self.rel_entry, True, True, 10)

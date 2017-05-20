@@ -64,12 +64,19 @@ class GaussianElimination():
         self.normalize[(bpg, bpg), (tpb, tpb)](gpu_A, rows)
 
     gpu_A.copy_to_host(A, stream)
+
+    del stream, gpu_A
+
     b = A.reshape(rows, (columns+1))[:, columns]
     A = A.reshape(rows, (columns+1))[..., :-1]
 
     x = substitution.back_substitution(A, b, rows)
     print(x)
     return x
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    cuda.close()
+    self.close()
 
 def main(argv):
   if len(argv) != 3:
