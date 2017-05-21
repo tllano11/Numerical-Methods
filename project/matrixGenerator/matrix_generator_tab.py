@@ -11,7 +11,7 @@ import numpy as np
 from matrix_generator import MatrixGenerator
 
 
-class MatrixGeneratorTab():
+class MatrixGeneratorTab:
     def __init__(self):
         self.matrix_filename_entry = None
         self.vector_filename_entry = None

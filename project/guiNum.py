@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.6
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 '''
     File name: guiNum.py
@@ -12,13 +12,16 @@
 '''
 
 import sys
+
 sys.path.append("/usr/lib/python3.6/site-packages/")
 sys.path.append("./sparseMatrices")
 sys.path.append("./matrixGenerator")
 sys.path.append("./jacobi")
 sys.path.append("./gauss_jordan")
 sys.path.append("./gaussian_elimination")
+sys.path.append("./lu_decomposition")
 import gi
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sparse_matrix_tab import SparseMatrixTab
@@ -26,84 +29,88 @@ from matrix_generator_tab import MatrixGeneratorTab
 from jacobi_tab import JacobiTab
 from gauss_jordan_tab import GaussJordanTab
 from gaussian_elimination_tab import GaussianEliminationTab
+from lu_decomposition_tab import LUDecompositionTab
+
 
 class PyApp(Gtk.Window):
+    def __init__(self):
+        super(PyApp, self).__init__()
 
-  def __init__(self):
-    super(PyApp, self).__init__()
+        # Tabs of the window.
+        self.sparse_matrix_tab = SparseMatrixTab()
+        self.matrix_generator_tab = MatrixGeneratorTab()
+        self.jacobi_tab = JacobiTab()
+        self.gauss_jordan_tab = GaussJordanTab()
+        self.gaussian_elimination_tab = GaussianEliminationTab()
+        self.lu_decomposition_tab = LUDecompositionTab()
 
-    # Tabs of the window.
-    self.sparse_matrix_tab = SparseMatrixTab()
-    self.matrix_generator_tab = MatrixGeneratorTab()
-    self.jacobi_tab = JacobiTab()
-    self.gauss_jordan_tab = GaussJordanTab()
-    self.gaussian_elimination_tab = GaussianEliminationTab()
+        # Elements of the current window.
+        self.set_title("Methods")
+        self.set_default_size(500, 400)
 
-    # Elements of the current window.
-    self.set_title("Methods")
-    self.set_default_size(500, 400)
+        # Creates a notebook to add tabs there.
+        notebook = Gtk.Notebook()
+        notebook.set_tab_pos(Gtk.PositionType.TOP)
 
-    # Creates a notebook to add tabs there.
-    notebook = Gtk.Notebook()
-    notebook.set_tab_pos(Gtk.PositionType.TOP)
+        # Adding sparse matrix
+        vbox_sparse_matrix = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        valign_sparse_matrix = Gtk.Alignment.new(0.5, 0.25, 0, 0)
 
-    # Adding sparse matrix
-    vbox_sparse_matrix = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    valign_sparse_matrix = Gtk.Alignment.new(0.5,0.25, 0, 0)
+        valign_sparse_matrix.add(self.sparse_matrix_tab.get_sparse_tab())
+        vbox_sparse_matrix.pack_start(valign_sparse_matrix, True, True, 6)
+        notebook.append_page(vbox_sparse_matrix)
+        notebook.set_tab_label_text(vbox_sparse_matrix, "Sparse matrix")
 
-    valign_sparse_matrix.add(self.sparse_matrix_tab.get_sparse_tab())
-    vbox_sparse_matrix.pack_start(valign_sparse_matrix, True, True, 6)
-    notebook.append_page(vbox_sparse_matrix)
-    notebook.set_tab_label_text(vbox_sparse_matrix, "Sparse matrix")
+        # Adding Matrix generator
+        vbox_matrix_generator = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        valign_matrix_generator = Gtk.Alignment.new(0.5, 0.25, 0, 0)
 
+        valign_matrix_generator.add(self.matrix_generator_tab.get_tab())
+        vbox_matrix_generator.pack_start(valign_matrix_generator, True, True, 6)
+        notebook.append_page(vbox_matrix_generator)
+        notebook.set_tab_label_text(vbox_matrix_generator, "Matrix Generator")
 
-    # Adding Matrix generator
-    vbox_matrix_generator = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    valign_matrix_generator = Gtk.Alignment.new(0.5,0.25, 0, 0)
+        # Adding Jacobi solver
+        vbox_jacobi = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        valign_jacobi = Gtk.Alignment.new(0.5, 0.25, 0, 0)
 
-    valign_matrix_generator.add(self.matrix_generator_tab.get_tab())
-    vbox_matrix_generator.pack_start(valign_matrix_generator, True, True, 6)
-    notebook.append_page(vbox_matrix_generator)
-    notebook.set_tab_label_text(vbox_matrix_generator, "Matrix Generator")
+        valign_jacobi.add(self.jacobi_tab.get_tab())
+        vbox_jacobi.pack_start(valign_jacobi, True, True, 6)
 
-    # Adding Jacobi solver
-    vbox_jacobi = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    valign_jacobi = Gtk.Alignment.new(0.5,0.25, 0, 0)
+        notebook.append_page(vbox_jacobi)
+        notebook.set_tab_label_text(vbox_jacobi, "Jacobi")
 
-    valign_jacobi.add(self.jacobi_tab.get_tab())
-    vbox_jacobi.pack_start(valign_jacobi, True, True, 6)
+        # Adding Gauss Jordan Tab
+        vbox_gauss_jordan = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        valign_gauss_jordan = Gtk.Alignment.new(0.5, 0.25, 0, 0)
 
-    notebook.append_page(vbox_jacobi)
-    notebook.set_tab_label_text(vbox_jacobi, "Jacobi")
+        valign_gauss_jordan.add(self.gauss_jordan_tab.get_tab())
+        vbox_gauss_jordan.pack_start(valign_gauss_jordan, True, True, 6)
 
-    # Adding Gauss Jordan Tab
-    vbox_gauss_jordan = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    valign_gauss_jordan = Gtk.Alignment.new(0.5,0.25, 0, 0)
+        notebook.append_page(vbox_gauss_jordan)
+        notebook.set_tab_label_text(vbox_gauss_jordan, "Gauss Jordan")
 
-    valign_gauss_jordan.add(self.gauss_jordan_tab.get_tab())
-    vbox_gauss_jordan.pack_start(valign_gauss_jordan, True, True, 6)
+        # Adding Gaussian Elimination Tab
+        vbox_gaussian_elimination = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        valign_gaussian_elimination = Gtk.Alignment.new(0.5, 0.25, 0, 0)
 
-    notebook.append_page(vbox_gauss_jordan)
-    notebook.set_tab_label_text(vbox_gauss_jordan, "Gauss Jordan")
+        valign_gaussian_elimination.add(self.gaussian_elimination_tab.get_tab())
+        vbox_gaussian_elimination.pack_start(valign_gaussian_elimination, True, True, 6)
 
-    # Adding Gaussian Elimination Tab
-    vbox_gaussian_elimination = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    valign_gaussian_elimination = Gtk.Alignment.new(0.5,0.25, 0, 0)
+        notebook.append_page(vbox_gaussian_elimination)
+        notebook.set_tab_label_text(vbox_gaussian_elimination, "Gaussian Elimination")
 
-    valign_gaussian_elimination.add(self.gaussian_elimination_tab.get_tab())
-    vbox_gaussian_elimination.pack_start(valign_gaussian_elimination, True, True, 6)
+        # Adding LU Decomposition Tab
+        vbox_lu_decomposition = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        valign_lu_decomposition = Gtk.Alignment.new(0.5, 0.25, 0, 0)
 
-    notebook.append_page(vbox_gaussian_elimination)
-    notebook.set_tab_label_text(vbox_gaussian_elimination, "Gaussian Elimination")
+        valign_lu_decomposition.add(self.lu_decomposition_tab.get_tab())
+        vbox_lu_decomposition.pack_start(valign_lu_decomposition, True, True, 6)
 
+        notebook.append_page(vbox_lu_decomposition)
+        notebook.set_tab_label_text(vbox_lu_decomposition, "LU Decomposition")
 
-
-
-
-
-
-
-    '''
+        '''
     hb = Gtk.HButtonBox()
 
     btn1 = Gtk.RadioButton(None,"Degree")
@@ -122,13 +129,9 @@ class PyApp(Gtk.Window):
     notebook.append_page(tv)
     notebook.set_tab_label_text(tv, "about")
     '''
-    self.add(notebook)
-    self.connect("destroy", Gtk.main_quit)
-    self.show_all()
-
-  def create_sparse_matrix(self, widget, data=None):
-    filename = self.filename_entry.get_text()
-    self.sparseMatrix.create_sparse_matrix(filename)
+        self.add(notebook)
+        self.connect("destroy", Gtk.main_quit)
+        self.show_all()
 
 if __name__ == '__main__':
     PyApp()

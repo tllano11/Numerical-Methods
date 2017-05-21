@@ -8,7 +8,8 @@ from jacobi_parallel import JacobiParallel
 from jacobi_serial import JacobiSerial
 import numpy as np
 
-class JacobiTab():
+
+class JacobiTab:
   def __init__(self):
     self.jacobi_parallel = JacobiParallel()
     self.jacobi_serial = JacobiSerial()

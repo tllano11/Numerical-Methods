@@ -7,7 +7,8 @@ import csv
 import numpy as np
 from gaussian_elimination import GaussianElimination
 
-class GaussianEliminationTab():
+
+class GaussianEliminationTab:
   def __init__(self):
     self.gaussian_elimination = GaussianElimination()
     self.A_matrix = None

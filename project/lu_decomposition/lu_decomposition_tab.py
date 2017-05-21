@@ -7,14 +7,16 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import csv
 import numpy as np
-from gauss_jordan import GaussJordan
+from gaussian_lu_decomposition import GuassianLUDecomposition
 
 
-class GaussJordanTab:
+class LUDecompositionTab:
     def __init__(self):
-        self.gauss_jordan = GaussJordan()
+        self.gaussian_lu_decomposition = GuassianLUDecomposition()
         self.A_matrix = None
         self.b_vector = None
+        self.L_matrix = None
+        self.U_matrix = None
 
     def get_tab(self):
         box_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -29,6 +31,10 @@ class GaussJordanTab:
         matrix_button = Gtk.Button("Load A matrix")
         matrix_button.connect("clicked", self.load_matrix, None)
         main_box.pack_start(matrix_button, True, True, 10)
+
+        lu_button = Gtk.Button("Run LU Decomposition")
+        lu_button.connect("clicked", self.lu_decomposition, None)
+        main_box.pack_start(lu_button, True, True, 10)
 
         vector_button = Gtk.Button("Load b vector")
         vector_button.connect("clicked", self.load_vector, None)
@@ -45,13 +51,17 @@ class GaussJordanTab:
         buttons_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         row.add(buttons_box)
 
-        parallel_button = Gtk.Button("Run Parallel Gauss Jordan")
-        parallel_button.connect("clicked", self.gaussParallel, None)
-        buttons_box.pack_start(parallel_button, True, True, 10)
+        solve_button = Gtk.Button("Solve System")
+        solve_button.connect("clicked", self.substitution, None)
+        buttons_box.pack_start(solve_button, True, True, 10)
 
-        serial_button = Gtk.Button("Run Serial Gauss Jordan")
-        serial_button.connect("clicked", self.gaussSerial, None)
-        buttons_box.pack_start(serial_button, True, True, 10)
+        determinant_button = Gtk.Button("Calculate Determinant")
+        determinant_button.connect("clicked", self.get_determinant, None)
+        buttons_box.pack_start(determinant_button, True, True, 10)
+        
+        inverse_button = Gtk.Button("Calculate Inverse Matrix")
+        inverse_button.connect("clicked", self.get_inverse, None)
+        buttons_box.pack_start(inverse_button, True, True, 10)
 
         list_box.add(row)
 
@@ -89,11 +99,14 @@ class GaussJordanTab:
 
         vector_chooser.destroy()
 
-    def gaussParallel(self, widget, data=None):
-        filename = self.out_entry.get_text()
-        x_vector = self.gauss_jordan.start(self.A_matrix, self.b_vector)
-        if x_vector is not None and filename != "":
-            np.savetxt(filename, x_vector, delimiter=" ")
+    def lu_decomposition(self, widget, data=None):
+        pass
 
-    def gaussSerial(self):
+    def substitution(self, widget, data=None):
+        pass
+
+    def get_determinant(self, widget, data=None):
+        pass
+
+    def get_inverse(self, widget, data=None):
         pass
