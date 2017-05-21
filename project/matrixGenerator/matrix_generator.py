@@ -5,7 +5,6 @@ from random import randrange, random, uniform
 
 class MatrixGenerator:
 
-    # gens vector b
     @staticmethod
     def gen_vector(size):
         solution = []
@@ -14,7 +13,6 @@ class MatrixGenerator:
             solution.append(rand_num)
         return np.array(solution)
 
-    # gens matrix A
     @staticmethod
     def gen_dominant(size):
         matrix = []
@@ -49,13 +47,14 @@ class MatrixGenerator:
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
-    def gen_band_matrix(size, band):
+    def gen_band_matrix(size, k1, k2):
         matrix = np.zeros(shape=(size, size))
-        width = int((band - 1)/2)
         for i in range(0, size):
-            for j in range(i - width, i + width + 1):
-                if 0 <= j < size:
-                    matrix[i][j] = 1  # uniform(-size, size)
+            for j in range(0, size):
+                if j <= i - k1 or j >= i + k2:
+                    matrix[i][j] = 0# uniform(-size, size)
+                else:
+                    matrix[i][j] = 1
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
         vector_b = np.dot(matrix_A, vector_x)
@@ -80,7 +79,10 @@ class MatrixGenerator:
             for j in range(0, size):
                 if i == j:
                     matrix[i][j] = uniform(-size, size)
-        return matrix
+                vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
 
     @staticmethod
     def gen_scalar_matrix(size):
@@ -90,18 +92,6 @@ class MatrixGenerator:
             for j in range(0, size):
                 if i == j:
                     matrix[i][j] = value
-        vector_x = MatrixGenerator.gen_vector(size)
-        matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
-        return (matrix_A, vector_x, vector_b)
-
-    @staticmethod
-    def gen_scalar_matrix(size):
-        matrix = np.zeros(shape=(size, size))
-        for i in range(0, size):
-            for j in range(0, size):
-                if i == j:
-                    matrix[i][j] = uniform(-size, size)
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
         vector_b = np.dot(matrix_A, vector_x)
@@ -160,11 +150,10 @@ def main(argv):
     fname2 = argv[3]
 
     matrix_generator = MatrixGenerator()
-    matrix, x, vector = matrix_generator.gen_band_matrix(size, 8)
+    matrix, x, vector = matrix_generator.gen_band_matrix1(size, 3, 4)
     print(matrix)
     print(x)
     print(vector)
-    # vector = matrix_generator.gen_vector(fname2, size)
 
 if __name__ == "__main__":
     main(sys.argv)
