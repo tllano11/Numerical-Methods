@@ -1,8 +1,10 @@
-from pprint import pprint
-from numpy import array, zeros, diag, diagflat, dot, ones, random, empty_like, copy, zeros_like
-import time, csv, sys
+import csv
+import sys
+import time
+from numpy import array, diag, diagflat, dot, zeros_like
 
-class JacobiSerial():
+
+class JacobiSerial:
 
   def jacobi(self, A_matrix,b_vector,niter, tol=0):
     #Solves the equation Ax=b via the Jacobi iterative method.

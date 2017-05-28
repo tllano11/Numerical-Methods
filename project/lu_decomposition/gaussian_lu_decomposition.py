@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 #-*- coding: utf-8 -*-
 
-'''
+"""
     File name: gaussian_lu_decomposition.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
@@ -9,59 +9,60 @@
     Date created: 20-May-2017
     Date last modified: 20-May-2017
     Python Version: 3.6.0
-'''
+"""
 
 from numba import cuda
 import numpy as np
 import sys
 import csv
 
-@cuda.jit
-def gaussian_lu_decomposition(A, L, size, i):
-    idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
-    idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
-    index = idx*size+idy
 
-    if idx < size and idy < size:
-        if idx > i:
-            mul = A[idx*size+i]/A[i*size+i]
-            if idy >= i:
-                A[index] -= A[i*size+idy] * mul
-                if idy == i:
-                    L[index] = mul
-        elif idx == idy:
-            L[index] = 1
-        cuda.syncthreads()
+class GuassianLUDecomposition:
+    @cuda.jit
+    def gaussian_lu_decomposition(A, L, size, i):
+        idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
+        idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
+        index = idx*size+idy
 
+        if idx < size and idy < size:
+            if idx > i:
+                mul = A[idx*size+i]/A[i*size+i]
+                if idy >= i:
+                    A[index] -= A[i*size+idy] * mul
+                    if idy == i:
+                        L[index] = mul
+            elif idx == idy:
+                L[index] = 1
+            cuda.syncthreads()
 
-def start(A_matrix):
-    A = A_matrix.flatten()
-    L = np.zeros_like(A)
+    def start(self, A_matrix):
+        A = A_matrix.flatten()
+        L = np.zeros_like(A)
 
-    rows = len(A_matrix)
-    columns = len(A_matrix)
-    tpb = 32
-    matrix_size = rows * columns
+        rows = len(A_matrix)
+        columns = len(A_matrix)
+        tpb = 32
+        matrix_size = rows * columns
 
-    with cuda.pinned(A, L):
-      stream = cuda.stream()
-      gpu_A = cuda.to_device(A, stream=stream)
-      gpu_L = cuda.to_device(L, stream=stream)
-      bpg = matrix_size + (tpb - 1) // tpb
+        with cuda.pinned(A, L):
+          stream = cuda.stream()
+          gpu_A = cuda.to_device(A, stream=stream)
+          gpu_L = cuda.to_device(L, stream=stream)
+          bpg = matrix_size + (tpb - 1) // tpb
 
-      for i in range(0, rows):
-        gaussian_lu_decomposition[(bpg, bpg), (tpb, tpb)](gpu_A, gpu_L, rows, i)
+          for i in range(0, rows):
+            self.gaussian_lu_decomposition[(bpg, bpg), (tpb, tpb)](gpu_A, gpu_L, rows, i)
 
-    gpu_A.copy_to_host(A, stream)
-    gpu_L.copy_to_host(L, stream)
+        gpu_A.copy_to_host(A, stream)
+        gpu_L.copy_to_host(L, stream)
 
-    U = A.reshape(rows, columns)
-    L = L.reshape(rows, columns)
-    print(L)
-    print(U)
-    print(np.matmul(L,U))
-    del stream
-    # return L,U
+        U = A.reshape(rows, columns)
+        L = L.reshape(rows, columns)
+        print(L)
+        print(U)
+        print(np.matmul(L,U))
+        del stream
+        # return L,U
 
 if __name__ == "__main__":
     with open(sys.argv[1]) as csvfile:
@@ -69,4 +70,5 @@ if __name__ == "__main__":
         matrix = list(reader)
         A_matrix = np.array(matrix).astype("float64")
 
-    start(A_matrix)
+    decomposition = GuassianLUDecomposition()
+    decomposition.start(A_matrix)

@@ -2,7 +2,8 @@ import sys
 import numpy as np
 from random import randrange, random, uniform
 
-class MatrixGenerator():
+
+class MatrixGenerator:
 
     @staticmethod
     def gen_vector(size):
@@ -30,7 +31,7 @@ class MatrixGenerator():
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
         vector_b = np.dot(matrix_A, vector_x)
-        return (matrix_A, vector_x, vector_b)
+        return matrix_A, vector_x, vector_b
 
     @staticmethod
     def gen_symmetric_matrix(size):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 #-*- coding: utf-8 -*-
 
-'''
+"""
     File name: substitution.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
@@ -9,7 +9,8 @@
     Date created: 03-May-2017
     Date last modified: 03-May-2017
     Python Version: 3.6.0
-'''
+"""
+
 
 def forward_substitution(A, b, n):
   x = []
@@ -20,6 +21,7 @@ def forward_substitution(A, b, n):
         accum += A[i][j]*x[j]
       x.append((b[i] - accum)/A[i][i])
   return x
+
 
 def back_substitution(A, b, n):
   x = [0] * n
