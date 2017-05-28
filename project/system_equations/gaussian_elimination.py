@@ -7,7 +7,6 @@ class GaussianElimination():
     n = len(A)
     for k in range(0, n - 1):
       A, b = self.partial_pivot(A, b, k)
-      print(A)
       for i in range(k + 1,n): 
         multiplier = A[i][k]/A[k][k]
         for j in range(k,n):
@@ -26,14 +25,14 @@ class GaussianElimination():
         x[i] = ((b[i] - accum)/A[i][i])
     return x
 
-  def forward_substitution(self, A, b):
-    n = len(A)
+  def forward_substitution(self, U, b):
+    n = len(U)
     x = [0]*n
     for i in range(0, n):
-      if A[i][i] != 0:
+      if U[i][i] != 0:
         accum = 0
         for j in range(0, i-1):
-          accum += A[i][j]*x[j]
+          accum += U[i][j]*x[j]
         x[i] = (b[j] - accum)/ A[i][i]
     return x
 
@@ -67,9 +66,10 @@ if __name__ == '__main__':
   A =  np.array([[4, 3, -2, -7], [3, 12, 8, -3], [2, 3, -9, 2], [1, -2, -5, 6]], dtype="float")
   b = np.array([20, 18, 31, 12], dtype="float")
   gauss = GaussianElimination()
-  U, L, b = gauss.LU_decomposition(A, b)
-  print(U)
-  print(L)
+  U, b = gauss.elimination(A, b)
+  x = gauss.back_substitution(U, b)
+  print(x)
+  #print(U)
 
 
   '''
