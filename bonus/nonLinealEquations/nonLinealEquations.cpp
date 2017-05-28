@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iomanip>
 #include <cmath>
+#include "nonLinealEquations.h"
 
 using namespace std;
 
@@ -280,7 +281,7 @@ void secant(){
 	cin >> x1;
 	cout << "Enter tolerance" << endl;
 	cin >> tol;
-he	cout << "Enter maximum number of iterations" << endl;
+	cout << "Enter maximum number of iterations" << endl;
 	cin >> niter;
 	fx0 = f(x0);
 	fx1 = f(x1);
@@ -374,50 +375,4 @@ void multipleRoots(){
 			cout << "Sorry, it failed" << endl;
 		}
 	}
-}
-
-
-int main(){
-	while(cin){
-		int methodNumber;
-		cout << "Choose a method: \n"
-			  << "1 ---- Incremental searches \n"
-			  << "2 ---- Bisection \n"
-			  << "3 ---- False Rule \n"
-			  << "4 ---- Fixed Point \n"
-			  << "5 ---- Newton \n"
-			  << "6 ---- Secant \n"
-			  << "7 ---- Multiple roots \n"
-			  << "8 ---- Exit"
-			  << endl;
-		cin >> methodNumber;
-		switch(methodNumber){
-			case 1:
-				incrementalSearches();
-				break;
-			case 2:
-				bisection();
-				break;
-			case 3:
-				falseRule();
-				break;
-			case 4:
-				fixedPoint();
-				break;
-			case 5:
-				newton();
-				break;
-			case 6:
-				secant();
-				break;
-			case 7:
-				multipleRoots();
-				break;
-			case 8:
-				return 0;
-			default:
-				cout << "Sorry, wrong number" << endl;
-		}	
-	}
-	return 0;
 }

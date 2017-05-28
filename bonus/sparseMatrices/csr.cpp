@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <iomanip>
+#include "csr.h"
 
 using namespace std;
 int matrixLength;
@@ -22,16 +23,7 @@ vector<int> columns;
 vector<int> pointerBR;
 vector<int> pointerER;
 
-void printMatrix(double **matrix){
-   for(int i = 0; i < matrixLength; i++){
-      for(int j = 0; j < matrixLength; j++){
-         cout << setw(10) << matrix[i][j] << " | ";
-      }
-      cout << endl;
-   }
-}
-
-void printVector(vector<double> vec){
+void printVectorCSR(vector<double> vec){
    for(int i = 0; i < matrixLength; i++){
       cout << setw(10) << vec[i] << endl;
    }
@@ -47,7 +39,7 @@ vector<double> multiply(){
       r.push_back(val);
    }
    cout << "r" << endl;
-   printVector(r);
+   printVectorCSR(r);
    for (int i = 0; i < matrixLength; i++) {
       for (int j = pointerBR[i]; j < pointerER[i]; j++) {
          auxR[i] += (valuesR[j] * r[i]);
@@ -101,34 +93,13 @@ void createFormatMatrix(){
    for(double n: columns){
       cout << n << " ";
    }
-   cout << endl;
-   cout << "pointerBR" << endl;
-   for(double n: pointerBR){
-      cout << n << " ";
-   }
-   cout << endl;
-   cout << "PointerER" << endl;
-   for(double n: pointerER){
-      cout << n << " ";
-   }
-   cout << endl;
-   cout << "Matrix" << endl;
-   printMatrix(matrix);
 }
 
-int main(int argc, char** argv) {
-   if(argc != 4){
-      cerr << "Error: Invalid arguments. " << endl;
-      exit(1);
-   }
-   
-   //Get the params given by the user.
-   matrixLength = atoi(argv[1]); // the length of the matrix
-   matrixDensity = atof(argv[2]); // portion of the matrix that will be different from zero (between 0 and 1)
+void csrInit(){
+   cout << "Enter matrix length" << endl;
+   cin >> matrixLength;
+   cout << "Enter matrix density" << endl;
+   cin >> matrixDensity;
 
    createFormatMatrix();
-   vector<double> result = multiply();
-   cout << "Result vector" << endl;
-   printVector(result);
-
 }

@@ -5,6 +5,7 @@ import sys
 from pprint import pprint
 
 class SparseMatrix():
+
 	def create_sparse_matrix(self, filename, matrix_length, density):
 		val = 0 
 		pos = 0 
