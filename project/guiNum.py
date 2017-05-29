@@ -78,8 +78,6 @@ class PyApp(Gtk.Window):
         photo = Gtk.Image.new_from_pixbuf(pixbuf)
         vbox_right.pack_start(photo, True, True, 0)
 
-
-
         notebook.append_page(hbox)
         notebook.set_tab_label_text(hbox, "About us")
 
@@ -142,25 +140,9 @@ class PyApp(Gtk.Window):
         notebook.append_page(vbox_lu_decomposition)
         notebook.set_tab_label_text(vbox_lu_decomposition, "LU Decomposition")
 
-        '''
-    hb = Gtk.HButtonBox()
+        # Operations by blocks
 
-    btn1 = Gtk.RadioButton(None,"Degree")
-    hb.add(btn1)
 
-    btn2 = Gtk.RadioButton(btn1,"P.G.")
-    hb.add(btn2)
-
-    btn3 = Gtk.RadioButton(btn1,"Doctorate")
-    hb.add(btn3)
-
-    notebook.append_page(hb)
-    notebook.set_tab_label_text(hb, "Qualification")
-
-    tv = Gtk.TextView()
-    notebook.append_page(tv)
-    notebook.set_tab_label_text(tv, "about")
-    '''
         self.add(notebook)
         self.connect("destroy", Gtk.main_quit)
         self.show_all()
