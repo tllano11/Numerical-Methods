@@ -7,12 +7,20 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 03-May-2017
-    Date last modified: 03-May-2017
+    Date last modified: 29-May-2017
     Python Version: 3.6.0
 """
 
 
 def forward_substitution(A, b, n):
+  """Returns the solution for a SLAE represented
+  by a lower triangular coefficient matrix.
+
+  Keyword arguments:
+  A -- Lower triangular coefficient matrix.
+  b -- Linearly independent vector.
+  n -- Size of matrix A.
+  """
   x = []
   for i in range(0, n):
     if A[i][i] != 0:
@@ -24,6 +32,14 @@ def forward_substitution(A, b, n):
 
 
 def back_substitution(A, b, n):
+  """Returns the solution for a SLAE represented
+  by an upper triangular coefficient matrix.
+
+  Keyword arguments:
+  A -- Upper triangular coefficient matrix.
+  b -- Linearly independent vector.
+  n -- Size of matrix A.
+  """
   x = [0] * n
   for i in range(n-1, -1, -1):
     if A[i][i] != 0:
