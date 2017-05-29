@@ -21,11 +21,11 @@ class SparseMatrix():
     def create_sparse_matrix(self, filename, matrix_length, density):
         """Creates a sparse matrix with CSR format (four arrays)
 
-    keyword arguments:
-    filename -- The file name where will be stored the final result.
-    matrix_length -- The length of the matrix.
-    density -- percentage of non-zeros elements
-    """
+        keyword arguments:
+        filename -- The file name where will be stored the final result.
+        matrix_length -- The length of the matrix.
+        density -- percentage of non-zeros elements
+        """
         pos = 0
         aux_pos = 0
         matrix = []
@@ -62,24 +62,11 @@ class SparseMatrix():
     def load_sparse_matrix(self, filename):
         """Takes a file and get the values array of it.
 
-    keyword arguments:
-    filename -- The file name where arrayes are stored.
-    """
+        keyword arguments:
+        filename -- The file name where arrayes are stored.
+        """
         with open(filename) as data_file:
             data = json.load(data_file)
         values = data["values"]
         print("JSON")
         print(values)
-
-
-def main(argv):
-    if len(argv) != 2:
-        print("Unsage: ./program filename")
-        sys.exit()
-    sparseMatrix = SparseMatrix()
-    sparseMatrix.create_sparse_matrix(argv[1], 20, 0.1)
-    sparseMatrix.load_sparse_matrix(argv[1])
-
-
-if __name__ == '__main__':
-    main(sys.argv)

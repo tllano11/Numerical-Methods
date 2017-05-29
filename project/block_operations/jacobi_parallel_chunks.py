@@ -41,14 +41,11 @@ class JacobiParallel:
         rows = len(b)
         cols = len(A) // rows
         x_next = np.zeros(rows, dtype=np.float64)
-        # x_error = np.zeros(length, dtype=np.float64)
         gpu_A = cuda.to_device(A)
         gpu_b = cuda.to_device(b)
         gpu_x_current = cuda.to_device(x_current)
         gpu_x_next = cuda.to_device(x_next)
-        # gpu_x_error = cuda.to_device(x_error)
         count = 0
-        # error = tol + 1
 
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, \
                               gpu_x_next, rows, cols, first_row_block, rel)

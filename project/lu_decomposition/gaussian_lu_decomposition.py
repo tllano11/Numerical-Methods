@@ -7,7 +7,7 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 20-May-2017
-    Date last modified: 20-May-2017
+    Date last modified: 29-May-2017
     Python Version: 3.6.0
 """
 
@@ -63,17 +63,35 @@ class GuassianLUDecomposition:
         return L, U
 
     def get_solution(self, L, U, b):
+        """Solves a LU system.
+
+        keyword arguments:
+        L -- The lower triangular matrix of the system.
+        U -- The upper triangular matrix of the system.
+        b -- Linearly independent vector.
+        """
         z = substitution.forward_substitution(L, b)
         x = substitution.back_substitution(U, z)
         return x
 
     def gen_identity_matrix(self, size):
+        """Creates an identity matrix given a size.
+
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             matrix[i][i] = 1
         return matrix
 
     def get_inverse(self, L, U):
+        """Returns the inverse of a given matrix by means of LU decomposition.
+
+        keyword arguments:
+        L -- The lower triangular matrix of the system.
+        U -- The upper triangular matrix of the system.
+        """
         deter = self.get_determinant(L, U)
         if deter == 0:
             return None
@@ -93,6 +111,12 @@ class GuassianLUDecomposition:
         return(AI)
 
     def get_determinant(self, L, U):
+        """Returns the determinant of a given matrix by means of LU decomposition.
+
+        keyword arguments:
+        L -- The lower triangular matrix of the system.
+        U -- The upper triangular matrix of the system.
+        """
         l_product = 1
         u_product = 1
         for i in range(0, len(L)):

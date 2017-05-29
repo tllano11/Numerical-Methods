@@ -22,12 +22,12 @@ class GaussianElimination:
     def gaussian_elimination(A, size, i):
         """ Performs Gaussian elimination for each row of a column.
 
-    Key arguments:
-    A -- Augmented matrix representing a SLAE.
-    size -- Size of coefficiente matrix.
-    i -- Integer representing the current column in which all threads
-    are performing row operations.
-    """
+        Key arguments:
+        A -- Augmented matrix representing a SLAE.
+        size -- Size of coefficiente matrix.
+        i -- Integer representing the current column in which all threads
+        are performing row operations.
+        """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
         size += 1
@@ -58,10 +58,10 @@ class GaussianElimination:
     def start(self, A_matrix, b_matrix):
         """Launches parallel Gaussian elimination for a SLAE and returns its answer.
 
-    Keyword arguments:
-    A_matrix -- Coefficient matrix of a SLAE.
-    b_matrix -- Linearly independent vector of a SLAE.
-    """
+        Keyword arguments:
+        A_matrix -- Coefficient matrix of a SLAE.
+        b_matrix -- Linearly independent vector of a SLAE.
+        """
         b = b_matrix.reshape(len(b_matrix), 1)
         A = np.hstack((A_matrix, b))
         A = A.flatten()

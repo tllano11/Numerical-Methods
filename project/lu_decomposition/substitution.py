@@ -50,17 +50,3 @@ def back_substitution(U, z):
                 accum += U[i][j] * x[j]
             x[i] = (z[i] - accum) / U[i][i]
     return x
-
-
-def main():
-    A = [[3, 0, 0, 0], [-1, 1, 0, 0], [3, -2, -1, 0], [1, -2, 6, 2]]
-    b = [5, 6, 4, 2]
-    print("forward subs: ", forward_substitution(A, b))
-
-    A = [[4, -1, 2, 3], [0, -2, 7, -4], [0, 0, 6, 5], [0, 0, 0, 3]]
-    b = [20, -7, 4, 6]
-    print("back subs: ", back_substitution(A, b))
-
-
-if __name__ == "__main__":
-    main()
