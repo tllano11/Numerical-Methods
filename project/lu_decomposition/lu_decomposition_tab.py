@@ -17,6 +17,8 @@ class LUDecompositionTab:
         self.b_vector = None
         self.L_matrix = None
         self.U_matrix = None
+        self.inverse = None
+        self.x_vector = None
 
     def get_tab(self):
         box_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -28,22 +30,20 @@ class LUDecompositionTab:
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         row.add(main_box)
 
-        matrix_button = Gtk.Button("Load A matrix")
+        image = Gtk.Image(stock=Gtk.STOCK_OPEN)
+        matrix_button = Gtk.Button(" Load A matrix", image=image)
         matrix_button.connect("clicked", self.load_matrix, None)
         main_box.pack_start(matrix_button, True, True, 10)
 
-        lu_button = Gtk.Button("Run LU Decomposition")
+        image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
+        lu_button = Gtk.Button(" Run LU Decomposition", image=image)
         lu_button.connect("clicked", self.lu_decomposition, None)
         main_box.pack_start(lu_button, True, True, 10)
 
-        vector_button = Gtk.Button("Load b vector")
+        image = Gtk.Image(stock=Gtk.STOCK_OPEN)
+        vector_button = Gtk.Button(" Load b vector", image=image)
         vector_button.connect("clicked", self.load_vector, None)
         main_box.pack_start(vector_button, True, True, 10)
-
-        out_lbl = Gtk.Label("Output Filename")
-        main_box.pack_start(out_lbl, True, True, 10)
-        self.out_entry = Gtk.Entry()
-        main_box.pack_start(self.out_entry, True, True, 10)
 
         list_box.add(row)
 
@@ -51,17 +51,41 @@ class LUDecompositionTab:
         buttons_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         row.add(buttons_box)
 
-        solve_button = Gtk.Button("Solve System")
+        image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
+        solve_button = Gtk.Button(" Solve System", image=image)
         solve_button.connect("clicked", self.substitution, None)
         buttons_box.pack_start(solve_button, True, True, 10)
 
-        determinant_button = Gtk.Button("Calculate Determinant")
+        image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
+        determinant_button = Gtk.Button(" Calculate Determinant", image=image)
         determinant_button.connect("clicked", self.get_determinant, None)
         buttons_box.pack_start(determinant_button, True, True, 10)
-        
-        inverse_button = Gtk.Button("Calculate Inverse Matrix")
+
+        image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
+        inverse_button = Gtk.Button(" Calculate Inverse Matrix", image=image)
         inverse_button.connect("clicked", self.get_inverse, None)
         buttons_box.pack_start(inverse_button, True, True, 10)
+
+        list_box.add(row)
+
+        row = Gtk.ListBoxRow()
+        button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        row.add(button_box)
+
+        image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
+        save_button = Gtk.Button(" Save LU As", image=image)
+        save_button.connect("clicked", self.save_lu, None)
+        button_box.pack_start(save_button, True, True, 10)
+
+        image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
+        save_button = Gtk.Button(" Save Solution As", image=image)
+        save_button.connect("clicked", self.save_x, None)
+        button_box.pack_start(save_button, True, True, 10)
+
+        image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
+        save_button = Gtk.Button(" Save Inverse As", image=image)
+        save_button.connect("clicked", self.save_inverse, None)
+        button_box.pack_start(save_button, True, True, 10)
 
         list_box.add(row)
 
@@ -100,13 +124,74 @@ class LUDecompositionTab:
         vector_chooser.destroy()
 
     def lu_decomposition(self, widget, data=None):
-        pass
+        self.L, self.U = self.gaussian_lu_decomposition.start(self.A_matrix)
+        print("L=", self.L)
+        print("U=", self.U)
 
     def substitution(self, widget, data=None):
-        pass
+        filename = self.out_entry.get_text()
+        self.x_vector = self.gaussian_lu_decomposition.get_solution(self.L, self.U, self.b_vector.flatten())
+        print(self.x_vector)
+        if self.x_vector is not None :
+          dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                    Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
+          dialog.run()
+          dialog.destroy()
+        else:
+          dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+              Gtk.ButtonsType.OK, "Gaussian Elimination failed")
+          dialog.run()
+          dialog.destroy()
 
     def get_determinant(self, widget, data=None):
         pass
 
     def get_inverse(self, widget, data=None):
         pass
+
+    def save_lu(self):
+        dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                        Gtk.FileChooserAction.SAVE,
+                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+        Gtk.FileChooser.set_current_name(dialog, "LU.txt")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+          filename = Gtk.FileChooser.get_filename(dialog)
+          f = open(filename, "a")
+          f.write("L = \n")
+          np.savetxt(f, self.L, delimiter=" ")
+          f.write("U = \n")
+          np.savetxt(f, self.L, delimiter=" ")
+          f.close()
+
+        dialog.destroy()
+
+    def save_inverse(self):
+        dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                        Gtk.FileChooserAction.SAVE,
+                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+        Gtk.FileChooser.set_current_name(dialog, "inverse_A.txt")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+          filename = Gtk.FileChooser.get_filename(dialog)
+          np.savetxt(filename, self.inverse, delimiter=" ")
+
+        dialog.destroy()
+
+    def save_x(self):
+        dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                        Gtk.FileChooserAction.SAVE,
+                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+        Gtk.FileChooser.set_current_name(dialog, "x_vector.txt")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+          filename = Gtk.FileChooser.get_filename(dialog)
+          np.savetxt(filename, self.x_vector, delimiter=" ")
+
+        dialog.destroy()

@@ -26,21 +26,6 @@ class MatrixGeneratorTab:
         self.length_entry = Gtk.Entry()
         gen_matrix_box.pack_start(self.length_entry, True, True, 10)
 
-        matrix_filename_lbl = Gtk.Label("Matrix filename")
-        gen_matrix_box.pack_start(matrix_filename_lbl, True, True, 10)
-        self.matrix_filename_entry = Gtk.Entry()
-        gen_matrix_box.pack_start(self.matrix_filename_entry, True, True, 10)
-
-        vector_filename_lbl = Gtk.Label("Vector B filename")
-        gen_matrix_box.pack_start(vector_filename_lbl, True, True, 10)
-        self.vector_filename_entry = Gtk.Entry()
-        gen_matrix_box.pack_start(self.vector_filename_entry, True, True, 10)
-
-        vectorx_filename_lbl = Gtk.Label("Vector X filename")
-        gen_matrix_box.pack_start(vectorx_filename_lbl, True, True, 10)
-        self.vectorx_filename_entry = Gtk.Entry()
-        gen_matrix_box.pack_start(self.vectorx_filename_entry, True, True, 10)
-
         button1 = Gtk.RadioButton.new_with_label_from_widget(None, "Diagonally dominant")
         button1.connect("toggled", self.set_generator, "1")
         gen_matrix_box.pack_start(button1, True, True, 10)
@@ -77,7 +62,8 @@ class MatrixGeneratorTab:
         button9.connect("toggled", self.set_generator, "9")
         gen_matrix_box.pack_start(button9, True, True, 10)
 
-        gen_button = Gtk.Button("Generate matrix and vector")
+        image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
+        gen_button = Gtk.Button(" Save matrices as", image=image)
         gen_button.connect("clicked", self.gen_matrix, None)
         gen_matrix_box.pack_start(gen_button, True, True, 10)
 
@@ -88,31 +74,39 @@ class MatrixGeneratorTab:
             self.selected_generator = int(name)
 
     def gen_matrix(self, widget, data=None):
-        matrix_filename = self.matrix_filename_entry.get_text()
-        vector_filename = self.vector_filename_entry.get_text()
-        vectorx_filename = self.vectorx_filename_entry.get_text()
         length = int(self.length_entry.get_text())
 
         if self.selected_generator == 1:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_dominant(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_dominant(length)
         elif self.selected_generator == 2:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_symmetric_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_symmetric_matrix(length)
         elif self.selected_generator == 3:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_band_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_band_matrix(length)
         elif self.selected_generator == 4:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_identity_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_identity_matrix(length)
         elif self.selected_generator == 5:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_diagonal_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_diagonal_matrix(length)
         elif self.selected_generator == 6:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_scalar_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_scalar_matrix(length)
         elif self.selected_generator == 7:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_antisymmetric_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_antisymmetric_matrix(length)
         elif self.selected_generator == 8:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_lower_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_lower_matrix(length)
         elif self.selected_generator == 9:
-            matrix_A,vector_x , vector_b = MatrixGenerator.gen_upper_matrix(length)
+            matrix_A, vector_x, vector_b = MatrixGenerator.gen_upper_matrix(length)
 
-        # Save file with numpy
-        np.savetxt(matrix_filename, matrix_A, fmt="%1.9f", delimiter=" ")
-        np.savetxt(vectorx_filename, vector_x, fmt="%1.9f", delimiter=" ")
-        np.savetxt(vector_filename, vector_b, fmt="%1.9f", delimiter=" ")
+        dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                    Gtk.FileChooserAction.SAVE,
+                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                     Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+        Gtk.FileChooser.set_current_name(dialog, "matrix")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            filename = Gtk.FileChooser.get_filename(dialog)
+            # Save file with numpy
+            np.savetxt(filename+"_A", matrix_A, fmt="%1.9f", delimiter=" ")
+            np.savetxt(filename+"_x", vector_x, fmt="%1.9f", delimiter=" ")
+            np.savetxt(filename+"_b", vector_b, fmt="%1.9f", delimiter=" ")
+
+        dialog.destroy()

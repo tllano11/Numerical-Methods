@@ -8,7 +8,7 @@ import time, csv, sys
 
 class JacobiParallel:
     @cuda.jit
-    def jacobi(A, b, x_current, x_next, n, rel=1):
+    def jacobi(A, b, x_current, x_next, n, rel):
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < n:
             sigma = 0.0
@@ -26,7 +26,7 @@ class JacobiParallel:
         if idx < rows:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
 
-    def start(self, A, b, niter, tol, rel):
+    def start(self, A, b, niter, tol, rel=1):
         A = A.flatten()
         b = b.flatten()
         tpb = 32
@@ -66,11 +66,10 @@ class JacobiParallel:
             print("Jacobis's algorithm computation time was: {} sec".format(end - start))
             print("Jacobi done with an error of {} and iter {}".format(error, count))
             print(x_next)
-            return x_next
+            return x_next, count, error
         else:
             print("Jacobi failed")
-            return None
-
+            return None, count, error
 
 def main(argv):
     if len(argv) != 3:
@@ -109,9 +108,9 @@ def main(argv):
     start = time.time()
     for i in range(0, 100):
         if i % 2:
-            jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, n)
+            jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, n, 1)
         else:
-            jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, n)
+            jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, n, 1)
 
     end = time.time()
 

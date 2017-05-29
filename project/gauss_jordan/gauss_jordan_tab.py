@@ -15,6 +15,7 @@ class GaussJordanTab:
         self.gauss_jordan = GaussJordan()
         self.A_matrix = None
         self.b_vector = None
+        self.x_vector = None
 
     def get_tab(self):
         box_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -26,18 +27,15 @@ class GaussJordanTab:
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         row.add(main_box)
 
-        matrix_button = Gtk.Button("Load A matrix")
+        image = Gtk.Image(stock=Gtk.STOCK_OPEN)
+        matrix_button = Gtk.Button(" Load A matrix", image=image)
         matrix_button.connect("clicked", self.load_matrix, None)
         main_box.pack_start(matrix_button, True, True, 10)
 
-        vector_button = Gtk.Button("Load b vector")
+        image = Gtk.Image(stock=Gtk.STOCK_OPEN)
+        vector_button = Gtk.Button(" Load b vector", image=image)
         vector_button.connect("clicked", self.load_vector, None)
         main_box.pack_start(vector_button, True, True, 10)
-
-        out_lbl = Gtk.Label("Output Filename")
-        main_box.pack_start(out_lbl, True, True, 10)
-        self.out_entry = Gtk.Entry()
-        main_box.pack_start(self.out_entry, True, True, 10)
 
         list_box.add(row)
 
@@ -45,13 +43,26 @@ class GaussJordanTab:
         buttons_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         row.add(buttons_box)
 
-        parallel_button = Gtk.Button("Run Parallel Gauss Jordan")
+        image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
+        parallel_button = Gtk.Button(" Run Parallel Gauss Jordan", image=image)
         parallel_button.connect("clicked", self.gaussParallel, None)
         buttons_box.pack_start(parallel_button, True, True, 10)
 
-        serial_button = Gtk.Button("Run Serial Gauss Jordan")
+        image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
+        serial_button = Gtk.Button(" Run Serial Gauss Jordan", image=image)
         serial_button.connect("clicked", self.gaussSerial, None)
         buttons_box.pack_start(serial_button, True, True, 10)
+
+        list_box.add(row)
+
+        row = Gtk.ListBoxRow()
+        button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        row.add(button_box)
+
+        image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
+        save_button = Gtk.Button(" Save As", image=image)
+        save_button.connect("clicked", self.save, None)
+        button_box.pack_start(save_button, True, True, 10)
 
         list_box.add(row)
 
@@ -91,9 +102,31 @@ class GaussJordanTab:
 
     def gaussParallel(self, widget, data=None):
         filename = self.out_entry.get_text()
-        x_vector = self.gauss_jordan.start(self.A_matrix, self.b_vector)
-        if x_vector is not None and filename != "":
-            np.savetxt(filename, x_vector, delimiter=" ")
+        self.x_vector = self.gauss_jordan.start(self.A_matrix, self.b_vector)
+        if self.x_vector is not None :
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                Gtk.ButtonsType.OK, "Gauss Jordan ended successfully")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                Gtk.ButtonsType.OK, "Gauss Jordan failed")
+            dialog.run()
+            dialog.destroy()
 
     def gaussSerial(self):
         pass
+
+    def save(self, widget, data=None):
+        dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                        Gtk.FileChooserAction.SAVE,
+                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+        Gtk.FileChooser.set_current_name(dialog, "x_vector.txt")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+          filename = Gtk.FileChooser.get_filename(dialog)
+          np.savetxt(filename, self.x_vector, delimiter=" ")
+
+        dialog.destroy()

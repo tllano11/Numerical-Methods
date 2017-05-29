@@ -23,7 +23,7 @@ sys.path.append("./lu_decomposition")
 import gi
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 from sparse_matrix_tab import SparseMatrixTab
 from matrix_generator_tab import MatrixGeneratorTab
 from jacobi_tab import JacobiTab
@@ -51,6 +51,38 @@ class PyApp(Gtk.Window):
         # Creates a notebook to add tabs there.
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.TOP)
+
+        # About us tab
+        hbox = Gtk.Box(spacing=10)
+        hbox.set_homogeneous(False)
+        vbox_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox_left.set_homogeneous(False)
+        vbox_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox_right.set_homogeneous(False)
+
+        hbox.pack_start(vbox_left, True, True, 0)
+        hbox.pack_start(vbox_right, True, True, 0)
+
+        label = Gtk.Label()
+        label.set_markup("<big>Numerical Methods\n in GPU</big>")
+        vbox_left.pack_start(label, True, True, 0)
+
+        label = Gtk.Label()
+        label.set_markup("<b>Johan Sebastián Yepes Rios</b>\n"
+                          "<b>Tomás Felipe Llano Ríos</b>\n"
+                          "<b>Juan Diego Ocampo García</b>")
+        vbox_left.pack_start(label, True, True, 0)
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./photo", width=500, height=500,
+                                                 preserve_aspect_ratio=True)
+        photo = Gtk.Image.new_from_pixbuf(pixbuf)
+        vbox_right.pack_start(photo, True, True, 0)
+
+
+
+        notebook.append_page(hbox)
+        notebook.set_tab_label_text(hbox, "About us")
+
 
         # Adding sparse matrix
         vbox_sparse_matrix = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
