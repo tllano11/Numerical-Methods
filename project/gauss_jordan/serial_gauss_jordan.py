@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
+"""
     File name: serial_gauss_jordan.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date last modified: 29-May-2017
     Python Version: 3.6.0
-'''
+"""
 
 import sys
 import numpy as np
