@@ -82,6 +82,10 @@ class SerialJacobi():
 			x_vector = self.sum_vectors(vector1, vector2)
 			error = self.get_error(x_vector, xant_vector)
 			count += 1
+		if error < tolerance:
+			print("The solution is: ", x_vector)
+		else:
+			print("Sorry, it failed in ", count, "iterations")
 		return x_vector
 
 
