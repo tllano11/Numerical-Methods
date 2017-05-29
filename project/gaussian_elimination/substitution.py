@@ -13,12 +13,13 @@
 
 
 def forward_substitution(A, b, n):
-  """Aplies forward substitution to a system of linear equations where the matrix is a lower triangular matrix.
+  """Returns the solution for a SLAE represented
+  by a lower triangular coefficient matrix.
 
-  keyword arguments:
-  A -- The coefficient matrix of the system.
-  b -- The linearly independent vector.
-  n -- The size of the matrix.
+  Keyword arguments:
+  A -- Lower triangular coefficient matrix.
+  b -- Linearly independent vector.
+  n -- Size of matrix A.
   """
   x = []
   for i in range(0, n):
@@ -31,12 +32,13 @@ def forward_substitution(A, b, n):
 
 
 def back_substitution(A, b, n):
-  """Aplies forward substitution to a system of linear equations where the matrix is an upper triangular matrix.
+  """Returns the solution for a SLAE represented
+  by an upper triangular coefficient matrix.
 
-  keyword arguments:
-  A -- The coefficient matrix of the system.
-  b -- The linearly independent vector.
-  n -- The size of the matrix.
+  Keyword arguments:
+  A -- Upper triangular coefficient matrix.
+  b -- Linearly independent vector.
+  n -- Size of matrix A.
   """
   x = [0] * n
   for i in range(n-1, -1, -1):
