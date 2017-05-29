@@ -59,17 +59,45 @@ class LUDecomposition():
         z[i] = (b[i] - accum)/ L[i][i]
     return z
 
+  def gen_identity_matrix(self, size):
+    matrix = np.zeros(shape=(size, size))
+    for i in range(0, size):
+      matrix[i][i] = 1
+    return matrix
+
+  def getInverse(self, L, U):
+    size = len(U)
+    identity_matrix = np.array(self.gen_identity_matrix(size))
+    cont = 0
+    for b in identity_matrix:
+      z = self.forward_substitution(L, b);
+      x = np.array(self.back_substitution(U, z))
+      x_column = x.reshape(len(x), 1)
+      if cont == 0:
+        AI = x_column
+      else:
+        AI = np.insert(AI,cont, x, axis=1)
+      cont += 1
+    return(AI)
+
+  def getDeterminant(self, L, U):
+    l_product = 1
+    u_product = 1
+    for i in range(0, len(L)):
+      l_product *= L[i][i]
+      u_product *= U[i][i]
+    return l_product * u_product
+
+
 if __name__ == '__main__':
-  #A =  np.array([[-7, 2, -3, 4], [5, -1, 14, -1], [1, 9, -7, 5], [-12, 13, -8, -4]], dtype="float")
-  #b = np.array([-12, 13, 31, -32], dtype="float")
-  A =  np.array([[4,3,-2,-7], [3, 12, 8, -3], [2, 3, -9, 2], [1, -2, -5, 6]], dtype="float")
-  b = np.array([20, 18, 31, 12], dtype="float")
+  A =  np.array([[-7, 2, -3, 4], [5, -1, 14, -1], [1, 9, -7, 5], [-12, 13, -8, -4]], dtype="float")
+  b = np.array([-12, 13, 31, -32], dtype="float")
+  #A =  np.array([[4,3,-2,-7], [3, 12, 8, -3], [2, 3, -9, 2], [1, -2, -5, 6]], dtype="float")
+  #b = np.array([20, 18, 31, 12], dtype="float")
   LUdecomposition = LUDecomposition()
   L, U, P = LUdecomposition.LU_decomposition(A)
-  print("L")
-  print(L)
-  print(U)
-  z = LUdecomposition.forward_substitution(L, b)
-  print(z)
-  x = LUdecomposition.back_substitution(U, z)
-  print(x)
+  #z = LUdecomposition.forward_substitution(L, b)
+  #x = LUdecomposition.back_substitution(U, z)
+  AI = LUdecomposition.getInverse(L, U)
+  det = LUdecomposition.getDeterminant(L, U)
+  print(det)
