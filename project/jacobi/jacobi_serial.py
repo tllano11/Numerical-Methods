@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-  File name: jacobi_serial.py
+  File name: jacobiSerial.py
   Authors: Tomás Felipe Llano Ríos,
            Juan Diego Ocampo García,
            Johan Sebastián Yepes Ríos

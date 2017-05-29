@@ -13,8 +13,8 @@ import numpy as np
 
 class JacobiTab:
     def __init__(self):
-        self.jacobi_parallel = JacobiParallel()
-        self.jacobi_serial = SerialJacobi()
+        self.jacobiParallel = JacobiParallel()
+        self.jacobiSerial = SerialJacobi()
         self.niter_entry = None
         self.A_matrix = None
         self.b_vector = None
@@ -63,12 +63,12 @@ class JacobiTab:
 
         image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
         parallel_button = Gtk.Button(" Run Parallel Jacobi", image=image)
-        parallel_button.connect("clicked", self.jacobiParallel, None)
+        parallel_button.connect("clicked", self.jacobi_parallel, None)
         buttons_box.pack_start(parallel_button, True, True, 10)
 
         image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
         serial_button = Gtk.Button(" Run Serial Jacobi", image=image)
-        serial_button.connect("clicked", self.jacobiSerial, None)
+        serial_button.connect("clicked", self.jacobi_serial, None)
         buttons_box.pack_start(serial_button, True, True, 10)
 
         list_box.add(row)
@@ -117,16 +117,16 @@ class JacobiTab:
 
         vector_chooser.destroy()
 
-    def jacobiParallel(self, widget, data=None):
+    def jacobi_parallel(self, widget, data=None):
         niter = int(self.niter_entry.get_text())
         tol = float(self.error_entry.get_text())
         rel = self.rel_entry.get_text()
 
         if rel == "":
-          self.x_vector, niter, error = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter, tol)
+          self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol)
         else:
           rel = float(rel)
-          self.x_vector, niter, error = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
+          self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
 
         print(self.x_vector)
         if self.x_vector is None:
@@ -142,16 +142,16 @@ class JacobiTab:
             dialog.run()
             dialog.destroy()
 
-    def jacobiSerial(self, widget, data=None):
+    def jacobi_serial(self, widget, data=None):
         niter = int(self.niter_entry.get_text())
         tol = float(self.error_entry.get_text())
         rel = self.rel_entry.get_text()
 
         if rel == "":
-            self.x_vector, niter, error = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter, tol)
+            self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector, niter, tol)
         else:
             rel = float(rel)
-            self.x_vector, niter, error = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter, tol, rel)
+            self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector.flatten(), niter, tol, rel)
 
         print(self.x_vector)
         if self.x_vector is None:

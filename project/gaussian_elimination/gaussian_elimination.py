@@ -42,19 +42,6 @@ class GaussianElimination:
                     A[idx * size + idy] -= A[i * size + idy] * mul
             cuda.syncthreads()
 
-    @cuda.jit
-    def normalize(A, size):
-        idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
-        idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
-        size += 1
-
-        if idx < size and idy < size:
-            index = idx * size
-            pivot = A[index + idx]
-            if pivot != 0:
-                A[index + idy] /= pivot
-        cuda.syncthreads()
-
     def start(self, A_matrix, b_matrix):
         """Launches parallel Gaussian elimination for a SLAE and returns its answer.
 
@@ -78,7 +65,6 @@ class GaussianElimination:
 
             for i in range(0, rows):
                 self.gaussian_elimination[(bpg, bpg), (tpb, tpb)](gpu_A, rows, i)
-                #self.normalize[(bpg, bpg), (tpb, tpb)](gpu_A, rows)
 
         gpu_A.copy_to_host(A, stream)
 
@@ -86,7 +72,6 @@ class GaussianElimination:
         A = A.reshape(rows, (columns + 1))[..., :-1]
 
         x = substitution.back_substitution(A, b)
-        print(A)
         return x
 
 

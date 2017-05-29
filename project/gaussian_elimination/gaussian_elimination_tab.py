@@ -129,7 +129,7 @@ class GaussianEliminationTab:
             dialog.destroy()
 
     def gaussSerial(self, widget, data=None):
-        self.x_vector = self.serial_gaussian_elimination.elimination(self.A_matrix, self.b_vector)
+        self.x_vector = self.serial_gaussian_elimination.elimination(self.A_matrix, self.b_vector.flatten())
         print(self.x_vector)
         if self.x_vector is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
