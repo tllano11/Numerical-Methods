@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
-'''
+"""
     File name: gauss_jordan.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
@@ -9,7 +9,7 @@
     Date created: 13-April-2017
     Date last modified: 29-May-2017
     Python Version: 3.6.0
-'''
+"""
 
 from numba import cuda
 import numpy as np

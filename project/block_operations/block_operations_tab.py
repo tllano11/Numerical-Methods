@@ -69,6 +69,16 @@ class BlockTab:
         buttons_box.pack_start(parallel_button, True, True, 10)
         
         list_box.add(row)
+
+        row = Gtk.ListBoxRow()
+        button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        row.add(button_box)
+
+        image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
+        save_button = Gtk.Button(" Save As", image=image)
+        save_button.connect("clicked", self.save, None)
+        button_box.pack_start(save_button, True, True, 10)
+        list_box.add(row)
         
         return box_outer
     
@@ -112,3 +122,17 @@ class BlockTab:
                                                                                                                error))
             dialog.run()
             dialog.destroy()
+
+    def save(self, widget, data=None):
+        dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                                       Gtk.FileChooserAction.SAVE,
+                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+        Gtk.FileChooser.set_current_name(dialog, "x_vector")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            filename = Gtk.FileChooser.get_filename(dialog)
+            np.savetxt(filename, self.x_vector, delimiter=" ")
+
+        dialog.destroy()
