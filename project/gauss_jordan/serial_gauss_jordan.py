@@ -17,12 +17,12 @@ import numpy as np
 class GaussJordanSerial:
     def elimination(self, A, b):
         """Takes a system of linear equations represented by a matrix and a vector
-    and returns the answer applying Gauss-Jordan method
+        and returns the answer applying Gauss-Jordan method
 
-    keyword arguments:
-    A -- The coefficient matrix of the system.
-    b -- The linearly independent vector.
-    """
+        keyword arguments:
+        A -- The coefficient matrix of the system.
+        b -- The linearly independent vector.
+        """
         n = len(A)
         for k in range(0, n):
             for i in range(0, n):
@@ -34,7 +34,7 @@ class GaussJordanSerial:
         for i in range(0, n):
             b[i] = b[i] / A[i][i]
             A[i][i] = A[i][i] / A[i][i]
-        return b.flatten()
+        return b
 
 
 if __name__ == '__main__':

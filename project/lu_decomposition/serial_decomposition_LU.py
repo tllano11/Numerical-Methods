@@ -18,11 +18,11 @@ import substitution
 class SerialLUDecomposition():
     def decomposition_LU(self, A):
         """Splits a given matrix into two matrices (lower and upper triangular matrices).
-    It is based on multiplication of matrices.
+        It is based on multiplication of matrices.
 
-    keyword arguments:
-    A -- The coefficient matrix to be splited.
-    """
+        keyword arguments:
+        A -- The coefficient matrix to be splited.
+        """
         n = len(A)
         L = np.zeros(shape=(n, n))
         P = np.identity(n)
@@ -40,21 +40,12 @@ class SerialLUDecomposition():
     def solve_system(self, L, U, b):
         """Solves a LU system.
 
-    keyword arguments:
-    L -- The lower triangular matrix of the system.
-    U -- The upper triangular matrix of the system.
-    b -- Linearly independent vector.
-    """
+        keyword arguments:
+        L -- The lower triangular matrix of the system.
+        U -- The upper triangular matrix of the system.
+        b -- Linearly independent vector.
+        """
         size = len(b)
         z = substitution.forward_substitution(L, b)
         x = substitution.back_substitution(U, z)
-        print(x)
         return x
-
-
-if __name__ == '__main__':
-    A = np.array([[-7, 2, -3, 4], [5, -1, 14, -1], [1, 9, -7, 5], [-12, 13, -8, -4]], dtype="float")
-    b = np.array([-12, 13, 31, -32], dtype="float")
-    LUdecomposition = SerialLUDecomposition()
-    L, U = LUdecomposition.decomposition_LU(A)
-    x = LUdecomposition.solve_system(L, U, b)

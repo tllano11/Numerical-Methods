@@ -20,9 +20,9 @@ class MatrixGenerator:
     def gen_vector(size):
         """Creates a random vector given a size.
 
-    keyword arguments:
-    size -- Length of the vector that will be created.
-    """
+        keyword arguments:
+        size -- Length of the vector that will be created.
+        """
         solution = []
         for i in range(size):
             rand_num = uniform(-size, size)
@@ -33,9 +33,9 @@ class MatrixGenerator:
     def gen_dominant(size):
         """Creates a diagonally dominant matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = []
         for i in range(size):
             row = []
@@ -56,9 +56,9 @@ class MatrixGenerator:
     def gen_symmetric_matrix(size):
         """Creates a symmetric matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             for j in range(0, i + 1):
@@ -74,11 +74,11 @@ class MatrixGenerator:
     def gen_band_matrix(size, k1, k2):
         """Creates a band matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    k1 -- Number of diagonals with non-zero elements below the main diagonal (Inclusive).
-    k2 -- Number of diagonals with non-zero elements above the main diagonal (Inclusive).
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        k1 -- Number of diagonals with non-zero elements below the main diagonal (Inclusive).
+        k2 -- Number of diagonals with non-zero elements above the main diagonal (Inclusive).
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             for j in range(0, size):
@@ -95,9 +95,9 @@ class MatrixGenerator:
     def gen_identity_matrix(size):
         """Creates an identity matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             matrix[i][i] = 1
@@ -110,9 +110,9 @@ class MatrixGenerator:
     def gen_diagonal_matrix(size):
         """Creates a diagonal matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             for j in range(0, size):
@@ -127,9 +127,9 @@ class MatrixGenerator:
     def gen_scalar_matrix(size):
         """Creates a scalar matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         value = uniform(-size, size)
         for i in range(0, size):
@@ -143,9 +143,9 @@ class MatrixGenerator:
     def gen_antisymmetric_matrix(size):
         """Creates an anti-symmetric matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             for j in range(0, i + 1):
@@ -164,9 +164,9 @@ class MatrixGenerator:
     def gen_lower_matrix(size):
         """Creates a lower triangular matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(size):
             for j in range(size):
@@ -182,9 +182,9 @@ class MatrixGenerator:
     def gen_upper_matrix(size):
         """Creates an upper triangular matrix given a size.
 
-    keyword arguments:
-    size -- Number of rows and columns that the matrix will have.
-    """
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(size):
             for j in range(size):
@@ -195,23 +195,3 @@ class MatrixGenerator:
         matrix_A = np.matrix(matrix)
         vector_b = np.dot(matrix_A, vector_x)
         return (matrix_A, vector_x, vector_b)
-
-
-def main(argv):
-    if len(argv) != 4:
-        print("Usage: python matrix_generator.py <size> <output_filename for A> <output_filename for b>")
-        sys.exit()
-
-    size = int(argv[1])
-    fname = argv[2]
-    fname2 = argv[3]
-
-    matrix_generator = MatrixGenerator()
-    matrix, x, vector = matrix_generator.gen_identity_matrix(size)
-    print(matrix)
-    print(x)
-    print(vector)
-
-
-if __name__ == "__main__":
-    main(sys.argv)

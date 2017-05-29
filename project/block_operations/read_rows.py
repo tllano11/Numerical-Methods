@@ -29,15 +29,15 @@ def get_error(x_vector, xant_vector):
 
 def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
     """Launches Jacobi for each set of rows read and returns a
-      solution to the system.
+    solution to the system.
 
-      Keyword arguments:
-      a_name -- String indicating A's path in the filesystem.
-      b_name -- String indicating b's path in the filesystem.
-      rows_to_read -- Integer indicating block size (rows to read from A).
-      matrix_size -- Integer indicating N for a NxN matrix A.
-      niter -- Maximum number of iterations to reach before stopping
-      jacobi's execution.
+    Keyword arguments:
+    a_name -- String indicating A's path in the filesystem.
+    b_name -- String indicating b's path in the filesystem.
+    rows_to_read -- Integer indicating block size (rows to read from A).
+    matrix_size -- Integer indicating N for a NxN matrix A.
+    niter -- Maximum number of iterations to reach before stopping
+    jacobi's execution.
     """
     b_file = open(b_name).read().split('\n')[:-1]
     A_file = open(a_name).read().split('\n')[:-1]

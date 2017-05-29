@@ -9,6 +9,16 @@ import time, csv, sys
 class JacobiParallel:
     @cuda.jit
     def jacobi(A, b, x_current, x_next, n, rel):
+        """Performs jacobi for every thread in matrix A bounaries.
+
+        Key arguments:
+        A -- Coefficient matrix.
+        b -- Linearly independent vector.
+        x_current -- Current answer's aproximation.
+        x_next -- vector in which to store new answer.
+        n -- Coefficient matrix' size.
+        rel -- Relaxation coefficient.
+        """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < n:
             sigma = 0.0
@@ -22,11 +32,21 @@ class JacobiParallel:
 
     @cuda.jit
     def get_error(x_current, x_next, x_error, rows):
+        """Calcualtes jacobi's maximum error"""
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < rows:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
 
     def start(self, A, b, niter, tol, rel=1):
+        """Launches parallel jacobi solver for a SLAE and returns its answer.
+
+        Keyword arguments:
+        A -- Coefficient matrix of a SLAE.
+        b -- Linearly independent vector of a SLAE.
+        niter -- Maximum number of iterations before jacobi stops.
+        tol -- Maximum error reached by jacobi when solving the system.
+        rel -- relaxation coeeficient.
+        """
         A = A.flatten()
         b = b.flatten()
         tpb = 32

@@ -7,7 +7,7 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 20-May-2017
-    Date last modified: 20-May-2017
+    Date last modified: 29-May-2017
     Python Version: 3.6.0
 """
 
@@ -21,6 +21,15 @@ import substitution
 class GuassianLUDecomposition:
     @cuda.jit
     def gaussian_lu_decomposition(A, L, size, i):
+        """ Performs Gaussian LU elimination.
+
+        Key arguments:
+        A -- Coefficient matrix A.
+        L -- Matrix in which to store the multipliers.
+        size -- Size of coefficiente matrix.
+        i -- Integer representing the current column in which all threads
+        are performing row operations.
+        """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
         index = idx * size + idy
@@ -37,6 +46,11 @@ class GuassianLUDecomposition:
             cuda.syncthreads()
 
     def start(self, A_matrix):
+        """Decomposes A_matrix into two matrices L and U.
+
+        Keyword arguments:
+        A_matrix -- Coefficient matrix.
+        """
         A = A_matrix.flatten()
         L = np.zeros_like(A)
 
@@ -52,7 +66,9 @@ class GuassianLUDecomposition:
             bpg = matrix_size + (tpb - 1) // tpb
 
             for i in range(0, rows):
-                self.gaussian_lu_decomposition[(bpg, bpg), (tpb, tpb)](gpu_A, gpu_L, rows, i)
+                self.gaussian_lu_decomposition[(bpg, bpg), (tpb, tpb)](gpu_A,\
+                                                                       gpu_L,\
+                                                                       rows, i)
 
         gpu_A.copy_to_host(A, stream)
         gpu_L.copy_to_host(L, stream)
@@ -63,17 +79,35 @@ class GuassianLUDecomposition:
         return L, U
 
     def get_solution(self, L, U, b):
+        """Solves a LU system.
+
+        keyword arguments:
+        L -- The lower triangular matrix of the system.
+        U -- The upper triangular matrix of the system.
+        b -- Linearly independent vector.
+        """
         z = substitution.forward_substitution(L, b)
         x = substitution.back_substitution(U, z)
         return x
 
     def gen_identity_matrix(self, size):
+        """Creates an identity matrix given a size.
+
+        keyword arguments:
+        size -- Number of rows and columns that the matrix will have.
+        """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
             matrix[i][i] = 1
         return matrix
 
     def get_inverse(self, L, U):
+        """Returns the inverse of a given matrix by means of LU decomposition.
+
+        keyword arguments:
+        L -- The lower triangular matrix of the system.
+        U -- The upper triangular matrix of the system.
+        """
         deter = self.get_determinant(L, U)
         if deter == 0:
             return None
@@ -93,6 +127,13 @@ class GuassianLUDecomposition:
         return(AI)
 
     def get_determinant(self, L, U):
+        """Returns the determinant of a given matrix by means of
+        LU decomposition.
+
+        keyword arguments:
+        L -- The lower triangular matrix of the system.
+        U -- The upper triangular matrix of the system.
+        """
         l_product = 1
         u_product = 1
         for i in range(0, len(L)):
