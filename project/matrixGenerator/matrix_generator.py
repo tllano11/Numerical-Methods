@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
+"""
     File name: matrix_generator.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date last modified: 29-May-2017
     Python Version: 3.6.0
-'''
+"""
 
 import sys
 import numpy as np
