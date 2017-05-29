@@ -65,7 +65,6 @@ class JacobiParallel:
 
             print("Jacobi algorithm computation time was: {} sec".format(end - start))
             print("Jacobi done with an error of {} and iter {}".format(error, count))
-            print(x_next)
             return x_next, count, error
         else:
             print("Jacobi failed")

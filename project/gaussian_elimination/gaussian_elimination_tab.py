@@ -94,7 +94,7 @@ class GaussianEliminationTab:
             with open(filename) as matrix_file:
                 reader = csv.reader(matrix_file, delimiter=' ')
                 matrix = list(reader)
-                self.A_matrix = np.array(matrix).astype("float")
+                self.A_matrix = np.array(matrix).astype("float64")
 
         matrix_chooser.destroy()
 
@@ -110,12 +110,13 @@ class GaussianEliminationTab:
             with open(filename) as vector_file:
                 reader = csv.reader(vector_file, delimiter=' ')
                 vector = list(reader)
-                self.b_vector = np.array(vector).astype("float")
+                self.b_vector = np.array(vector).astype("float64")
 
         vector_chooser.destroy()
 
     def gaussParallel(self, widget, data=None):
         self.x_vector = self.gaussian_elimination.start(self.A_matrix, self.b_vector)
+        print(self.x_vector)
         if self.x_vector is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
@@ -127,8 +128,9 @@ class GaussianEliminationTab:
             dialog.run()
             dialog.destroy()
 
-    def gaussSerial(self):
+    def gaussSerial(self, widget, data=None):
         self.x_vector = self.serial_gaussian_elimination.elimination(self.A_matrix, self.b_vector)
+        print(self.x_vector)
         if self.x_vector is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")

@@ -67,19 +67,41 @@ class PyApp(Gtk.Window):
         hbox.pack_start(vbox_right, True, True, 0)
 
         label = Gtk.Label()
-        label.set_markup("<big>Numerical Methods\n in GPU</big>")
+        label.set_markup("<big>Parallel Methods</big>")
+        label.set_justify(Gtk.Justification.CENTER)
         vbox_left.pack_start(label, True, True, 0)
 
-        label = Gtk.Label()
-        label.set_markup("<b>Johan Sebastián Yepes Rios</b>\n"
-                          "<b>Tomás Felipe Llano Ríos</b>\n"
-                          "<b>Juan Diego Ocampo García</b>")
-        vbox_left.pack_start(label, True, True, 0)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./eafit.png", width=200, height=500,
+                                                 preserve_aspect_ratio=True)
+        photo = Gtk.Image.new_from_pixbuf(pixbuf)
+        vbox_left.pack_start(photo, True, True, 0)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./photo", width=500, height=500,
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./Johan.jpg", width=100, height=500,
                                                  preserve_aspect_ratio=True)
         photo = Gtk.Image.new_from_pixbuf(pixbuf)
         vbox_right.pack_start(photo, True, True, 0)
+
+        label = Gtk.Label()
+        label.set_markup("<b>Johan Sebastián Yepes Ríos</b>")
+        vbox_right.pack_start(label, True, True, 0)
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./Diego.jpg", width=100, height=500,
+                                                 preserve_aspect_ratio=True)
+        photo = Gtk.Image.new_from_pixbuf(pixbuf)
+        vbox_right.pack_start(photo, True, True, 0)
+
+        label = Gtk.Label()
+        label.set_markup("<b>Juan Diego Ocampo García</b>")
+        vbox_right.pack_start(label, True, True, 0)
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./Tomas.jpg", width=100, height=500,
+                                                 preserve_aspect_ratio=True)
+        photo = Gtk.Image.new_from_pixbuf(pixbuf)
+        vbox_right.pack_start(photo, True, True, 0)
+
+        label = Gtk.Label()
+        label.set_markup("<b>Tomás Felipe Llano Ríos</b>")
+        vbox_right.pack_start(label, True, True, 0)
 
         notebook.append_page(hbox)
         notebook.set_tab_label_text(hbox, "About us")

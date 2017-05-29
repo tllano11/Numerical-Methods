@@ -34,7 +34,7 @@ class GaussJordanSerial:
         for i in range(0, n):
             b[i] = b[i] / A[i][i]
             A[i][i] = A[i][i] / A[i][i]
-        return b
+        return b.flatten()
 
 
 if __name__ == '__main__':

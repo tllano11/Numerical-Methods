@@ -137,6 +137,7 @@ class SerialJacobi:
     tolerance -- The tolerance of the method
     relaxation -- The number that will be used in the relaxation of the method.
     """
+        b_vector = b_vector.flatten()
         size = len(A_matrix)
         x_vector = [0] * size
         error = tolerance + 1

@@ -38,8 +38,13 @@ class LUDecompositionTab:
         main_box.pack_start(matrix_button, True, True, 10)
 
         image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
-        lu_button = Gtk.Button(" Run LU Decomposition", image=image)
+        lu_button = Gtk.Button(" Run Parallel LU Decomposition", image=image)
         lu_button.connect("clicked", self.lu_decomposition, None)
+        main_box.pack_start(lu_button, True, True, 10)
+
+        image = Gtk.Image(stock=Gtk.STOCK_EXECUTE)
+        lu_button = Gtk.Button(" Run Serial LU Decomposition", image=image)
+        lu_button.connect("clicked", self.serial_lu, None)
         main_box.pack_start(lu_button, True, True, 10)
 
         image = Gtk.Image(stock=Gtk.STOCK_OPEN)
@@ -105,7 +110,7 @@ class LUDecompositionTab:
             with open(filename) as matrix_file:
                 reader = csv.reader(matrix_file, delimiter=' ')
                 matrix = list(reader)
-                self.A_matrix = np.array(matrix).astype("float")
+                self.A_matrix = np.array(matrix).astype("float64")
 
         matrix_chooser.destroy()
 
@@ -121,7 +126,7 @@ class LUDecompositionTab:
             with open(filename) as vector_file:
                 reader = csv.reader(vector_file, delimiter=' ')
                 vector = list(reader)
-                self.b_vector = np.array(vector).astype("float")
+                self.b_vector = np.array(vector).astype("float64")
 
         vector_chooser.destroy()
 
@@ -132,6 +137,8 @@ class LUDecompositionTab:
 
     def serial_lu(self, widget, data=None):
         self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
+        print("L=", self.L)
+        print("U=", self.U)
 
     def substitution(self, widget, data=None):
         self.x_vector = self.gaussian_lu_decomposition.get_solution(self.L, self.U, self.b_vector.flatten())
@@ -148,7 +155,7 @@ class LUDecompositionTab:
             dialog.destroy()
 
     def get_determinant(self, widget, data=None):
-        determinant = self.gaussian_lu_decomposition.get_determinant()
+        determinant = self.gaussian_lu_decomposition.get_determinant(self.L, self.U)
         if determinant is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Determinant is {}".format(determinant))
@@ -162,6 +169,7 @@ class LUDecompositionTab:
 
     def get_inverse(self, widget, data=None):
         self.inverse = self.gaussian_lu_decomposition.get_inverse(self.L, self.U)
+        print(self.inverse)
         if self.inverse is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Inverse matrix was calculated successfully")

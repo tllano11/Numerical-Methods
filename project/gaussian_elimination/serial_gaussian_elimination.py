@@ -35,6 +35,7 @@ class SerialGaussianElimination:
                     A[i][j] = A[i][j] - multiplier * A[k][j]
                 b[i] = b[i] - multiplier * b[k]
         x = substitution.back_substitution(A, b)
+        print(A)
         return x
 
     def partial_pivot(self, A, b, k):

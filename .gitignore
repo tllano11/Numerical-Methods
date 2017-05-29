@@ -1,5 +1,7 @@
 *.pyc
 *.txt
+*.jpg
+*.png
 .idea
 Examples/
 gauss_elimination_serial.py

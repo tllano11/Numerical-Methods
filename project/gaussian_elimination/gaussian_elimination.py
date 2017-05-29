@@ -78,7 +78,7 @@ class GaussianElimination:
 
             for i in range(0, rows):
                 self.gaussian_elimination[(bpg, bpg), (tpb, tpb)](gpu_A, rows, i)
-                self.normalize[(bpg, bpg), (tpb, tpb)](gpu_A, rows)
+                #self.normalize[(bpg, bpg), (tpb, tpb)](gpu_A, rows)
 
         gpu_A.copy_to_host(A, stream)
 
@@ -86,7 +86,7 @@ class GaussianElimination:
         A = A.reshape(rows, (columns + 1))[..., :-1]
 
         x = substitution.back_substitution(A, b)
-        print(x)
+        print(A)
         return x
 
 

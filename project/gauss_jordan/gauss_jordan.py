@@ -95,7 +95,6 @@ class GaussJordan:
         gpu_A.copy_to_host(A, stream)
 
         x = A.reshape(rows, (columns + 1))[:, columns]
-        print(x)
         return x
 
 

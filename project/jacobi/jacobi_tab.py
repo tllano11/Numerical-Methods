@@ -97,7 +97,7 @@ class JacobiTab:
             with open(filename) as matrix_file:
                 reader = csv.reader(matrix_file, delimiter=' ')
                 matrix = list(reader)
-                self.A_matrix = np.array(matrix).astype("float")
+                self.A_matrix = np.array(matrix).astype("float64")
 
         matrix_chooser.destroy()
 
@@ -113,7 +113,7 @@ class JacobiTab:
             with open(filename) as vector_file:
                 reader = csv.reader(vector_file, delimiter=' ')
                 vector = list(reader)
-                self.b_vector = np.array(vector).astype("float")
+                self.b_vector = np.array(vector).astype("float64")
 
         vector_chooser.destroy()
 
@@ -128,6 +128,7 @@ class JacobiTab:
           rel = float(rel)
           self.x_vector, niter, error = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
 
+        print(self.x_vector)
         if self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.WARNING,
                                        Gtk.ButtonsType.OK_CANCEL, "Jacobi Failed in {} iterations".format(niter))
@@ -152,6 +153,7 @@ class JacobiTab:
             rel = float(rel)
             self.x_vector, niter, error = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter, tol, rel)
 
+        print(self.x_vector)
         if self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Jacobi Failed in {} iterations".format(niter))
