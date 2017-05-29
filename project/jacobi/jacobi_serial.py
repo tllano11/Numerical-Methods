@@ -91,9 +91,8 @@ class SerialJacobi:
             count += 1
         if count > max_iterations:
             return None, count, error
-
-        print(count)
-        return x_vector, count, error
+        else:
+            return x_vector, count, error
 
 
 if __name__ == '__main__':

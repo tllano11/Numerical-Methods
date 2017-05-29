@@ -74,7 +74,7 @@ class JacobiTab:
         list_box.add(row)
 
         row = Gtk.ListBoxRow()
-        button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         row.add(button_box)
 
         image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)

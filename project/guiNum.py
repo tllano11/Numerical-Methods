@@ -20,6 +20,7 @@ sys.path.append("./jacobi")
 sys.path.append("./gauss_jordan")
 sys.path.append("./gaussian_elimination")
 sys.path.append("./lu_decomposition")
+sys.path.append("./block_operations")
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -30,6 +31,7 @@ from jacobi_tab import JacobiTab
 from gauss_jordan_tab import GaussJordanTab
 from gaussian_elimination_tab import GaussianEliminationTab
 from lu_decomposition_tab import LUDecompositionTab
+from block_operations_tab import BlockTab
 
 
 class PyApp(Gtk.Window):
@@ -43,6 +45,7 @@ class PyApp(Gtk.Window):
         self.gauss_jordan_tab = GaussJordanTab()
         self.gaussian_elimination_tab = GaussianEliminationTab()
         self.lu_decomposition_tab = LUDecompositionTab()
+        self.blocks_tab = BlockTab()
 
         # Elements of the current window.
         self.set_title("Methods")
@@ -141,6 +144,14 @@ class PyApp(Gtk.Window):
         notebook.set_tab_label_text(vbox_lu_decomposition, "LU Decomposition")
 
         # Operations by blocks
+        vbox_blocks = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        valign_blocks = Gtk.Alignment.new(0.5, 0.25, 0, 0)
+
+        valign_blocks.add(self.blocks_tab.get_tab())
+        vbox_blocks.pack_start(valign_blocks, True, True, 6)
+
+        notebook.append_page(vbox_blocks)
+        notebook.set_tab_label_text(vbox_blocks, "Operations by Blocks")
 
 
         self.add(notebook)
