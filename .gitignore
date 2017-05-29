@@ -1,3 +1,8 @@
 *.pyc
 *.txt
-
+.idea
+Examples/
+gauss_elimination_serial.py
+project/executor.sh
+project/jacobi/inputs/
+project/out

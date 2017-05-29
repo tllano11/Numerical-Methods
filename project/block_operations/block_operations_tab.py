@@ -20,6 +20,7 @@ import csv
 import numpy as np
 from read_rows import start
 
+
 class BlockTab:
     def __init__(self):
         self.niter_entry = None
@@ -36,7 +37,7 @@ class BlockTab:
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         row.add(main_box)
-        
+
         image = Gtk.Image(stock=Gtk.STOCK_OPEN)
         matrix_button = Gtk.Button(" Load A matrix", image=image)
         matrix_button.connect("clicked", self.load_matrix, None)
@@ -61,14 +62,14 @@ class BlockTab:
         main_box.pack_start(rows_lbl, True, True, 10)
         self.rows_entry = Gtk.Entry()
         main_box.pack_start(self.rows_entry, True, True, 10)
-        
+
         tol_lbl = Gtk.Label("Tolerance")
         main_box.pack_start(tol_lbl, True, True, 10)
         self.tol_entry = Gtk.Entry()
         main_box.pack_start(self.tol_entry, True, True, 10)
 
         list_box.add(row)
-    
+
         row = Gtk.ListBoxRow()
         buttons_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         row.add(buttons_box)
@@ -77,7 +78,7 @@ class BlockTab:
         parallel_button = Gtk.Button(" Run Parallel Jacobi", image=image)
         parallel_button.connect("clicked", self.jacobi_by_blocks, None)
         buttons_box.pack_start(parallel_button, True, True, 10)
-        
+
         list_box.add(row)
 
         row = Gtk.ListBoxRow()
@@ -89,9 +90,9 @@ class BlockTab:
         save_button.connect("clicked", self.save, None)
         button_box.pack_start(save_button, True, True, 10)
         list_box.add(row)
-        
+
         return box_outer
-    
+
     def load_matrix(self, widget, data=None):
         matrix_chooser = Gtk.FileChooserDialog("Select matrix file", None, Gtk.FileChooserAction.OPEN,
                                                (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -111,9 +112,9 @@ class BlockTab:
 
         if response == Gtk.ResponseType.OK:
             self.b_vector = vector_chooser.get_filename()
-            
+
         vector_chooser.destroy()
-        
+
     def jacobi_by_blocks(self, widget, data=None):
         niter = int(self.niter_entry.get_text())
         size = int(self.size_entry.get_text())

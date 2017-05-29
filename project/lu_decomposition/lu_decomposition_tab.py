@@ -8,11 +8,13 @@ from gi.repository import Gtk
 import csv
 import numpy as np
 from gaussian_lu_decomposition import GuassianLUDecomposition
+from serial_decomposition_LU import SerialLUDecomposition
 
 
 class LUDecompositionTab:
     def __init__(self):
         self.gaussian_lu_decomposition = GuassianLUDecomposition()
+        self.serial_lu_decomposition = SerialLUDecomposition()
         self.A_matrix = None
         self.b_vector = None
         self.L_matrix = None
@@ -127,6 +129,9 @@ class LUDecompositionTab:
         self.L, self.U = self.gaussian_lu_decomposition.start(self.A_matrix)
         print("L=", self.L)
         print("U=", self.U)
+
+    def serial_lu(self, widget, data=None):
+        self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
 
     def substitution(self, widget, data=None):
         self.x_vector = self.gaussian_lu_decomposition.get_solution(self.L, self.U, self.b_vector.flatten())
