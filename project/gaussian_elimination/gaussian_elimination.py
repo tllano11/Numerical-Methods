@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 """
-    File name: gauss_elimination.py
+    File name: gaussian_elimination.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos

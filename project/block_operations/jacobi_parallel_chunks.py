@@ -1,6 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
+"""
+    File name: block_operations_tab.py
+    Authors: Tomás Felipe Llano Ríos,
+             Juan Diego Ocampo García,
+             Johan Sebastián Yepes Ríos
+    Date last modified: 29-May-2017
+    Python Version: 3.6.0
+"""
 from numba import cuda
 import numpy as np
 import time, csv, sys

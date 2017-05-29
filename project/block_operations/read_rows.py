@@ -18,13 +18,13 @@ from jacobi_parallel_chunks import JacobiParallel
 
 
 def get_error(x_vector, xant_vector):
-        maximum = 0
-        size = len(x_vector)
-        for i in range(0, size):
-            tmp = float(abs(x_vector[i] - xant_vector[i]))
-            if tmp > maximum:
-                maximum = tmp
-        return maximum
+    maximum = 0
+    size = len(x_vector)
+    for i in range(0, size):
+        tmp = float(abs(x_vector[i] - xant_vector[i]))
+        if tmp > maximum:
+            maximum = tmp
+    return maximum
 
 
 def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
