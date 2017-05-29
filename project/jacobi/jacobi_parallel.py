@@ -63,7 +63,7 @@ class JacobiParallel:
             else:
                 x_next = gpu_x_current.copy_to_host()
 
-            print("Jacobis's algorithm computation time was: {} sec".format(end - start))
+            print("Jacobi algorithm computation time was: {} sec".format(end - start))
             print("Jacobi done with an error of {} and iter {}".format(error, count))
             print(x_next)
             return x_next, count, error

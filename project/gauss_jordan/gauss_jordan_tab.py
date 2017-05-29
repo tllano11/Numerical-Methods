@@ -8,11 +8,13 @@ from gi.repository import Gtk
 import csv
 import numpy as np
 from gauss_jordan import GaussJordan
+from serial_gauss_jordan import GaussJordanSerial
 
 
 class GaussJordanTab:
     def __init__(self):
         self.gauss_jordan = GaussJordan()
+        self.gauss_jordan_serial = GaussJordanSerial()
         self.A_matrix = None
         self.b_vector = None
         self.x_vector = None
@@ -101,7 +103,6 @@ class GaussJordanTab:
         vector_chooser.destroy()
 
     def gaussParallel(self, widget, data=None):
-        filename = self.out_entry.get_text()
         self.x_vector = self.gauss_jordan.start(self.A_matrix, self.b_vector)
         if self.x_vector is not None :
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
@@ -115,7 +116,17 @@ class GaussJordanTab:
             dialog.destroy()
 
     def gaussSerial(self):
-        pass
+        self.x_vector = self.gauss_jordan_serial.elimination(self.A_matrix, self.b_vector)
+        if self.x_vector is not None :
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                Gtk.ButtonsType.OK, "Gauss Jordan ended successfully")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                Gtk.ButtonsType.OK, "Gauss Jordan failed")
+            dialog.run()
+            dialog.destroy()
 
     def save(self, widget, data=None):
         dialog = Gtk.FileChooserDialog("Please choose a file", None,

@@ -120,8 +120,14 @@ class JacobiTab:
     def jacobiParallel(self, widget, data=None):
         niter = int(self.niter_entry.get_text())
         tol = float(self.error_entry.get_text())
-        rel = float(self.rel_entry.get_text())
-        self.x_vector, niter, error = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
+        rel = self.rel_entry.get_text()
+
+        if rel == "":
+          self.x_vector, niter, error = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter, tol)
+        else:
+          rel = float(rel)
+          self.x_vector, niter, error = self.jacobi_parallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
+
         if self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.WARNING,
                                        Gtk.ButtonsType.OK_CANCEL, "Jacobi Failed in {} iterations".format(niter))
@@ -137,12 +143,14 @@ class JacobiTab:
 
     def jacobiSerial(self, widget, data=None):
         niter = int(self.niter_entry.get_text())
-        tol = self.error_entry.get_text()
-        if tol == "":
-            self.x_vector, niter, error = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter)
-        else:
-            tol = float(tol)
+        tol = float(self.error_entry.get_text())
+        rel = self.rel_entry.get_text()
+
+        if rel == "":
             self.x_vector, niter, error = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter, tol)
+        else:
+            rel = float(rel)
+            self.x_vector, niter, error = self.jacobi_serial.jacobi(self.A_matrix, self.b_vector, niter, tol, rel)
 
         if self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
