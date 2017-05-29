@@ -7,12 +7,19 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 03-May-2017
-    Date last modified: 03-May-2017
+    Date last modified: 29-May-2017
     Python Version: 3.6.0
 """
 
 
 def forward_substitution(A, b, n):
+  """Aplies forward substitution to a system of linear equations where the matrix is a lower triangular matrix.
+
+  keyword arguments:
+  A -- The coefficient matrix of the system.
+  b -- The linearly independent vector.
+  n -- The size of the matrix.
+  """
   x = []
   for i in range(0, n):
     if A[i][i] != 0:
@@ -24,6 +31,13 @@ def forward_substitution(A, b, n):
 
 
 def back_substitution(A, b, n):
+  """Aplies forward substitution to a system of linear equations where the matrix is an upper triangular matrix.
+
+  keyword arguments:
+  A -- The coefficient matrix of the system.
+  b -- The linearly independent vector.
+  n -- The size of the matrix.
+  """
   x = [0] * n
   for i in range(n-1, -1, -1):
     if A[i][i] != 0:
