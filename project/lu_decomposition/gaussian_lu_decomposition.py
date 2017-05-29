@@ -21,6 +21,15 @@ import substitution
 class GuassianLUDecomposition:
     @cuda.jit
     def gaussian_lu_decomposition(A, L, size, i):
+        """ Performs Gaussian LU elimination.
+
+        Key arguments:
+        A -- Coefficient matrix A.
+        L -- Matrix in which to store the multipliers.
+        size -- Size of coefficiente matrix.
+        i -- Integer representing the current column in which all threads
+        are performing row operations.
+        """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
         index = idx * size + idy
@@ -37,6 +46,11 @@ class GuassianLUDecomposition:
             cuda.syncthreads()
 
     def start(self, A_matrix):
+        """Decomposes A_matrix into two matrices L and U.
+
+        Keyword arguments:
+        A_matrix -- Coefficient matrix.
+        """
         A = A_matrix.flatten()
         L = np.zeros_like(A)
 
@@ -52,7 +66,9 @@ class GuassianLUDecomposition:
             bpg = matrix_size + (tpb - 1) // tpb
 
             for i in range(0, rows):
-                self.gaussian_lu_decomposition[(bpg, bpg), (tpb, tpb)](gpu_A, gpu_L, rows, i)
+                self.gaussian_lu_decomposition[(bpg, bpg), (tpb, tpb)](gpu_A,\
+                                                                       gpu_L,\
+                                                                       rows, i)
 
         gpu_A.copy_to_host(A, stream)
         gpu_L.copy_to_host(L, stream)
@@ -111,7 +127,8 @@ class GuassianLUDecomposition:
         return(AI)
 
     def get_determinant(self, L, U):
-        """Returns the determinant of a given matrix by means of LU decomposition.
+        """Returns the determinant of a given matrix by means of
+        LU decomposition.
 
         keyword arguments:
         L -- The lower triangular matrix of the system.
