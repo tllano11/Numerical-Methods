@@ -88,11 +88,38 @@ class GuassianLUDecomposition:
                 x[i] = (z[i] - accum) / U[i][i]
         return x
 
+    def gen_identity_matrix(self, size):
+        matrix = np.zeros(shape=(size, size))
+        for i in range(0, size):
+            matrix[i][i] = 1
+        return matrix
+
     def get_inverse(self, L, U):
-        pass
+        deter = self.get_determinant(L, U)
+        if deter == 0:
+            return None
+
+        size = len(U)
+        identity_matrix = np.array(self.gen_identity_matrix(size))
+        cont = 0
+        for b in identity_matrix:
+            z = self.forward_substitution(L, b);
+            x = np.array(self.back_substitution(U, z))
+            x_column = x.reshape(len(x), 1)
+            if cont == 0:
+              AI = x_column
+            else:
+              AI = np.insert(AI,cont, x, axis=1)
+            cont += 1
+        return(AI)
 
     def get_determinant(self, L, U):
-        pass
+        l_product = 1
+        u_product = 1
+        for i in range(0, len(L)):
+          l_product *= L[i][i]
+          u_product *= U[i][i]
+        return l_product * u_product
 
 
 if __name__ == "__main__":

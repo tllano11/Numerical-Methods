@@ -1,59 +1,112 @@
-import csv
 import sys
-import time
-from numpy import array, diag, diagflat, dot, zeros_like
+import numpy as np
+import csv
 
 
-class JacobiSerial:
+class SerialJacobi:
+    def multiply_matrix_vector(self, A_matrix, b_vector):
+        size = len(A_matrix)
+        result = []
+        for i in range(0, size):
+            tmp = 0
+            for j in range(0, size):
+                tmp += A_matrix[i][j] * b_vector[j]
+            result.append(tmp)
+        return result
 
-  def jacobi(self, A_matrix,b_vector,niter, tol=0):
-    #Solves the equation Ax=b via the Jacobi iterative method.
-    # Create an initial guess if needed
-    x_next = zeros_like(b_vector)
-    x_vector = zeros_like(b_vector)
-    count = 0
-    error = tol + 1
+    def multiply_matrix_matrix(self, matrix1, matrix2):
+        size = len(matrix1)
+        matrix_result = []
+        for i in range(0, size):
+            row = []
+            for j in range(0, size):
+                row.append(0)
+                for k in range(0, size):
+                    row[j] += matrix1[i][k] * matrix2[k][j]
+            matrix_result.append(row)
+        return matrix_result
 
-    # Create a vector of the diagonal elements of A
-    # and subtract them from A
-    D_matrix = diag(A_matrix)
-    R_matrix = A_matrix - diagflat(D_matrix)
-    # Iterate for N times
-    start = time.time()
-    while count < niter:
-      x_next = (b_vector - dot(R_matrix,x_next)) / D_matrix
-#print(x_next)
-#      print(x_vector)
-#      error = self.get_max_error(x_vector, x_next)
-#      x_vector = copy(x_next)
-      count += 1
-    end = time.time()
+    def get_D_and_U(self, matrix):
+        matrixD = []
+        matrixU = []
+        size = len(matrix)
+        for i in range(0, size):
+            rowD = []
+            rowU = []
+            for j in range(0, size):
+                if i == j:
+                    rowD.append(matrix[i][j])
+                    rowU.append(0)
+                else:
+                    rowD.append(0)
+                    rowU.append(-matrix[i][j])
+            matrixD.append(rowD)
+            matrixU.append(rowU)
+        return matrixD, matrixU
 
-    print("Computation Time was: {}".format(end - start))
-    #print("X:")
-    # print(x_next)
-    return x_next
+    def get_inverse(self, matrixD):
+        size = len(matrixD)
+        for i in range(0, size):
+            matrixD[i][i] = pow(matrixD[i][i], -1)
+        return matrixD
 
-  def get_max_error(self, x_vector, x_next):
-    x_error = zeros_like(x_vector)
-    for i in range(len(x_vector)):
-      x_error[i] = abs(x_next[i] - x_vector[i])
+    def sum_vectors(self, vector1, vector2):
+        size = len(vector1)
+        result = []
+        for i in range(0, size):
+            result.append(vector1[i] + vector2[i])
+        return result
 
-    return max(x_error)
+    def get_error(self, x_vector, xant_vector):
+        maximum = 0
+        size = len(x_vector)
+        for i in range(0, size):
+            tmp = abs(x_vector[i] - xant_vector[i])
+            if tmp > maximum:
+                maximum = tmp
+        return maximum
 
-if __name__ == "__main__":
-  jacobi = JacobiSerial()
-  A_name = sys.argv[1]
-  b_name = sys.argv[2]
+    def relaxation(self, x_vector, xant_vector, relaxation):
+        size = len(x_vector)
+        xrelax_vector = []
+        for i in range(0, size):
+            xrelax_vector.append(relaxation * x_vector[i] + (1 - relaxation) * xant_vector[i])
+        return xrelax_vector
 
-  with open(A_name) as csvfile:
-    reader = csv.reader(csvfile, delimiter=' ')
-    matrix = list(reader)
-    A_matrix = array(matrix).astype("float64")
+    def jacobi(self, A_matrix, b_vector, max_iterations, tolerance, relaxation=1):
+        size = len(A_matrix)
+        x_vector = [0] * size
+        error = tolerance + 1
+        matrixD, matrixU = self.get_D_and_U(A_matrix)
+        matrixD = self.get_inverse(matrixD)
+        vector1 = self.multiply_matrix_vector(matrixD, b_vector)
+        matrix_aux = self.multiply_matrix_matrix(matrixD, matrixU)
+        count = 0
+        while error > tolerance and count < max_iterations:
+            xant_vector = x_vector
+            vector2 = self.multiply_matrix_vector(matrix_aux, xant_vector)
+            x_vector = self.sum_vectors(vector1, vector2)
+            xrelax_vector = self.relaxation(x_vector, xant_vector, relaxation)
+            error = self.get_error(x_vector, xant_vector)
+            count += 1
+        if count > max_iterations:
+            return None, count, error
 
-  with open(b_name) as csvfile:
-    reader = csv.reader(csvfile, delimiter=' ')
-    matrix = list(reader)
-    b_vector = array(matrix).astype("float64")
+        return xrelax_vector, count, error
 
-  jacobi.jacobi(A_matrix, b_vector, 60)
+
+if __name__ == '__main__':
+    with open('../../a.txt') as A_file:
+        reader = csv.reader(A_file, delimiter=' ')
+        matrix = list(reader)
+        A_matrix = np.array(matrix).astype("float")
+    with open('../../b.txt') as b_file:
+        reader = csv.reader(b_file, delimiter=' ')
+        vector = list(reader)
+        b_vector = np.array(vector).astype("float")
+    # A_matrix = [[4, 3, -2, -7],[3, 12, 8, -3], [2, 3, -9, 2], [1, -2, -5, 6]]
+    # b_vector = [20, 18, 21, 12]
+    maximum = 1000
+    tol = 0.001
+    serial_jacobi = SerialJacobi()
+    serial_jacobi.jacobi(A_matrix, b_vector, maximum, tol)

@@ -132,66 +132,86 @@ class LUDecompositionTab:
         filename = self.out_entry.get_text()
         self.x_vector = self.gaussian_lu_decomposition.get_solution(self.L, self.U, self.b_vector.flatten())
         print(self.x_vector)
-        if self.x_vector is not None :
-          dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                    Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
-          dialog.run()
-          dialog.destroy()
+        if self.x_vector is not None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
+            dialog.run()
+            dialog.destroy()
         else:
-          dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-              Gtk.ButtonsType.OK, "Gaussian Elimination failed")
-          dialog.run()
-          dialog.destroy()
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed")
+            dialog.run()
+            dialog.destroy()
 
     def get_determinant(self, widget, data=None):
-        pass
+        determinant = self.gaussian_lu_decomposition.get_determinant()
+        if determinant is not None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Determinant is {}".format(determinant))
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed")
+            dialog.run()
+            dialog.destroy()
 
     def get_inverse(self, widget, data=None):
-        pass
+        self.inverse = self.gaussian_lu_decomposition.get_inverse(self.L, self.U)
+        if self.inverse is not None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Inverse matrix was calculated successfully")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Matrix has not inverse")
+            dialog.run()
+            dialog.destroy()
 
-    def save_lu(self):
+    def save_lu(self, widget, data=None):
         dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                        Gtk.FileChooserAction.SAVE,
-                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+                                       Gtk.FileChooserAction.SAVE,
+                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
         Gtk.FileChooser.set_current_name(dialog, "LU.txt")
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-          filename = Gtk.FileChooser.get_filename(dialog)
-          f = open(filename, "a")
-          f.write("L = \n")
-          np.savetxt(f, self.L, delimiter=" ")
-          f.write("U = \n")
-          np.savetxt(f, self.L, delimiter=" ")
-          f.close()
+            filename = Gtk.FileChooser.get_filename(dialog)
+            with open(filename, "ab") as f:
+                f.write("L = \n".encode())
+                np.savetxt(f, self.L, delimiter=" ")
+                f.write("U = \n".encode())
+                np.savetxt(f, self.L, delimiter=" ")
+                f.close()
 
         dialog.destroy()
 
-    def save_inverse(self):
+    def save_inverse(self, widget, data=None):
         dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                        Gtk.FileChooserAction.SAVE,
-                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+                                       Gtk.FileChooserAction.SAVE,
+                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
         Gtk.FileChooser.set_current_name(dialog, "inverse_A.txt")
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-          filename = Gtk.FileChooser.get_filename(dialog)
-          np.savetxt(filename, self.inverse, delimiter=" ")
+            filename = Gtk.FileChooser.get_filename(dialog)
+            np.savetxt(filename, self.inverse, delimiter=" ")
 
         dialog.destroy()
 
-    def save_x(self):
+    def save_x(self, widget, data=None):
         dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                        Gtk.FileChooserAction.SAVE,
-                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+                                       Gtk.FileChooserAction.SAVE,
+                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
         Gtk.FileChooser.set_current_name(dialog, "x_vector.txt")
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-          filename = Gtk.FileChooser.get_filename(dialog)
-          np.savetxt(filename, self.x_vector, delimiter=" ")
+            filename = Gtk.FileChooser.get_filename(dialog)
+            np.savetxt(filename, self.x_vector, delimiter=" ")
 
         dialog.destroy()

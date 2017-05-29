@@ -74,39 +74,47 @@ class MatrixGeneratorTab:
             self.selected_generator = int(name)
 
     def gen_matrix(self, widget, data=None):
-        length = int(self.length_entry.get_text())
+        length = self.length_entry.get_text()
 
-        if self.selected_generator == 1:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_dominant(length)
-        elif self.selected_generator == 2:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_symmetric_matrix(length)
-        elif self.selected_generator == 3:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_band_matrix(length)
-        elif self.selected_generator == 4:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_identity_matrix(length)
-        elif self.selected_generator == 5:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_diagonal_matrix(length)
-        elif self.selected_generator == 6:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_scalar_matrix(length)
-        elif self.selected_generator == 7:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_antisymmetric_matrix(length)
-        elif self.selected_generator == 8:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_lower_matrix(length)
-        elif self.selected_generator == 9:
-            matrix_A, vector_x, vector_b = MatrixGenerator.gen_upper_matrix(length)
+        if length == "":
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Please enter a length first")
+            dialog.run()
+            dialog.destroy()
+        else:
+            length = int(length)
 
-        dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                    Gtk.FileChooserAction.SAVE,
-                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                     Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+            if self.selected_generator == 1:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_dominant(length)
+            elif self.selected_generator == 2:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_symmetric_matrix(length)
+            elif self.selected_generator == 3:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_band_matrix(length)
+            elif self.selected_generator == 4:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_identity_matrix(length)
+            elif self.selected_generator == 5:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_diagonal_matrix(length)
+            elif self.selected_generator == 6:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_scalar_matrix(length)
+            elif self.selected_generator == 7:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_antisymmetric_matrix(length)
+            elif self.selected_generator == 8:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_lower_matrix(length)
+            elif self.selected_generator == 9:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_upper_matrix(length)
 
-        Gtk.FileChooser.set_current_name(dialog, "matrix")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            filename = Gtk.FileChooser.get_filename(dialog)
-            # Save file with numpy
-            np.savetxt(filename+"_A", matrix_A, fmt="%1.9f", delimiter=" ")
-            np.savetxt(filename+"_x", vector_x, fmt="%1.9f", delimiter=" ")
-            np.savetxt(filename+"_b", vector_b, fmt="%1.9f", delimiter=" ")
+            dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                        Gtk.FileChooserAction.SAVE,
+                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
-        dialog.destroy()
+            Gtk.FileChooser.set_current_name(dialog, "matrix")
+            response = dialog.run()
+            if response == Gtk.ResponseType.OK:
+                filename = Gtk.FileChooser.get_filename(dialog)
+                # Save file with numpy
+                np.savetxt(filename+"_A", matrix_A, fmt="%1.9f", delimiter=" ")
+                np.savetxt(filename+"_x", vector_x, fmt="%1.9f", delimiter=" ")
+                np.savetxt(filename+"_b", vector_b, fmt="%1.9f", delimiter=" ")
+
+            dialog.destroy()
