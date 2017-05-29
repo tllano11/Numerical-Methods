@@ -61,7 +61,7 @@ class SerialJacobi:
         maximum = 0
         size = len(x_vector)
         for i in range(0, size):
-            tmp = abs(x_vector[i] - xant_vector[i])
+            tmp = float(abs(x_vector[i] - xant_vector[i]))
             if tmp > maximum:
                 maximum = tmp
         return maximum
@@ -86,21 +86,22 @@ class SerialJacobi:
             xant_vector = x_vector
             vector2 = self.multiply_matrix_vector(matrix_aux, xant_vector)
             x_vector = self.sum_vectors(vector1, vector2)
-            xrelax_vector = self.relaxation(x_vector, xant_vector, relaxation)
+            x_vector = self.relaxation(x_vector, xant_vector, relaxation)
             error = self.get_error(x_vector, xant_vector)
             count += 1
         if count > max_iterations:
             return None, count, error
 
-        return xrelax_vector, count, error
+        print(count)
+        return x_vector, count, error
 
 
 if __name__ == '__main__':
-    with open('../../a.txt') as A_file:
+    with open('../../A.txt') as A_file:
         reader = csv.reader(A_file, delimiter=' ')
         matrix = list(reader)
         A_matrix = np.array(matrix).astype("float")
-    with open('../../b.txt') as b_file:
+    with open('../../B.txt') as b_file:
         reader = csv.reader(b_file, delimiter=' ')
         vector = list(reader)
         b_vector = np.array(vector).astype("float")
@@ -109,4 +110,4 @@ if __name__ == '__main__':
     maximum = 1000
     tol = 0.001
     serial_jacobi = SerialJacobi()
-    serial_jacobi.jacobi(A_matrix, b_vector, maximum, tol)
+    serial_jacobi.jacobi(A_matrix, b_vector, maximum, tol, 0.8)
