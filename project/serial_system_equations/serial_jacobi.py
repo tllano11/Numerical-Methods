@@ -26,7 +26,7 @@ class SerialJacobi():
 			matrix_result.append(row)
 		return matrix_result
 
-	def getDandU(self, matrix):
+	def get_D_and_U(self, matrix):
 		matrixD = []
 		matrixU = []
 		size = len(matrix)
@@ -44,7 +44,7 @@ class SerialJacobi():
 			matrixU.append(rowU)
 		return matrixD, matrixU
 
-	def getInverse(self, matrixD):
+	def get_inverse(self, matrixD):
 		size = len(matrixD)
 		for i in range(0, size):
 			matrixD[i][i] = pow(matrixD[i][i], -1)
@@ -67,26 +67,32 @@ class SerialJacobi():
 				max = tmp
 		return max
 
-	def jacobi(self, A_matrix, b_vector, max_iterations, tolerance):
+	def relaxation(self, x_vector, xant_vector, relaxation):
+		size = len(x_vector)
+		xrelax_vector = []
+		for i in range(0, size):
+			xrelax_vector.append(relaxation * x_vector[i] + (1 - relaxation) * xant_vector[i])
+		return xrelax_vector
+
+	def jacobi(self, A_matrix, b_vector, max_iterations, tolerance, relaxation=1):
 		size = len(A_matrix)
 		x_vector = [0] * size
 		error = tolerance + 1
-		matrixD, matrixU = self.getDandU(A_matrix)
-		matrixD = self.getInverse(matrixD)
+		matrixD, matrixU = self.get_D_and_U(A_matrix)
+		matrixD = self.get_inverse(matrixD)
 		vector1 = self.multiply_matrix_vector(matrixD, b_vector)
 		matrix_aux = self.multiply_matrix_matrix(matrixD, matrixU)
 		count = 0
 		while error > tolerance and count < max_iterations:
 			xant_vector = x_vector
-			vector2 = self.multiply_matrix_vector(matrix_aux,x_vector)
+			vector2 = self.multiply_matrix_vector(matrix_aux,xant_vector)
 			x_vector = self.sum_vectors(vector1, vector2)
+			xrelax_vector = self.relaxation(x_vector, xant_vector, relaxation)
 			error = self.get_error(x_vector, xant_vector)
 			count += 1
-		if error < tolerance:
-			print("The solution is: ", x_vector)
-		else:
-			print("Sorry, it failed in ", count, "iterations")
-		return x_vector
+		if count > max_iterations:
+			x_vector = None
+		return x_vector, count, error
 
 
 if __name__ == '__main__':
@@ -104,3 +110,4 @@ if __name__ == '__main__':
 	tol = 0.001
 	serial_jacobi =	SerialJacobi()
 	serial_jacobi.jacobi(A_matrix, b_vector, max, tol)
+
