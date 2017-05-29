@@ -35,7 +35,7 @@ class SerialGaussianElimination:
         for j in range(k,n):
           A[i][j] = A[i][j] - multiplier * A[k][j]
         b[i] = b[i] - multiplier * b[k]
-    x = substitution.back_substitution(A, b, n)
+    x = substitution.back_substitution(A, b)
     return x
 
 

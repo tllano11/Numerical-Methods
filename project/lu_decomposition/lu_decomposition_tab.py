@@ -129,17 +129,16 @@ class LUDecompositionTab:
         print("U=", self.U)
 
     def substitution(self, widget, data=None):
-        filename = self.out_entry.get_text()
         self.x_vector = self.gaussian_lu_decomposition.get_solution(self.L, self.U, self.b_vector.flatten())
         print(self.x_vector)
         if self.x_vector is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
+                                       Gtk.ButtonsType.OK, "Solve ended successfully")
             dialog.run()
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed")
+                                       Gtk.ButtonsType.OK, "Solve failed")
             dialog.run()
             dialog.destroy()
 
@@ -152,7 +151,7 @@ class LUDecompositionTab:
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed")
+                                       Gtk.ButtonsType.OK, "Get determinant failed")
             dialog.run()
             dialog.destroy()
 

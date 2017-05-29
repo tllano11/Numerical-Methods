@@ -46,8 +46,8 @@ class SerialLUDecomposition():
     b -- Linearly independent vector.
     """
     size = len(b)
-    z = substitution.forward_substitution(L, b, size)
-    x = substitution.back_substitution(U, z, size)
+    z = substitution.forward_substitution(L, b)
+    x = substitution.back_substitution(U, z)
     print(x)
     return x
 

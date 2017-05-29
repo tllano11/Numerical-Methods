@@ -15,6 +15,7 @@ from numba import cuda
 import numpy as np
 import sys
 import csv
+import substitution
 
 
 class GuassianLUDecomposition:
@@ -62,30 +63,8 @@ class GuassianLUDecomposition:
         return L, U
 
     def get_solution(self, L, U, b):
-        z = self.forward_substitution(L, b)
-        x = self.back_substitution(U, z)
-        return x
-
-    def forward_substitution(self, L, b):
-        n = len(L[0])
-        z = [0] * n
-        for i in range(0, n):
-            if L[i][i] != 0:
-                accum = 0
-                for j in range(0, i):
-                    accum += L[i][j] * z[j]
-                z[i] = (b[i] - accum) / L[i][i]
-        return z
-
-    def back_substitution(self, U, z):
-        n = len(U[0])
-        x = [0] * n
-        for i in range(n - 1, -1, -1):
-            if U[i][i] != 0:
-                accum = 0
-                for j in range(i, n):
-                    accum += U[i][j] * x[j]
-                x[i] = (z[i] - accum) / U[i][i]
+        z = substitution.forward_substitution(L, b)
+        x = substitution.back_substitution(U, z)
         return x
 
     def gen_identity_matrix(self, size):
@@ -103,8 +82,8 @@ class GuassianLUDecomposition:
         identity_matrix = np.array(self.gen_identity_matrix(size))
         cont = 0
         for b in identity_matrix:
-            z = self.forward_substitution(L, b);
-            x = np.array(self.back_substitution(U, z))
+            z = substitution.forward_substitution(L, b);
+            x = np.array(substitution.back_substitution(U, z))
             x_column = x.reshape(len(x), 1)
             if cont == 0:
               AI = x_column

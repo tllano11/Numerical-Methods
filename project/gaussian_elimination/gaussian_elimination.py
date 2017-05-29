@@ -85,7 +85,7 @@ class GaussianElimination:
     b = A.reshape(rows, (columns+1))[:, columns]
     A = A.reshape(rows, (columns+1))[..., :-1]
 
-    x = substitution.back_substitution(A, b, rows)
+    x = substitution.back_substitution(A, b)
     print(x)
     return x
 
