@@ -70,6 +70,18 @@ class MatrixGenerator:
         vector_b = np.dot(matrix_A, vector_x)
         return (matrix_A, vector_x, vector_b)
 
+
+    @staticmethod
+    def gen_random_matrix(size):
+        matrix = np.zeros(shape=(size, size))
+        for i in range(0, size):
+            for j in range(0, size):
+                matrix[i][j] = uniform(-size, size)
+        vector_x = MatrixGenerator.gen_vector(size)
+        matrix_A = np.matrix(matrix)
+        vector_b = np.dot(matrix_A, vector_x)
+        return (matrix_A, vector_x, vector_b)
+
     @staticmethod
     def gen_band_matrix(size, k1, k2):
         """Creates a band matrix given a size.
