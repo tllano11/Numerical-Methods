@@ -129,7 +129,13 @@ class JacobiTab:
             self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
 
         print(self.x_vector)
-        if self.x_vector is None:
+        if self.x_vector is None and niter is None and error is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK,
+                                       "Jacobi can be executed because of a division by zero")
+            dialog.run()
+            dialog.destroy()
+        elif self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies" \
                                                            "the given tolerance in the provided number of iterations")
@@ -156,7 +162,13 @@ class JacobiTab:
                                                                    rel)
 
         print(self.x_vector)
-        if self.x_vector is None:
+        if self.x_vector is None and niter is None and error is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK,
+                                       "Jacobi can be executed because of a zero in the main diagonal")
+            dialog.run()
+            dialog.destroy()
+        elif self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies" \
                                                            "the given tolerance in the provided number of iterations ")

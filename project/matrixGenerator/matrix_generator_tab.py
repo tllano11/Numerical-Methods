@@ -7,7 +7,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 import numpy as np
-
 from matrix_generator import MatrixGenerator
 
 

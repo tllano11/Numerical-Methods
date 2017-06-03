@@ -54,7 +54,7 @@ class SerialJacobi:
         """Split a given matrix into two matrices D and U (uower and upper triangular matrices)
 
         keyword arguments:
-        matrix -- The matrix to be splited
+        matrix -- The matrix to be split
         """
         matrixD = []
         matrixU = []
@@ -81,6 +81,8 @@ class SerialJacobi:
         """
         size = len(matrixD)
         for i in range(0, size):
+            if matrixD[i][i] == 0:
+                return None
             matrixD[i][i] = pow(matrixD[i][i], -1)
         return matrixD
 
@@ -142,6 +144,9 @@ class SerialJacobi:
         error = tolerance + 1
         matrixD, matrixU = self.get_D_and_U(A_matrix)
         matrixD = self.get_inverse(matrixD)
+        if matrixD is None:
+            return None, None, None
+
         vector1 = self.multiply_matrix_vector(matrixD, b_vector)
         matrix_aux = self.multiply_matrix_matrix(matrixD, matrixU)
         count = 0
@@ -152,24 +157,10 @@ class SerialJacobi:
             x_vector = self.relaxation(x_vector, xant_vector, relaxation)
             error = self.get_error(x_vector, xant_vector)
             count += 1
-        if count > max_iterations:
+
+        if True in np.isnan(x_vector) or True in np.inf(x_vector):
+                return None, None, None
+        elif count > max_iterations:
             return None, count, error
         else:
             return x_vector, count, error
-
-
-if __name__ == '__main__':
-    with open('../../A.txt') as A_file:
-        reader = csv.reader(A_file, delimiter=' ')
-        matrix = list(reader)
-        A_matrix = np.array(matrix).astype("float")
-    with open('../../B.txt') as b_file:
-        reader = csv.reader(b_file, delimiter=' ')
-        vector = list(reader)
-        b_vector = np.array(vector).astype("float")
-    # A_matrix = [[4, 3, -2, -7],[3, 12, 8, -3], [2, 3, -9, 2], [1, -2, -5, 6]]
-    # b_vector = [20, 18, 21, 12]
-    maximum = 1000
-    tol = 0.001
-    serial_jacobi = SerialJacobi()
-    x = serial_jacobi.jacobi(A_matrix, b_vector, maximum, tol, 0.8)

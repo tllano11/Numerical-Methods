@@ -3,6 +3,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sparse_matrix import SparseMatrix
+import numpy as np
+import csv
 
 
 class SparseMatrixTab():
@@ -52,7 +54,7 @@ class SparseMatrixTab():
             self.filename = Gtk.FileChooser.get_filename(dialog)
             matrix_length = int(self.matrix_length_entry.get_text())
             density = float(self.matrix_density_entry.get_text())
-            self.sparseMatrix.create_sparse_matrix(filename, matrix_length, density)
+            self.sparseMatrix.create_sparse_matrix(self.filename, matrix_length, density)
 
         dialog.destroy()
 
@@ -68,6 +70,7 @@ class SparseMatrixTab():
                 reader = csv.reader(vector_file, delimiter=' ')
                 vector = list(reader)
                 vector = np.array(vector).astype("float64")
-        sparseMatrix = SparseMatrix()
-        SparseMatrix.multiply(self.filename, vector)
-        matrix_chooser.destroy()
+        vector_chooser.destroy()
+
+        sparse_matrix = SparseMatrix()
+        sparse_matrix.multiply(self.filename, vector)
