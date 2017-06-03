@@ -1,13 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+    File name: jacobi_parallel.py
+    Authors: Tomás Felipe Llano Ríos,
+             Juan Diego Ocampo García,
+             Johan Sebastián Yepes Ríos
+    Date created: 13-April-2017
+    Date last modified: 03-June-2017
+    Python Version: 3.6.0
+"""
+
 from numba import cuda
 import numpy as np
 import time, csv, sys
 
 
 class JacobiParallel:
-    @cuda.jit('void(float64[:], float64[:], float64[:], float64[:], int32, float32)', target='gpu', nopython=True)
+
+    @cuda.jit('void(float64[:], float64[:], float64[:], float64[:],'\
+              'int32, float32)', target='gpu', nopython=True)
     def jacobi(A, b, x_current, x_next, n, rel):
         """Performs jacobi for every thread in matrix A boundaries.
 
@@ -30,12 +42,15 @@ class JacobiParallel:
             x_next[idx] = (b[idx] - sigma) / A[index + idx]
             x_next[idx] = rel * x_next[idx] + (1 - rel) * x_current[idx]
 
-    @cuda.jit
+
+    @cuda.jit('void(float64[:], float64[:], float64[:], int32)',\
+              target='gpu', nopython=True)
     def get_error(x_current, x_next, x_error, rows):
         """Calculates jacobi's maximum error"""
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < rows:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
+
 
     def start(self, A, b, niter, tol, rel=1):
         """Launches parallel jacobi solver for a SLAE and returns its answer.
@@ -68,11 +83,15 @@ class JacobiParallel:
 
         while error > tol and count < niter:
             if count % 2:
-                self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length, rel)
-                self.get_error[bpg, tpb](gpu_x_current, gpu_x_next, gpu_x_error, length)
+                self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current,\
+                                      gpu_x_next, length, rel)
+                self.get_error[bpg, tpb](gpu_x_current, gpu_x_next,\
+                                         gpu_x_error, length)
             else:
-                self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, length, rel)
-                self.get_error[bpg, tpb](gpu_x_next, gpu_x_current, gpu_x_error, length)
+                self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next,\
+                                      gpu_x_current, length, rel)
+                self.get_error[bpg, tpb](gpu_x_next, gpu_x_current,\
+                                         gpu_x_error, length)
 
             x_error = gpu_x_error.copy_to_host()
             error = max(x_error)
@@ -87,36 +106,9 @@ class JacobiParallel:
             if True in np.isnan(x_next) or True in np.isinf(x_next):
                 return None, None, None
 
-            print("Jacobi done with an error of {} and iter {}".format(error, count))
+            print("Jacobi done with an error of {} and iter {}".format(error,\
+                                                                       count))
             return x_next, count, error
         else:
             print("Jacobi failed")
             return None, count, error
-
-
-def main(argv):
-    if len(argv) != 6:
-        print("Usage: python3.6 jacobi.py <A_matrix> <b_matrix> niter tol rel")
-        sys.exit()
-
-    A_name = argv[1]
-    b_name = argv[2]
-    niter = argv[3]
-    tol = argv[4]
-    rel = argv[5]
-
-    with open(A_name) as csvfile:
-        reader = csv.reader(csvfile, delimiter=' ')
-        matrix = list(reader)
-        A_matrix = np.array(matrix).astype("float64")
-
-    with open(b_name) as csvfile:
-        reader = csv.reader(csvfile, delimiter=' ')
-        matrix = list(reader)
-        b_vector = np.array(matrix).astype("float64")
-
-    jacobi_parallel = JacobiParallel()
-    jacobi_parallel.start(A_matrix, b_vector, niter, tol, rel)
-
-if __name__ == "__main__":
-    main(sys.argv)

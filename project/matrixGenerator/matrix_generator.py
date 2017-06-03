@@ -6,7 +6,7 @@
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
-    Date last modified: 29-May-2017
+    Date last modified: 03-June-2017
     Python Version: 3.6.0
 """
 

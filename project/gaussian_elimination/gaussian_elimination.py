@@ -7,7 +7,7 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 13-April-2017
-    Date last modified: 29-May-2017
+    Date last modified: 03-June-2017
     Python Version: 3.6.0
 """
 
@@ -18,16 +18,16 @@ import numpy as np
 import csv, sys
 from time import time
 
+#Threads Per Block
 tpb = 32
 
 class GaussianElimination:
 
     @cuda.jit('void(float64[:], int32, int32)', target='gpu', nopython=True)
     def gaussian_elimination(Ab, size, i):
-        global tpb
         """ Performs Gaussian elimination for each row of a column.
 
-        Key arguments:
+        Keyword arguments:
         A -- Augmented matrix representing a SLAE.
         size -- Size of coefficiente matrix.
         i -- Integer representing the current column in which all threads
@@ -54,6 +54,7 @@ class GaussianElimination:
             Ab[idx * size + idy] = sAb[tx, ty]
             cuda.syncthreads()
 
+
     def start(self, A_matrix, b_matrix):
         """Launches parallel Gaussian elimination for a SLAE and returns its answer.
 
@@ -65,23 +66,22 @@ class GaussianElimination:
         A = np.hstack((A_matrix, b))
         A = A.flatten()
 
-        rows = len(b)
-        columns = len(b)
-        matrix_size = rows * columns
+        n = len(b)
 
         with cuda.pinned(A):
             stream = cuda.stream()
             gpu_A = cuda.to_device(A, stream=stream)
-            bpg = matrix_size + (tpb - 1) // tpb
+            #bpg = n + (tpb - 1) // tpb
+            bpg = 1
 
             start = time()
-            for i in range(0, rows):
-                self.gaussian_elimination[(bpg, bpg), (tpb, tpb)](gpu_A, rows, i)
+            for i in range(0, n):
+                self.gaussian_elimination[(bpg, bpg), (tpb, tpb)](gpu_A, n, i)
 
         gpu_A.copy_to_host(A, stream)
 
-        b = A.reshape(rows, (columns + 1))[:, columns]
-        A = A.reshape(rows, (columns + 1))[..., :-1]
+        b = A.reshape(n, (n + 1))[:, n]
+        A = A.reshape(n, (n + 1))[..., :-1]
 
         x = substitution.back_substitution(A, b)
         end = time()

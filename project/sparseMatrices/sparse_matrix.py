@@ -6,7 +6,7 @@
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
-    Date last modified: 29-May-2017
+    Date last modified: 03-June-2017
     Python Version: 3.6.0
 """
 
@@ -93,7 +93,7 @@ class SparseMatrix():
             res.append(val)
         print(res)
         return res
-                
+
 
 def main(argv):
     if len(argv) != 4:
@@ -108,6 +108,6 @@ def main(argv):
         print(type(vector))
 
     sparseMatrix.multiply(argv[1], vector)
-  
+
 if __name__ == '__main__':
     main(sys.argv)
