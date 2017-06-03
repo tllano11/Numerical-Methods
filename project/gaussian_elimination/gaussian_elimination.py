@@ -12,14 +12,18 @@
 """
 
 from numba import cuda
+from numba import float64
 import substitution
 import numpy as np
 import csv, sys
 
+tpb = 32
 
 class GaussianElimination:
-    @cuda.jit
-    def gaussian_elimination(A, size, i):
+
+    @cuda.jit('void(float64[:], int32, int32)', target='gpu', nopython=True)
+    def gaussian_elimination(Ab, size, i):
+        global tpb
         """ Performs Gaussian elimination for each row of a column.
 
         Key arguments:
@@ -28,18 +32,25 @@ class GaussianElimination:
         i -- Integer representing the current column in which all threads
         are performing row operations.
         """
+        tx = cuda.threadIdx.x
+        ty = cuda.threadIdx.y
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
+        sAb = cuda.shared.array(shape=(tpb, tpb), dtype=float64)
         size += 1
 
         # Thread does nothing when idx or idy are out of the matrix boundaries.
         if idx < size and idy < size:
+            sAb[tx, ty] = Ab[idx * size + idy]
+            cuda.syncthreads()
             # Operates on rows below the diagonal.
             if idx > i:
-                mul = A[idx * size + i] / A[i * size + i]
+                mul = sAb[tx, i] / sAb[i, i]
                 # Computes elements to the right of column i.
                 if idy >= i:
-                    A[idx * size + idy] -= A[i * size + idy] * mul
+                    sAb[tx, ty] -= sAb[i, ty] * mul
+            cuda.syncthreads()
+            Ab[idx * size + idy] = sAb[tx, ty]
             cuda.syncthreads()
 
     def start(self, A_matrix, b_matrix):
@@ -55,7 +66,6 @@ class GaussianElimination:
 
         rows = len(b)
         columns = len(b)
-        tpb = 32
         matrix_size = rows * columns
 
         with cuda.pinned(A):
@@ -94,7 +104,7 @@ def main(argv):
         b_matrix = np.array(matrix).astype("float64")
 
     gauss = GaussianElimination()
-    gauss.start(A_matrix, b_matrix)
+    print(gauss.start(A_matrix, b_matrix))
 
 
 if __name__ == "__main__":
