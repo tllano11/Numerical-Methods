@@ -33,6 +33,9 @@ class SparseMatrixTab():
         button1.connect("clicked", self.create_sparse_matrix)
         sparse_matrix_box.pack_start(button1, True, True, 10)
 
+        operations_lbl = Gtk.Label("Operations: ")
+        sparse_matrix_box.pack_start(operations_lbl, True, True, 10)
+
         button2 = Gtk.Button("Multiply")
         button2.connect("clicked", self.multiply)
         sparse_matrix_box.pack_start(button2, True, True, 10)
