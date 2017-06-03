@@ -9,12 +9,12 @@ import time, csv, sys
 class JacobiParallel:
     @cuda.jit
     def jacobi(A, b, x_current, x_next, n, rel):
-        """Performs jacobi for every thread in matrix A bounaries.
+        """Performs jacobi for every thread in matrix A boundaries.
 
         Key arguments:
         A -- Coefficient matrix.
         b -- Linearly independent vector.
-        x_current -- Current answer's aproximation.
+        x_current -- Current answer's approximation.
         x_next -- vector in which to store new answer.
         n -- Coefficient matrix' size.
         rel -- Relaxation coefficient.
@@ -32,7 +32,7 @@ class JacobiParallel:
 
     @cuda.jit
     def get_error(x_current, x_next, x_error, rows):
-        """Calcualtes jacobi's maximum error"""
+        """Calculates jacobi's maximum error"""
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < rows:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
@@ -45,8 +45,11 @@ class JacobiParallel:
         b -- Linearly independent vector of a SLAE.
         niter -- Maximum number of iterations before jacobi stops.
         tol -- Maximum error reached by jacobi when solving the system.
-        rel -- relaxation coeeficient.
+        rel -- relaxation coefficient.
         """
+        if 0 in A.diagonal():
+            return None, None, None
+
         A = A.flatten()
         b = b.flatten()
         tpb = 32
@@ -63,7 +66,6 @@ class JacobiParallel:
         count = 0
         error = tol + 1
 
-        start = time.time()
         while error > tol and count < niter:
             if count % 2:
                 self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, length, rel)
@@ -75,7 +77,6 @@ class JacobiParallel:
             x_error = gpu_x_error.copy_to_host()
             error = max(x_error)
             count += 1
-        end = time.time()
 
         if error < tol:
             if count % 2:
@@ -83,61 +84,39 @@ class JacobiParallel:
             else:
                 x_next = gpu_x_current.copy_to_host()
 
-            print("Jacobi algorithm computation time was: {} sec".format(end - start))
+            if True in np.isnan(x_next) or True in np.inf(x_next):
+                return None, None, None
+
             print("Jacobi done with an error of {} and iter {}".format(error, count))
             return x_next, count, error
         else:
             print("Jacobi failed")
             return None, count, error
 
+
 def main(argv):
-    if len(argv) != 3:
-        print("Usage: python3.6 jacobi.py <A_matrix> <b_matrix>")
+    if len(argv) != 6:
+        print("Usage: python3.6 jacobi.py <A_matrix> <b_matrix> niter tol rel")
         sys.exit()
 
     A_name = argv[1]
     b_name = argv[2]
+    niter = argv[3]
+    tol = argv[4]
+    rel = argv[5]
 
     with open(A_name) as csvfile:
         reader = csv.reader(csvfile, delimiter=' ')
         matrix = list(reader)
         A_matrix = np.array(matrix).astype("float64")
-        A = A_matrix.flatten()
 
     with open(b_name) as csvfile:
         reader = csv.reader(csvfile, delimiter=' ')
         matrix = list(reader)
-        b_matrix = np.array(matrix).astype("float64")
-        b = b_matrix.flatten()
+        b_vector = np.array(matrix).astype("float64")
 
-    n = len(b)
-    tpb = 32
-    matrix_size = n * n
-
-    x_current = np.zeros(n, dtype=np.float64)
-    x_next = np.zeros(n, dtype=np.float64)
-    gpu_A = cuda.to_device(A)
-    gpu_b = cuda.to_device(b)
-    gpu_x_current = cuda.to_device(x_current)
-    gpu_x_next = cuda.to_device(x_next)
-
-    bpg = matrix_size + (tpb - 1) // tpb
-    jacobiParallel = JacobiParallel()
-
-    start = time.time()
-    for i in range(0, 100):
-        if i % 2:
-            jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, gpu_x_next, n, 1)
-        else:
-            jacobiParallel.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_next, gpu_x_current, n, 1)
-
-    end = time.time()
-
-    x_next = gpu_x_next.copy_to_host()
-
-    print("Jacobis's algorithm computation time was: {} sec".format(end - start))
-    print(x_next)
-
+    jacobi_parallel = JacobiParallel()
+    jacobi_parallel.start(A_matrix, b_vector, niter, tol, rel)
 
 if __name__ == "__main__":
     main(sys.argv)
