@@ -49,7 +49,7 @@ class MatrixGenerator:
             matrix.append(row)
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return matrix_A, vector_x, vector_b
 
     @staticmethod
@@ -67,7 +67,7 @@ class MatrixGenerator:
                 matrix[j][i] = value
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
 
@@ -79,7 +79,7 @@ class MatrixGenerator:
                 matrix[i][j] = uniform(-size, size)
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
@@ -100,7 +100,7 @@ class MatrixGenerator:
                     matrix[i][j] = 1
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
@@ -115,7 +115,7 @@ class MatrixGenerator:
             matrix[i][i] = 1
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
@@ -130,9 +130,9 @@ class MatrixGenerator:
             for j in range(0, size):
                 if i == j:
                     matrix[i][j] = uniform(-size, size)
-                vector_x = MatrixGenerator.gen_vector(size)
+        vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
@@ -148,7 +148,7 @@ class MatrixGenerator:
             matrix[i][I] = value
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
@@ -169,7 +169,7 @@ class MatrixGenerator:
                     matrix[j][i] = -value
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
@@ -187,7 +187,7 @@ class MatrixGenerator:
                     matrix[i][j] = rand_num
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
 
     @staticmethod
@@ -205,5 +205,9 @@ class MatrixGenerator:
                     matrix[i][j] = rand_num
         vector_x = MatrixGenerator.gen_vector(size)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x)
+        vector_b = np.dot(matrix_A, vector_x).reshape(size, 1)
         return (matrix_A, vector_x, vector_b)
+
+if __name__ == '__main__':
+    gen = MatrixGenerator()
+    gen.gen_dominant(2)
