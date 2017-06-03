@@ -60,15 +60,17 @@ def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
                 A.append(A_line)
                 b.append(b_value)
             else:
-                x = jp.start(np.array(A).flatten(), \
+                x = jp.start(np.array(A), \
                              np.array(b), \
                              x_current, (count2 - rows_to_read))
+                if x is None:
+                    return None, None, None
 
                 x_next = np.append(x_next, x)
                 A = [A_line]
                 b = [b_value]
             count2 += 1
-        x = jp.start(np.array(A).flatten(), np.array(b), \
+        x = jp.start(np.array(A), np.array(b), \
                      x_current, (count2 - len(A)))
         x_next = np.append(x_next, x)
         error = get_error(x_next, x_current)

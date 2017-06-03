@@ -84,7 +84,7 @@ class JacobiParallel:
             else:
                 x_next = gpu_x_current.copy_to_host()
 
-            if True in np.isnan(x_next) or True in np.inf(x_next):
+            if True in np.isnan(x_next) or True in np.isinf(x_next):
                 return None, None, None
 
             print("Jacobi done with an error of {} and iter {}".format(error, count))

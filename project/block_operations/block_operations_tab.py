@@ -121,7 +121,14 @@ class BlockTab:
         rows_to_read = int(self.rows_entry.get_text())
         tol = float(self.tol_entry.get_text())
         self.x_vector, error, count = start(self.A_matrix, self.b_vector, rows_to_read, size, niter, tol)
-        if self.x_vector is None:
+        print(self.x_vector)
+        if self.x_vector is None and error is None and count is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK,
+                                       "Jacobi can be executed because of a zero in the main diagonal")
+            dialog.run()
+            dialog.destroy()
+        elif self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Jacobi Failed")
             dialog.run()

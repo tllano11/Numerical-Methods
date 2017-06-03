@@ -36,9 +36,19 @@ class JacobiParallel:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
 
     def start(self, A, b, x_current, first_row_block, rel=1):
+        rows = len(b)
+
+        print(first_row_block)
+        col = first_row_block
+        print(len(A))
+        for i in range(0, rows):
+            if A[i][col] == 0.0:
+                return None
+            col += 1
+
+        A = A.flatten()
         tpb = 32
         bpg = len(A) + (tpb - 1) // tpb
-        rows = len(b)
         cols = len(A) // rows
         x_next = np.zeros(rows, dtype=np.float64)
         gpu_A = cuda.to_device(A)

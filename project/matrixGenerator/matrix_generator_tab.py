@@ -108,11 +108,6 @@ class MatrixGeneratorTab:
             elif self.selected_generator == 10:
                 matrix_A, vector_x, vector_b = MatrixGenerator.gen_random_matrix(length)
 
-            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Matrix Generated Successfully")
-            dialog.run()
-            dialog.destroy()
-
             dialog = Gtk.FileChooserDialog("Please choose a file", None,
                         Gtk.FileChooserAction.SAVE,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -127,4 +122,9 @@ class MatrixGeneratorTab:
                 np.savetxt(filename+"_x", vector_x, fmt="%1.9f", delimiter=" ")
                 np.savetxt(filename+"_b", vector_b, fmt="%1.9f", delimiter=" ")
 
+            dialog.destroy()
+
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Matrix Generated Successfully")
+            dialog.run()
             dialog.destroy()
