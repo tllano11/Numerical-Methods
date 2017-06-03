@@ -75,7 +75,7 @@ def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
         x_current = np.array(x_next).flatten()
         count += 1
 
-    if count > niter:
-        return None, error, niter
+    if error > tol:
+        return None, error, count
     else:
-        return x_current, error, niter
+        return x_current, error, count

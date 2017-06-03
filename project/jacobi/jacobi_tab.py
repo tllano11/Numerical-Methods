@@ -123,15 +123,16 @@ class JacobiTab:
         rel = self.rel_entry.get_text()
 
         if rel == "":
-          self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol)
+            self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol)
         else:
-          rel = float(rel)
-          self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
+            rel = float(rel)
+            self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
 
         print(self.x_vector)
         if self.x_vector is None:
-            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.WARNING,
-                                       Gtk.ButtonsType.OK_CANCEL, "Jacobi Failed in {} iterations".format(niter))
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies" \
+                                                           "the given tolerance in the provided number of iterations")
             dialog.run()
             dialog.destroy()
         else:
@@ -151,12 +152,14 @@ class JacobiTab:
             self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector, niter, tol)
         else:
             rel = float(rel)
-            self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector.flatten(), niter, tol, rel)
+            self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector.flatten(), niter, tol,
+                                                                   rel)
 
         print(self.x_vector)
         if self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Jacobi Failed in {} iterations".format(niter))
+                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies" \
+                                                           "the given tolerance in the provided number of iterations ")
             dialog.run()
             dialog.destroy()
         else:

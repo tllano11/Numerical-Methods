@@ -103,6 +103,11 @@ class MatrixGeneratorTab:
             elif self.selected_generator == 9:
                 matrix_A, vector_x, vector_b = MatrixGenerator.gen_upper_matrix(length)
 
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Matrix Generated Successfully")
+            dialog.run()
+            dialog.destroy()
+
             dialog = Gtk.FileChooserDialog("Please choose a file", None,
                         Gtk.FileChooserAction.SAVE,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,

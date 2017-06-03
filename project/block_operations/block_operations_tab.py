@@ -120,16 +120,16 @@ class BlockTab:
         size = int(self.size_entry.get_text())
         rows_to_read = int(self.rows_entry.get_text())
         tol = float(self.tol_entry.get_text())
-        self.x_vector, error, niter = start(self.A_matrix, self.b_vector, rows_to_read, size, niter, tol)
+        self.x_vector, error, count = start(self.A_matrix, self.b_vector, rows_to_read, size, niter, tol)
         if self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Jacobi Failed in {} iterations".format(niter))
+                                       Gtk.ButtonsType.OK, "Jacobi Failed")
             dialog.run()
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK,
-                                       "Jacobi ended successfully in {} iterations with an error of {}".format(niter,
+                                       "Jacobi ended successfully in {} iterations with an error of {}".format(count,
                                                                                                                error))
             dialog.run()
             dialog.destroy()
