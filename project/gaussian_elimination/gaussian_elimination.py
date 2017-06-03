@@ -16,6 +16,7 @@ from numba import float64
 import substitution
 import numpy as np
 import csv, sys
+from time import time
 
 tpb = 32
 
@@ -73,6 +74,7 @@ class GaussianElimination:
             gpu_A = cuda.to_device(A, stream=stream)
             bpg = matrix_size + (tpb - 1) // tpb
 
+            start = time()
             for i in range(0, rows):
                 self.gaussian_elimination[(bpg, bpg), (tpb, tpb)](gpu_A, rows, i)
 
@@ -82,6 +84,8 @@ class GaussianElimination:
         A = A.reshape(rows, (columns + 1))[..., :-1]
 
         x = substitution.back_substitution(A, b)
+        end = time()
+        print(end - start)
         return x
 
 

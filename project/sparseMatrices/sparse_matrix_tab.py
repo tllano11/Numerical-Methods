@@ -3,6 +3,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sparse_matrix import SparseMatrix
+import numpy as np
+import csv
 
 
 class SparseMatrixTab():
@@ -21,7 +23,7 @@ class SparseMatrixTab():
         self.matrix_length_entry = Gtk.Entry()
         sparse_matrix_box.pack_start(self.matrix_length_entry, True, True, 10)
 
-        matrix_density_lbl = Gtk.Label("Matrix density")
+        matrix_density_lbl = Gtk.Label("Matrix density (0 - 1)")
         sparse_matrix_box.pack_start(matrix_density_lbl, True, True, 10)
         self.matrix_density_entry = Gtk.Entry()
         sparse_matrix_box.pack_start(self.matrix_density_entry, True, True, 10)
@@ -30,6 +32,9 @@ class SparseMatrixTab():
         button1 = Gtk.Button(" Save matrix as", image=image)
         button1.connect("clicked", self.create_sparse_matrix)
         sparse_matrix_box.pack_start(button1, True, True, 10)
+
+        operations_lbl = Gtk.Label("Operations: ")
+        sparse_matrix_box.pack_start(operations_lbl, True, True, 10)
 
         button2 = Gtk.Button("Multiply")
         button2.connect("clicked", self.multiply)
@@ -49,7 +54,7 @@ class SparseMatrixTab():
             self.filename = Gtk.FileChooser.get_filename(dialog)
             matrix_length = int(self.matrix_length_entry.get_text())
             density = float(self.matrix_density_entry.get_text())
-            self.sparseMatrix.create_sparse_matrix(filename, matrix_length, density)
+            self.sparseMatrix.create_sparse_matrix(self.filename, matrix_length, density)
 
         dialog.destroy()
 
@@ -65,6 +70,7 @@ class SparseMatrixTab():
                 reader = csv.reader(vector_file, delimiter=' ')
                 vector = list(reader)
                 vector = np.array(vector).astype("float64")
-        sparseMatrix = SparseMatrix()
-        SparseMatrix.multiply(self.filename, vector)
-        matrix_chooser.destroy()
+        vector_chooser.destroy()
+
+        sparse_matrix = SparseMatrix()
+        sparse_matrix.multiply(self.filename, vector)

@@ -7,7 +7,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 import numpy as np
-
 from matrix_generator import MatrixGenerator
 
 
@@ -108,6 +107,11 @@ class MatrixGeneratorTab:
                 matrix_A, vector_x, vector_b = MatrixGenerator.gen_upper_matrix(length)
             elif self.selected_generator == 10:
                 matrix_A, vector_x, vector_b = MatrixGenerator.gen_random_matrix(length)
+
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "Matrix Generated Successfully")
+            dialog.run()
+            dialog.destroy()
 
             dialog = Gtk.FileChooserDialog("Please choose a file", None,
                         Gtk.FileChooserAction.SAVE,

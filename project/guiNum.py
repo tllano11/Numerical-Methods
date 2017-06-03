@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
-'''
+"""
     File name: guiNum.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
@@ -9,7 +9,7 @@
     Date created: 13-April-2017
     Date last modified: 20-May-2017
     Python Version: 3.6.0
-'''
+"""
 
 import sys
 
@@ -71,13 +71,13 @@ class PyApp(Gtk.Window):
         label.set_justify(Gtk.Justification.CENTER)
         vbox_left.pack_start(label, True, True, 0)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./eafit.png", width=200, height=500,
-                                                 preserve_aspect_ratio=True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./images/eafit.png", width=200, height=500,
+                                                         preserve_aspect_ratio=True)
         photo = Gtk.Image.new_from_pixbuf(pixbuf)
         vbox_left.pack_start(photo, True, True, 0)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./Johan.jpg", width=100, height=500,
-                                                 preserve_aspect_ratio=True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./images/Johan.jpg", width=100, height=500,
+                                                         preserve_aspect_ratio=True)
         photo = Gtk.Image.new_from_pixbuf(pixbuf)
         vbox_right.pack_start(photo, True, True, 0)
 
@@ -85,8 +85,8 @@ class PyApp(Gtk.Window):
         label.set_markup("<b>Johan Sebastián Yepes Ríos</b>")
         vbox_right.pack_start(label, True, True, 0)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./Diego.jpg", width=100, height=500,
-                                                 preserve_aspect_ratio=True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./images/Diego.jpg", width=100, height=500,
+                                                         preserve_aspect_ratio=True)
         photo = Gtk.Image.new_from_pixbuf(pixbuf)
         vbox_right.pack_start(photo, True, True, 0)
 
@@ -94,8 +94,8 @@ class PyApp(Gtk.Window):
         label.set_markup("<b>Juan Diego Ocampo García</b>")
         vbox_right.pack_start(label, True, True, 0)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./Tomas.jpg", width=100, height=500,
-                                                 preserve_aspect_ratio=True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("./images/Tomas.jpg", width=100, height=500,
+                                                         preserve_aspect_ratio=True)
         photo = Gtk.Image.new_from_pixbuf(pixbuf)
         vbox_right.pack_start(photo, True, True, 0)
 
@@ -105,7 +105,6 @@ class PyApp(Gtk.Window):
 
         notebook.append_page(hbox)
         notebook.set_tab_label_text(hbox, "About us")
-
 
         # Adding sparse matrix
         vbox_sparse_matrix = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -175,10 +174,10 @@ class PyApp(Gtk.Window):
         notebook.append_page(vbox_blocks)
         notebook.set_tab_label_text(vbox_blocks, "Operations by Blocks")
 
-
         self.add(notebook)
         self.connect("destroy", Gtk.main_quit)
         self.show_all()
+
 
 if __name__ == '__main__':
     PyApp()
