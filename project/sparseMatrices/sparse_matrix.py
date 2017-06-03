@@ -15,6 +15,7 @@ import random
 import json
 import sys
 from pprint import pprint
+import csv
 
 
 class SparseMatrix():
@@ -72,6 +73,7 @@ class SparseMatrix():
         print(values)
 
     def multiply(self, filename_matrix, vector):
+        vector = vector.flatten()
         with open(filename_matrix) as f_matrix:
             matrix1 = json.load(f_matrix)
 
@@ -89,6 +91,7 @@ class SparseMatrix():
             except:
                 val = 0
             res.append(val)
+        print(res)
         return res
                 
 
@@ -98,7 +101,13 @@ def main(argv):
         sys.exit()
     sparseMatrix = SparseMatrix()
     sparseMatrix.create_sparse_matrix(argv[1], int(argv[2]), float(argv[3]))
-    sparseMatrix.multiply(argv[1], [9,8,7,6,5,4,3,2,1,0])
+    with open("vector") as vector_file:
+        reader = csv.reader(vector_file, delimiter=' ')
+        vector = list(reader)
+        vector = np.array(vector).astype("float64")
+        print(type(vector))
+
+    sparseMatrix.multiply(argv[1], vector)
   
 if __name__ == '__main__':
     main(sys.argv)

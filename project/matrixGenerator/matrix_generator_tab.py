@@ -62,6 +62,10 @@ class MatrixGeneratorTab:
         button9.connect("toggled", self.set_generator, "9")
         gen_matrix_box.pack_start(button9, True, True, 10)
 
+        button10 = Gtk.RadioButton.new_with_label_from_widget(button1, "Random")
+        button10.connect("toggled", self.set_generator, "10")
+        gen_matrix_box.pack_start(button10, True, True, 10)
+
         image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
         gen_button = Gtk.Button(" Save matrices as", image=image)
         gen_button.connect("clicked", self.gen_matrix, None)
@@ -102,6 +106,8 @@ class MatrixGeneratorTab:
                 matrix_A, vector_x, vector_b = MatrixGenerator.gen_lower_matrix(length)
             elif self.selected_generator == 9:
                 matrix_A, vector_x, vector_b = MatrixGenerator.gen_upper_matrix(length)
+            elif self.selected_generator == 10:
+                matrix_A, vector_x, vector_b = MatrixGenerator.gen_random_matrix(length)
 
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "Matrix Generated Successfully")
