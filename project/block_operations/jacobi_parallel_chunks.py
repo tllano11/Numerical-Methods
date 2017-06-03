@@ -15,7 +15,7 @@ import time, csv, sys
 
 
 class JacobiParallel:
-    @cuda.jit
+    @cuda.jit('void(float64[:], float64[:], float64[:], float64[:], int32, int32, int32, float32)', target='gpu', nopython=True)
     def jacobi(A, b, x_current, x_next, rows, cols, first_row_block, rel):
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         current_row = first_row_block + idx
@@ -37,12 +37,9 @@ class JacobiParallel:
 
     def start(self, A, b, x_current, first_row_block, rel=1):
         rows = len(b)
-
-        print(first_row_block)
         col = first_row_block
-        print(len(A))
         for i in range(0, rows):
-            if A[i][col] == 0.0:
+            if A[i][col] == 0:
                 return None
             col += 1
 

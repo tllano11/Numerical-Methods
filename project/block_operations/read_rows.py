@@ -67,11 +67,15 @@ def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
                     return None, None, None
 
                 x_next = np.append(x_next, x)
-                A = [A_line]
-                b = [b_value]
+                A.clear()
+                A.append(A_line)
+                b.clear()
+                b.append(b_value)
             count2 += 1
         x = jp.start(np.array(A), np.array(b), \
                      x_current, (count2 - len(A)))
+        if x is None:
+            return None, None, None
         x_next = np.append(x_next, x)
         error = get_error(x_next, x_current)
         x_current = np.array(x_next).flatten()

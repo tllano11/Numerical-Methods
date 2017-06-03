@@ -7,7 +7,7 @@ import time, csv, sys
 
 
 class JacobiParallel:
-    @cuda.jit
+    @cuda.jit('void(float64[:], float64[:], float64[:], float64[:], int32, float32)', target='gpu', nopython=True)
     def jacobi(A, b, x_current, x_next, n, rel):
         """Performs jacobi for every thread in matrix A boundaries.
 
