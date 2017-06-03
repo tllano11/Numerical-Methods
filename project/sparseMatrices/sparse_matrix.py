@@ -34,11 +34,10 @@ class SparseMatrix():
         columns = []
         values = []
 
-        pointerB.append(pos)
         for i in range(0, matrix_length):
             row = []
-            if (pos != aux_pos):
-                pointerB.append(pos)
+            #if (pos != aux_pos):
+            pointerB.append(pos)
             aux_pos = pos
             for j in range(0, matrix_length):
                 probability = random.random()
@@ -50,9 +49,10 @@ class SparseMatrix():
                 else:
                     val = 0
                 row.append(val)
-                if (pos != aux_pos):
-                    pointerE.append(pos)
-                matrix.append(row)
+            matrix.append(row)
+            #if (pos != aux_pos):
+            pointerE.append(pos)
+        print(matrix)
         data = {"values": values, "columns": columns, "pointerB": pointerB, "pointerE": pointerE}
         data_json = json.dumps(data)
         file = open(filename, 'w')
@@ -70,3 +70,35 @@ class SparseMatrix():
         values = data["values"]
         print("JSON")
         print(values)
+
+    def multiply(self, filename_matrix, vector):
+        with open(filename_matrix) as f_matrix:
+            matrix1 = json.load(f_matrix)
+
+        values_matrix1 = matrix1["values"]
+        columns_matrix1 = matrix1["columns"]
+        pointerB_matrix1 = matrix1["pointerB"]
+        pointerE_matrix1 = matrix1["pointerE"]
+
+        res = []
+        for i in range(0, len(vector)):
+            val = 0
+            try:
+                for j in range(pointerB_matrix1[i], pointerE_matrix1[i]):
+                    val += values_matrix1[j] * vector[columns_matrix1[j]]
+            except:
+                val = 0
+            res.append(val)
+        return res
+                
+
+def main(argv):
+    if len(argv) != 4:
+        print("Unsage: ./program filename matrix_length density")
+        sys.exit()
+    sparseMatrix = SparseMatrix()
+    sparseMatrix.create_sparse_matrix(argv[1], int(argv[2]), float(argv[3]))
+    sparseMatrix.multiply(argv[1], [9,8,7,6,5,4,3,2,1,0])
+  
+if __name__ == '__main__':
+    main(sys.argv)
