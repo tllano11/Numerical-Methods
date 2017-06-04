@@ -17,6 +17,7 @@ import time, csv, sys, copy
 
 tpb = 32
 
+
 class GaussJordan:
     @cuda.jit
     def gauss_jordan(A, size, i):
@@ -32,18 +33,18 @@ class GaussJordan:
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
         size += 1
-        #Indicates which row must be computed by the current thread.
+        # Indicates which row must be computed by the current thread.
         index_r = idx * size
-        #Indicates the pivot row
+        # Indicates the pivot row
         index_p = i * size
-        #Thread does nothing when idx or idy are out of the matrix boundaries.
+        # Thread does nothing when idx or idy are out of the matrix boundaries.
         if idx < size and idy < size:
-            #Operates on rows below the diagonal.
+            # Operates on rows below the diagonal.
             if idx > i:
                 mul = A[index_r + i] / A[index_p + i]
                 if idy >= i:
                     A[index_r + idy] -= A[index_p + idy] * mul
-            #Operates on rows above the diagonal.
+            # Operates on rows above the diagonal.
             elif idx < i:
                 mul = A[index_r + i] / A[index_p + i]
                 if idy >= i:
@@ -70,7 +71,6 @@ class GaussJordan:
                 A[index + idy] /= pivot
                 cuda.syncthreads()
 
-
     def start(self, A_matrix, b_vector):
         """Launches parallel Gauss Jordan elimination for a SLAE and returns
         its answer.
@@ -79,6 +79,9 @@ class GaussJordan:
         A_matrix -- Coefficient matrix of a SLAE.
         b_vector -- Linearly independent vector of a SLAE.
         """
+        if 0 in A_matrix.diagonal():
+            return None
+
         b = b_vector.reshape(len(b_vector), 1)
         A = np.hstack((A_matrix, b))
         A = A.flatten()
@@ -90,7 +93,7 @@ class GaussJordan:
             gpu_A = cuda.to_device(A, stream=stream)
             bpg = 1
 
-            for i in range(0, rows):
+            for i in range(0, n):
                 self.gauss_jordan[(bpg, bpg), (tpb, tpb)](gpu_A, n, i)
                 self.normalize[(bpg, bpg), (tpb, tpb)](gpu_A, n)
 

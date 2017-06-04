@@ -27,6 +27,8 @@ class GaussJordanSerial:
         for k in range(0, n):
             for i in range(0, n):
                 if i != k:
+                    if A[k][k] == 0:
+                        return None
                     multiplier = A[i][k] / A[k][k]
                     for j in range(k, n):
                         A[i][j] = A[i][j] - multiplier * A[k][j]
