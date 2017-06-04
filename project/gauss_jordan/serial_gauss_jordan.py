@@ -11,6 +11,7 @@
 """
 
 import sys
+import csv
 import numpy as np
 
 
@@ -39,9 +40,24 @@ class GaussJordanSerial:
         return b
 
 
-if __name__ == '__main__':
-    A = np.array([[14, 6, -2, 3], [3, 15, 2, -5], [-7, 4, -23, 2], [1, -3, -2, 16]], dtype="float")
-    b = np.array([12, 32, -24, 14], dtype="float")
+def main(argv):
+    A_name = argv[1]
+    b_name = argv[2]
+
+    with open(A_name) as csvfile:
+        reader = csv.reader(csvfile, delimiter=' ')
+        matrix = list(reader)
+        A = np.array(matrix).astype("float64")
+
+    with open(b_name) as csvfile:
+        reader = csv.reader(csvfile, delimiter=' ')
+        matrix = list(reader)
+        b = np.array(matrix).astype("float64")
+
     gauss = GaussJordanSerial()
     x = gauss.elimination(A, b)
     print(x)
+
+
+if __name__ == '__main__':
+    main(sys.argv)

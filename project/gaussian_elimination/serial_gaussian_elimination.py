@@ -14,7 +14,6 @@ import sys
 import numpy as np
 import substitution
 from time import time
-from pprint import pprint
 
 
 class SerialGaussianElimination:
@@ -26,12 +25,7 @@ class SerialGaussianElimination:
         A -- The coefficient matrix of the system.
         b -- The linearly independent vector.
         """
-<<<<<<< HEAD
         b = b.flatten()
-=======
-        print(A)
-        print(b)
->>>>>>> 1e8b1dc6973104e283db3b66848259e7a5927d7f
         n = len(A)
         for k in range(0, n - 1):
             A, b = self.partial_pivot(A, b, k)
@@ -42,7 +36,6 @@ class SerialGaussianElimination:
                 for j in range(k, n):
                     A[i][j] = A[i][j] - multiplier * A[k][j]
                 b[i] = b[i] - multiplier * b[k]
-        pprint(A)
         x = substitution.back_substitution(A, b)
         return x
 

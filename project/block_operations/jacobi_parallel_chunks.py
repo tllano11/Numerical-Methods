@@ -15,8 +15,7 @@ import time, csv, sys
 
 
 class JacobiParallel:
-
-    @cuda.jit('void(float64[:], float64[:], float64[:], float64[:],'\
+    @cuda.jit('void(float64[:], float64[:], float64[:], float64[:],' \
               'int32, int32, int32, float32)', target='gpu', nopython=True)
     def jacobi(A, b, x_current, x_next, rows, cols, first_row_block, rel):
         """Performs jacobi for every thread in matrix A boundaries.
@@ -45,14 +44,12 @@ class JacobiParallel:
             x_next[idx] = (b[idx] - sigma) / A[index + current_row]
             x_next[idx] = rel * x_next[idx] + (1 - rel) * x_current[idx]
 
-
-    @cuda.jit('void(float64[:], float64[:], float64[:], int32)',\
+    @cuda.jit('void(float64[:], float64[:], float64[:], int32)', \
               target='gpu', nopython=True)
     def get_error(x_current, x_next, x_error, rows):
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < rows:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
-
 
     def start(self, A, b, x_current, first_row_block, rel=1):
         rows = len(b)
@@ -72,7 +69,6 @@ class JacobiParallel:
         gpu_b = cuda.to_device(b)
         gpu_x_current = cuda.to_device(x_current)
         gpu_x_next = cuda.to_device(x_next)
-        count = 0
 
         self.jacobi[bpg, tpb](gpu_A, gpu_b, gpu_x_current, \
                               gpu_x_next, rows, cols, first_row_block, rel)

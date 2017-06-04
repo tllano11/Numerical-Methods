@@ -62,7 +62,7 @@ class GaussJordanTab:
         row.add(button_box)
 
         image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
-        save_button = Gtk.Button(" Save As", image=image)
+        save_button = Gtk.Button(" Save result as", image=image)
         save_button.connect("clicked", self.save, None)
         button_box.pack_start(save_button, True, True, 10)
 
@@ -103,7 +103,7 @@ class GaussJordanTab:
         vector_chooser.destroy()
 
     def gaussParallel(self, widget, data=None):
-        self.x_vector = self.gauss_jordan.start(self.A_matrix, self.b_vector)
+        self.x_vector = self.gauss_jordan.start(self.A_matrix.copy(), self.b_vector.copy())
         print(self.x_vector)
         if self.x_vector is not None :
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
@@ -117,7 +117,7 @@ class GaussJordanTab:
             dialog.destroy()
 
     def gaussSerial(self, widget, data=None):
-        self.x_vector = self.gauss_jordan_serial.elimination(self.A_matrix, self.b_vector.flatten())
+        self.x_vector = self.gauss_jordan_serial.elimination(self.A_matrix.copy(), self.b_vector.copy())
         print(self.x_vector)
         if self.x_vector is not None :
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,

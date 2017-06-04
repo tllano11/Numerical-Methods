@@ -60,9 +60,9 @@ def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
                 A.append(A_line)
                 b.append(b_value)
             else:
-                x = jp.start(np.array(A), \
-                             np.array(b), \
-                             x_current, (count2 - rows_to_read))
+                first_row_block = count2 - rows_to_read
+                x = jp.start(np.array(A), np.array(b), x_current, \
+                             first_row_block)
                 if x is None:
                     return None, None, None
 
@@ -72,10 +72,11 @@ def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
                 b.clear()
                 b.append(b_value)
             count2 += 1
-        x = jp.start(np.array(A), np.array(b), \
-                     x_current, (count2 - len(A)))
+        first_row_block = count2 - len(A)
+        x = jp.start(np.array(A), np.array(b), x_current, first_row_block)
         if x is None:
             return None, None, None
+
         x_next = np.append(x_next, x)
         error = get_error(x_next, x_current)
         x_current = np.array(x_next).flatten()

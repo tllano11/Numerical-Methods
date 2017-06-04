@@ -131,7 +131,7 @@ class LUDecompositionTab:
         vector_chooser.destroy()
 
     def lu_decomposition(self, widget, data=None):
-        self.L, self.U = self.gaussian_lu_decomposition.start(self.A_matrix)
+        self.L, self.U = self.gaussian_lu_decomposition.start(self.A_matrix.copy())
         if self.L is not None and self.U is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "LU decomposition ended successfully")
@@ -146,7 +146,7 @@ class LUDecompositionTab:
         print("U=", self.U)
 
     def serial_lu(self, widget, data=None):
-        self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
+        self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix.copy())
         if self.L is not None and self.U is not None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK, "LU decomposition ended successfully")
