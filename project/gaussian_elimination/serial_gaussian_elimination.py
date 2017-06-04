@@ -25,8 +25,8 @@ class SerialGaussianElimination:
         A -- The coefficient matrix of the system.
         b -- The linearly independent vector.
         """
+        b = b.flatten()
         n = len(A)
-        start = time()
         for k in range(0, n - 1):
             A, b = self.partial_pivot(A, b, k)
             for i in range(k + 1, n):
@@ -37,8 +37,6 @@ class SerialGaussianElimination:
                     A[i][j] = A[i][j] - multiplier * A[k][j]
                 b[i] = b[i] - multiplier * b[k]
         x = substitution.back_substitution(A, b)
-        end = time()
-        print(end-start)
         return x
 
     def partial_pivot(self, A, b, k):
@@ -56,12 +54,12 @@ class SerialGaussianElimination:
             if abs(A[s][k]) > maximum:
                 maximum = abs(A[s][k])
                 max_row = s
-        if (maximum != 0):
-            if (max_row != k):
+        if maximum != 0:
+            if max_row != k:
                 aux_A = np.copy(A[k])
                 A[k] = np.copy(A[max_row])
                 A[max_row] = np.copy(aux_A)
-                aux_B = b[k]
-                b[k] = b[max_row]
-                b[max_row] = aux_B
+                aux_B = np.copy(b[k])
+                b[k] = np.copy(b[max_row])
+                b[max_row] = np.copy(aux_B)
         return A, b
