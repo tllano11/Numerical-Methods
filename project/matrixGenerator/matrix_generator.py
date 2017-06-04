@@ -210,4 +210,7 @@ class MatrixGenerator:
 
 if __name__ == '__main__':
     gen = MatrixGenerator()
-    gen.gen_dominant(2)
+    A, x, b = gen.gen_dominant(3)
+    print(A)
+    print(x)
+    print(b)
