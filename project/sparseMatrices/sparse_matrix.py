@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
+@package sparseMatrices
+Represents a matrix with CSR format.
+"""
+
+"""
     File name: sparse_matrix.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
@@ -24,8 +29,8 @@ class SparseMatrix():
     def gen_vector(size):
         """Creates a random vector given a size.
 
-        keyword arguments:
-        size -- Length of the vector that will be created.
+        @param size Length of the vector that will be created.
+        @return float128[:]
         """
         solution = []
         for i in range(size):
@@ -36,10 +41,10 @@ class SparseMatrix():
     def create_sparse_matrix(self, filename, matrix_length, density):
         """Creates a sparse matrix with CSR format (four arrays)
 
-        keyword arguments:
-        filename -- The file name where will be stored the final result.
-        matrix_length -- The length of the matrix.
-        density -- percentage of non-zeros elements
+        @param filename The file name where will be stored the final result.
+        @param matrix_length The length of the matrix.
+        @param density percentage of non-zeros elements
+        @return float128[:,:], str, float128[:], float128[:]
         """
         pos = 0
         aux_pos = 0
@@ -51,7 +56,6 @@ class SparseMatrix():
 
         for i in range(0, matrix_length):
             row = []
-            #if (pos != aux_pos):
             pointerB.append(pos)
             aux_pos = pos
             for j in range(0, matrix_length):
@@ -65,7 +69,6 @@ class SparseMatrix():
                     val = 0
                 row.append(val)
             matrix.append(row)
-            #if (pos != aux_pos):
             pointerE.append(pos)
         vector_x = SparseMatrix.gen_vector(matrix_length)
         matrix_A = np.matrix(matrix)
@@ -83,13 +86,13 @@ class SparseMatrix():
         file.close()
         np.savetxt("vector.txt", vector_x, fmt="%1.9f", delimiter=" ")
         '''
-        return (matrix_A, CSR_A, vector_x, vector_b)
+        return matrix_A, CSR_A, vector_x, vector_b
 
     def load_sparse_matrix(self, filename):
         """Takes a file and get the values array of it.
 
-        keyword arguments:
-        filename -- The file name where arrayes are stored.
+        @param filename The file name where arrayes are stored.
+        @return None
         """
         with open(filename) as data_file:
             data = json.load(data_file)
@@ -98,6 +101,12 @@ class SparseMatrix():
         print(values)
 
     def multiply(self, filename_matrix, vector):
+        """Takes a file with a sparse matrix in CSR format and multiply it with a vector.
+
+        @param filename_matrix The filename where the CSR matrix is located.
+        @param vector The vector to multiply with the matrix
+        @return 128[:]
+        """
         vector = vector.flatten()
         with open(filename_matrix) as f_matrix:
             matrix1 = json.load(f_matrix)

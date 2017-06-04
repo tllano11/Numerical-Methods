@@ -2,12 +2,17 @@
 # -*- coding: utf-8 -*-
 
 """
+@package lu_decomposition
+Decompuses a matrix A into two matrices L and U.
+"""
+
+"""
     File name: gaussian_lu_decomposition.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 20-May-2017
-    Date last modified: 29-May-2017
+    Date last modified: 04-June-2017
     Python Version: 3.6.0
 """
 
@@ -23,12 +28,12 @@ class GuassianLUDecomposition:
     def gaussian_lu_decomposition(A, L, size, i):
         """ Performs Gaussian LU elimination.
 
-        Key arguments:
-        A -- Coefficient matrix A.
-        L -- Matrix in which to store the multipliers.
-        size -- Size of coefficiente matrix.
-        i -- Integer representing the current column in which all threads
+        @param A Coefficient matrix A.
+        @param L Matrix in which to store the multipliers.
+        @param size Size of coefficiente matrix.
+        @param i Integer representing the current column in which all threads 
         are performing row operations.
+        @return None
         """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
@@ -48,8 +53,8 @@ class GuassianLUDecomposition:
     def start(self, A_matrix):
         """Decomposes A_matrix into two matrices L and U.
 
-        Keyword arguments:
-        A_matrix -- Coefficient matrix.
+        @param A_matrix Coefficient matrix.
+        @return float64[:,:], float64[:,:]
         """
         A = A_matrix.flatten()
         L = np.zeros_like(A)
@@ -81,10 +86,10 @@ class GuassianLUDecomposition:
     def get_solution(self, L, U, b):
         """Solves a LU system.
 
-        keyword arguments:
-        L -- The lower triangular matrix of the system.
-        U -- The upper triangular matrix of the system.
-        b -- Linearly independent vector.
+        @param L The lower triangular matrix of the system.
+        @param U The upper triangular matrix of the system.
+        @param b Linearly independent vector.
+        @return float64[:]
         """
         z = substitution.forward_substitution(L, b)
         x = substitution.back_substitution(U, z)
@@ -93,8 +98,8 @@ class GuassianLUDecomposition:
     def gen_identity_matrix(self, size):
         """Creates an identity matrix given a size.
 
-        keyword arguments:
-        size -- Number of rows and columns that the matrix will have.
+        @param size Number of rows and columns that the matrix will have.
+        @return float64[:,:]
         """
         matrix = np.zeros(shape=(size, size))
         for i in range(0, size):
@@ -104,9 +109,9 @@ class GuassianLUDecomposition:
     def get_inverse(self, L, U):
         """Returns the inverse of a given matrix by means of LU decomposition.
 
-        keyword arguments:
-        L -- The lower triangular matrix of the system.
-        U -- The upper triangular matrix of the system.
+        @param L The lower triangular matrix of the system.
+        @param U The upper triangular matrix of the system.
+        @return float64[:,:]
         """
         deter = self.get_determinant(L, U)
         if deter == 0:
@@ -131,8 +136,9 @@ class GuassianLUDecomposition:
         LU decomposition.
 
         keyword arguments:
-        L -- The lower triangular matrix of the system.
-        U -- The upper triangular matrix of the system.
+        @param L The lower triangular matrix of the system.
+        @param U The upper triangular matrix of the system.
+        @return float64
         """
         l_product = 1
         u_product = 1

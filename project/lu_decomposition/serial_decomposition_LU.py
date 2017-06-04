@@ -2,11 +2,16 @@
 # -*- coding: utf-8 -*-
 
 """
+@package lu_decomposition
+Decompuses a matrix A into two matrices L and U.
+"""
+
+"""
   File name: serial_decomposition_LU.py
   Authors: Tomás Felipe Llano Ríos,
            Juan Diego Ocampo García,
            Johan Sebastián Yepes Ríos
-  Date last modified: 29-May-2017
+  Date last modified: 04-June-2017
   Python Version: 3.6.0
 """
 
@@ -20,8 +25,8 @@ class SerialLUDecomposition():
         """Splits a given matrix into two matrices (lower and upper triangular matrices).
         It is based on multiplication of matrices.
 
-        keyword arguments:
-        A -- The coefficient matrix to be splited.
+        @param A The coefficient matrix to be splited.
+        @return float128[:,:], float128[:,:]
         """
         n = len(A)
         L = np.zeros(shape=(n, n))
@@ -42,10 +47,10 @@ class SerialLUDecomposition():
     def solve_system(self, L, U, b):
         """Solves a LU system.
 
-        keyword arguments:
-        L -- The lower triangular matrix of the system.
-        U -- The upper triangular matrix of the system.
-        b -- Linearly independent vector.
+        @param L The lower triangular matrix of the system.
+        @param U The upper triangular matrix of the system.
+        @param b Linearly independent vector.
+        @return float128[:]
         """
         size = len(b)
         z = substitution.forward_substitution(L, b)
