@@ -98,8 +98,10 @@ void createFormatMatrix(){
 void csrInit(){
    cout << "Enter matrix length" << endl;
    cin >> matrixLength;
+   cout << matrixLength;
    cout << "Enter matrix density" << endl;
    cin >> matrixDensity;
+   cout << matrixDensity;
 
    createFormatMatrix();
 }

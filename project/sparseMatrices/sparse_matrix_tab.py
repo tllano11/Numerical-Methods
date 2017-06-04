@@ -78,4 +78,6 @@ class SparseMatrixTab():
         vector_chooser.destroy()
 
         sparse_matrix = SparseMatrix()
-        sparse_matrix.multiply(self.filename+"_CSR", vector)
+        res = sparse_matrix.multiply(self.filename+"_CSR", vector)
+        np.savetxt("CSR_result", res, fmt="%1.9f", delimiter=" ")
+
