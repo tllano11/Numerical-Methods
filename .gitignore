@@ -1,7 +1,6 @@
 *.pyc
 *.txt
 .idea
-matrix*
 Examples/
 gauss_elimination_serial.py
 project/executor.sh
