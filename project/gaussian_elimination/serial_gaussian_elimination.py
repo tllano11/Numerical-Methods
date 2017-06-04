@@ -26,7 +26,12 @@ class SerialGaussianElimination:
         A -- The coefficient matrix of the system.
         b -- The linearly independent vector.
         """
+<<<<<<< HEAD
         b = b.flatten()
+=======
+        print(A)
+        print(b)
+>>>>>>> 1e8b1dc6973104e283db3b66848259e7a5927d7f
         n = len(A)
         for k in range(0, n - 1):
             A, b = self.partial_pivot(A, b, k)

@@ -124,7 +124,7 @@ class GaussianEliminationTab:
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed")
+                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed because of a division by zero")
             dialog.run()
             dialog.destroy()
 
@@ -138,7 +138,7 @@ class GaussianEliminationTab:
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed")
+                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed because of a division by zero")
             dialog.run()
             dialog.destroy()
 

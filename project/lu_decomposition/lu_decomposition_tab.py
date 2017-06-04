@@ -139,7 +139,7 @@ class LUDecompositionTab:
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "LU decomposition failed because of division by zero")
+                                       Gtk.ButtonsType.OK, "LU decomposition failed because of a division by zero")
             dialog.run()
             dialog.destroy()
         print("L=", self.L)
@@ -154,7 +154,7 @@ class LUDecompositionTab:
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "LU decomposition failed because of division by zero")
+                                       Gtk.ButtonsType.OK, "LU decomposition failed because of a division by zero")
             dialog.run()
             dialog.destroy()
         print("L=", self.L)

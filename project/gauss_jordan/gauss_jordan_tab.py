@@ -112,7 +112,7 @@ class GaussJordanTab:
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                Gtk.ButtonsType.OK, "Gauss Jordan failed")
+                Gtk.ButtonsType.OK, "Gauss Jordan failed because of a division by zero")
             dialog.run()
             dialog.destroy()
 
@@ -126,7 +126,7 @@ class GaussJordanTab:
             dialog.destroy()
         else:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                Gtk.ButtonsType.OK, "Gauss Jordan failed")
+                Gtk.ButtonsType.OK, "Gauss Jordan failed because of a division by zero")
             dialog.run()
             dialog.destroy()
 
