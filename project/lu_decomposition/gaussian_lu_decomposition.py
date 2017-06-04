@@ -63,7 +63,7 @@ class GuassianLUDecomposition:
             stream = cuda.stream()
             gpu_A = cuda.to_device(A, stream=stream)
             gpu_L = cuda.to_device(L, stream=stream)
-            bpg = matrix_size + (tpb - 1) // tpb
+            bpg = 1
 
             for i in range(0, rows):
                 self.gaussian_lu_decomposition[(bpg, bpg), (tpb, tpb)](gpu_A,\
