@@ -7,7 +7,7 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 13-April-2017
-    Date last modified: 03-June-2017
+    Date last modified: 04-June-2017
     Python Version: 3.6.0
 """
 
@@ -34,8 +34,10 @@ class JacobiParallel:
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < n:
             sigma = 0.0
+            #Indicates which row must be computed by the current thread.
             index = idx * n
             for j in range(0, n):
+                #Ensures not to use diagonal's value when computing.
                 if idx != j:
                     sigma += A[index + j] * x_current[j]
 

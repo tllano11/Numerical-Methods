@@ -7,7 +7,7 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 13-April-2017
-    Date last modified: 03-June-2017
+    Date last modified: 04-June-2017
     Python Version: 3.6.0
 """
 
@@ -35,14 +35,17 @@ class GaussianElimination:
         """
         tx = cuda.threadIdx.x
         ty = cuda.threadIdx.y
-        idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
-        idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
-        sAb = cuda.shared.array(shape=(tpb, tpb), dtype=float64)
+        idx = cuda.blockIdx.x * cuda.blockDim.x + tx
+        idy = cuda.blockIdx.y * cuda.blockDim.y + ty
         size += 1
 
         # Thread does nothing when idx or idy are out of the matrix boundaries.
         if idx < size and idy < size:
-            sAb[tx, ty] = Ab[idx * size + idy]
+            #Indicates which row must be computed by the current thread.
+            index_r = idx * size
+            #Copy Ab current position's value into shared memory.
+            sAb = cuda.shared.array(shape=(tpb, tpb), dtype=float64)
+            sAb[tx, ty] = Ab[index_r + idy]
             cuda.syncthreads()
             # Operates on rows below the diagonal.
             if idx > i:
@@ -51,7 +54,7 @@ class GaussianElimination:
                 if idy >= i:
                     sAb[tx, ty] -= sAb[i, ty] * mul
             cuda.syncthreads()
-            Ab[idx * size + idy] = sAb[tx, ty]
+            Ab[index_r + idy] = sAb[tx, ty]
             cuda.syncthreads()
 
 
@@ -71,7 +74,6 @@ class GaussianElimination:
         with cuda.pinned(A):
             stream = cuda.stream()
             gpu_A = cuda.to_device(A, stream=stream)
-            #bpg = n + (tpb - 1) // tpb
             bpg = 1
 
             start = time()
@@ -80,6 +82,7 @@ class GaussianElimination:
 
         gpu_A.copy_to_host(A, stream)
 
+        #Restore A and b from augmented matrix Ab
         b = A.reshape(n, (n + 1))[:, n]
         A = A.reshape(n, (n + 1))[..., :-1]
 

@@ -7,7 +7,7 @@
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
     Date created: 13-April-2017
-    Date last modified: 29-May-2017
+    Date last modified: 04-June-2017
     Python Version: 3.6.0
 """
 
@@ -15,6 +15,7 @@ from numba import cuda
 import numpy as np
 import time, csv, sys, copy
 
+tpb = 32
 
 class GaussJordan:
     @cuda.jit
@@ -31,18 +32,22 @@ class GaussJordan:
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
         size += 1
+        #Indicates which row must be computed by the current thread.
+        index_r = idx * size
+        #Indicates the pivot row
+        index_p = i * size
         #Thread does nothing when idx or idy are out of the matrix boundaries.
         if idx < size and idy < size:
             #Operates on rows below the diagonal.
             if idx > i:
-                pivot = A[idx * size + i] / A[i * size + i]
+                mul = A[index_r + i] / A[index_p + i]
                 if idy >= i:
-                    A[idx * size + idy] -= A[i * size + idy] * pivot
+                    A[index_r + idy] -= A[index_p + idy] * mul
             #Operates on rows above the diagonal.
             elif idx < i:
-                pivot = A[idx * size + i] / A[i * size + i]
+                mul = A[index_r + i] / A[index_p + i]
                 if idy >= i:
-                    A[idx * size + idy] -= A[i * size + idy] * pivot
+                    A[index_r + idy] -= A[index_p + idy] * mul
                     cuda.syncthreads()
 
     @cuda.jit
@@ -72,29 +77,26 @@ class GaussJordan:
 
         Keyword arguments:
         A_matrix -- Coefficient matrix of a SLAE.
-        b_matrix -- Linearly independent vector of a SLAE.
+        b_vector -- Linearly independent vector of a SLAE.
         """
         b = b_vector.reshape(len(b_vector), 1)
         A = np.hstack((A_matrix, b))
         A = A.flatten()
 
-        rows = len(b)
-        columns = len(b)
-        tpb = 32
-        matrix_size = rows * columns
+        n = len(b)
 
         with cuda.pinned(A):
             stream = cuda.stream()
             gpu_A = cuda.to_device(A, stream=stream)
-            bpg = matrix_size + (tpb - 1) // tpb
+            bpg = 1
 
             for i in range(0, rows):
-                self.gauss_jordan[(bpg, bpg), (tpb, tpb)](gpu_A, rows, i)
-                self.normalize[(bpg, bpg), (tpb, tpb)](gpu_A, rows)
+                self.gauss_jordan[(bpg, bpg), (tpb, tpb)](gpu_A, n, i)
+                self.normalize[(bpg, bpg), (tpb, tpb)](gpu_A, n)
 
         gpu_A.copy_to_host(A, stream)
 
-        x = A.reshape(rows, (columns + 1))[:, columns]
+        x = A.reshape(n, (n + 1))[:, n]
         return x
 
 
