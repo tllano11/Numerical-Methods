@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""@package jacobi
+Solve a system of linear algebraic equations by using the Jacobi
+Iterative method.
+"""
 
 """
   File name: jacobiSerial.py
@@ -16,12 +20,14 @@ import csv
 
 
 class SerialJacobi:
-    def multiply_matrix_vector(self, A_matrix, b_vector):
-        """Returns the dot product between a matrix and a vector
 
-        keyword arguments:
-        A_matrix -- The matrix to be multiplied.
-        b_vector -- The vector to be multiplied.
+    def multiply_matrix_vector(self, A_matrix, b_vector):
+        """Returns the dot product between a matrix and a vector.
+
+        @param A_matrix  The matrix to be multiplied.
+        @param b_vector  The vector to be multiplied.
+
+        @return float128[:]
         """
         size = len(A_matrix)
         result = []
@@ -35,9 +41,10 @@ class SerialJacobi:
     def multiply_matrix_matrix(self, matrix1, matrix2):
         """Returns the dot product between two matrices.
 
-        keyword arguments:
-        A_matrix -- The first matrix to be multiplied.
-        b_vector -- The second matrix to be multiplied.
+        @param matrix1  The first matrix to be multiplied.
+        @param matrix2  The second matrix to be multiplied.
+
+        @return float128[:]
         """
         size = len(matrix1)
         matrix_result = []
@@ -50,11 +57,12 @@ class SerialJacobi:
             matrix_result.append(row)
         return matrix_result
 
-    def get_D_and_U(self, matrix):
-        """Split a given matrix into two matrices D and U (uower and upper triangular matrices)
 
-        keyword arguments:
-        matrix -- The matrix to be split
+    def get_D_and_U(self, matrix):
+        """Split a given matrix into two matrices D and U (lower and upper triangular matrices)
+
+        @param matrix  The matrix to be splitted.
+        @return float128[:,:],float128[:,:]
         """
         matrixD = []
         matrixU = []
@@ -76,8 +84,9 @@ class SerialJacobi:
     def get_inverse(self, matrixD):
         """Returns the inverse of a LOWER TRIANGULAR MATRIX.
 
-        keyword arguments:
-        A_matrix -- The matrix base to calculate the inverse.
+        @param matrixD The matrix base to calculate the inverse.
+
+        @return float128[:,:]
         """
         size = len(matrixD)
         for i in range(0, size):
@@ -89,9 +98,10 @@ class SerialJacobi:
     def sum_vectors(self, vector1, vector2):
         """Takes two vector and sum them.
 
-        keyword arguments:
-        vector1 -- The first vector to be added.
-        vector2 -- The second vector to be added.
+        @param  vector1  The first vector to be added.
+        @param  vector2  The second vector to be added.
+
+        @return float128[:]
         """
         size = len(vector1)
         result = []
@@ -101,11 +111,12 @@ class SerialJacobi:
 
     def get_error(self, x_vector, xant_vector):
         """Returns the norm of two given vectors,
-        the norm represents the error of the current method.
+        which represents the error of the current method.
 
-        keyword arguments:
-        x_vector -- The vector of the current stage of the method.
-        xant_vector -- The vector of the previous stage of the method.
+        @param x_vector     The vector of the current stage of the method.
+        @param xant_vector  The vector of the previous stage of the method.
+
+        @return float128
         """
         maximum = 0
         size = len(x_vector)
@@ -118,10 +129,12 @@ class SerialJacobi:
     def relaxation(self, x_vector, xant_vector, relaxation):
         """Applies the relaxation method to Jacobi.
 
-        keyword arguments:
-        x_vector -- The vector of the current stage of the method.
-        xant_vector -- The vector of the previous stage of the method.
-        relaxation -- The number that will be used in the relaxation of the method.
+        @param  x_vector      The vector of the current stage of the method.
+        @param  xant_vector   The vector of the previous stage of the method.
+        @param  relaxation    The number that will be used in the
+                              relaxation of the method.
+
+        @return  float128[:]
         """
         size = len(x_vector)
         xrelax_vector = []
@@ -130,14 +143,18 @@ class SerialJacobi:
         return xrelax_vector
 
     def jacobi(self, A_matrix, b_vector, max_iterations, tolerance, relaxation=1):
-        """Applies Jacobi method to a system of linear equations.
+        """Applies Jacobi method to a system of linear equations and returns
+        its answer (except if it was not found), number of iterations executed
+        and the maximum error.
 
-        keyword arguments:
-        A_matrix -- The coefficient matrix of the system.
-        b_vector -- The linearly independent vector.
-        max_iterations -- Maximum number of iterations of the method.
-        tolerance -- The tolerance of the method
-        relaxation -- The number that will be used in the relaxation of the method.
+        @param  A_matrix        The coefficient matrix of the system.
+        @param  b_vector        The linearly independent vector.
+        @param  max_iterations  Maximum number of iterations of the method.
+        @param  tolerance       The tolerance of the method
+        @param  relaxation      The number that will be used in the
+                                relaxation of the method.
+
+        @return float128[:] or None, int32, float128
         """
         size = len(A_matrix)
         x_vector = [0] * size

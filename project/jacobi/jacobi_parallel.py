@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """@package jacobi
-Solve a Linear System of Algebraic Equations by using the Jacobi
-Iterative method
+Solve a system of linear algebraic equations by using the Jacobi
+Iterative method.
 """
 
 """
@@ -36,8 +36,7 @@ class JacobiParallel:
         @param n           Coefficient matrix' size.
         @param rel         Relaxation coefficient.
 
-        Returns:
-            There is no return value.
+        @return None
         """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < n:
@@ -56,7 +55,18 @@ class JacobiParallel:
     @cuda.jit('void(float64[:], float64[:], float64[:], int32)',\
               target='gpu', nopython=True)
     def get_error(x_current, x_next, x_error, rows):
-        """Calculates jacobi's maximum error"""
+        """Calculates jacobi's maximum error.
+
+        @param x_current Pointer to list representing current
+                         approximation for vector x in a system Ax = b.
+        @param x_next    Pointer to list representing new
+                         approximation for vector x in a system Ax = b.
+        @param x_error   Pointer to list in which an error for each
+                         approximation will be stored.
+        @param rows      Coefficient matrix A number of rows.
+
+        @return None
+        """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < rows:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
@@ -65,12 +75,13 @@ class JacobiParallel:
     def start(self, A, b, niter, tol, rel=1):
         """Launches parallel jacobi solver for a SLAE and returns its answer.
 
-        Keyword arguments:
-        A -- Coefficient matrix of a SLAE.
-        b -- Linearly independent vector of a SLAE.
-        niter -- Maximum number of iterations before jacobi stops.
-        tol -- Maximum error reached by jacobi when solving the system.
-        rel -- relaxation coefficient.
+        @param A         Coefficient matrix of a SLAE.
+        @param b         Linearly independent vector of a SLAE.
+        @param niter     Maximum number of iterations before jacobi stops.
+        @param tol       Maximum error reached by jacobi when solving the system
+        @param rel       Relaxation coefficient.
+
+        @return float64[:]
         """
         if 0 in A.diagonal():
             return None, None, None
