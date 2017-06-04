@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""@package jacobi
+Solve a Linear System of Algebraic Equations by using the Jacobi
+Iterative method
+"""
 
 """
     File name: jacobi_parallel.py
@@ -16,20 +20,24 @@ import numpy as np
 import time, csv, sys
 
 
+
 class JacobiParallel:
 
     @cuda.jit('void(float64[:], float64[:], float64[:], float64[:],'\
               'int32, float32)', target='gpu', nopython=True)
     def jacobi(A, b, x_current, x_next, n, rel):
-        """Performs jacobi for every thread in matrix A boundaries.
+        """
+        Runs jacobi for every thread in matrix A boundaries.
 
-        Key arguments:
-        A -- Coefficient matrix.
-        b -- Linearly independent vector.
-        x_current -- Current answer's approximation.
-        x_next -- vector in which to store new answer.
-        n -- Coefficient matrix' size.
-        rel -- Relaxation coefficient.
+        @param A           Coefficient matrix.
+        @param b           Linearly independent vector.
+        @param x_current   Current answer's approximation.
+        @param x_next      vector in which to store new answer.
+        @param n           Coefficient matrix' size.
+        @param rel         Relaxation coefficient.
+
+        Returns:
+            There is no return value.
         """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < n:
