@@ -25,8 +25,6 @@ class SerialGaussianElimination:
         A -- The coefficient matrix of the system.
         b -- The linearly independent vector.
         """
-        print(A)
-        print(b)
         n = len(A)
         start = time()
         for k in range(0, n - 1):

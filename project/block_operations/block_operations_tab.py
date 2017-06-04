@@ -125,7 +125,7 @@ class BlockTab:
         if self.x_vector is None and error is None and count is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK,
-                                       "Jacobi can be executed because of a zero in the main diagonal")
+                                       "Jacobi can't be executed because of a division by zero")
             dialog.run()
             dialog.destroy()
         elif self.x_vector is None:
