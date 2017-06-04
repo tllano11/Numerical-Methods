@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-@package sparseMatrices
+@package SparseMatrices
 Represents a matrix with CSR format.
 """
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-@package lu_decomposition
+@package LuDecomposition
 Decompuses a matrix A into two matrices L and U.
 """
 
@@ -31,7 +31,7 @@ class GuassianLUDecomposition:
         @param A Coefficient matrix A.
         @param L Matrix in which to store the multipliers.
         @param size Size of coefficiente matrix.
-        @param i Integer representing the current column in which all threads 
+        @param i Integer representing the current column in which all threads
         are performing row operations.
         @return None
         """

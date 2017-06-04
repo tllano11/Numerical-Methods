@@ -1,0 +1,6 @@
+<map id="jacobi_parallel.JacobiParallel.start" name="jacobi_parallel.JacobiParallel.start">
+<area shape="rect" id="node2" href="$classjacobi__parallel__chunks_1_1JacobiParallel.html#acf8f08d35b1821557229847f91c59279" title="Performs jacobi for every thread in matrix A boundaries. " alt="" coords="315,29,529,71"/>
+<area shape="rect" id="node3" href="$classjacobi__parallel_1_1JacobiParallel.html#a5685d60489d14bb688b21fbb8d2a0a26" title="Runs jacobi for every thread in matrix A boundaries. " alt="" coords="296,95,548,122"/>
+<area shape="rect" id="node4" href="$classjacobi__parallel__chunks_1_1JacobiParallel.html#ab2a9a519683bc8167d706dc8d17a38af" title="jacobi_parallel_chunks.Jacobi\lParallel.get_error" alt="" coords="315,147,529,188"/>
+<area shape="rect" id="node5" href="$classjacobi__parallel_1_1JacobiParallel.html#a47aad1e7c1f4e87163b540dc6e30a378" title="Calculates jacobi&#39;s maximum error. " alt="" coords="305,212,539,253"/>
+</map>

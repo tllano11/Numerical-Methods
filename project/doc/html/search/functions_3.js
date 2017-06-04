@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['gauss_5fjordan',['gauss_jordan',['../classgauss__jordan_1_1GaussJordan.html#adc5ba2943430167012b3986eeb16fb0b',1,'gauss_jordan::GaussJordan']]],
+  ['gaussian_5felimination',['gaussian_elimination',['../classgaussian__elimination_1_1GaussianElimination.html#a32b842608c2a9f1c5be5dd2e7fbb4045',1,'gaussian_elimination::GaussianElimination']]],
+  ['gaussian_5flu_5fdecomposition',['gaussian_lu_decomposition',['../classgaussian__lu__decomposition_1_1GuassianLUDecomposition.html#a77f3afcfb4059819e486c798f985e728',1,'gaussian_lu_decomposition::GuassianLUDecomposition']]],
+  ['gen_5fantisymmetric_5fmatrix',['gen_antisymmetric_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#a0a7b7939226dd57a5c0abd6e290a6986',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fband_5fmatrix',['gen_band_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#aec66054b91bdc9be5426300921619aac',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fdiagonal_5fmatrix',['gen_diagonal_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#ab92a8944492812e446c104f82c10f9a1',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fdominant',['gen_dominant',['../classmatrix__generator_1_1MatrixGenerator.html#a31d486374dda1e94b3a693d8d973f9d6',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fidentity_5fmatrix',['gen_identity_matrix',['../classgaussian__lu__decomposition_1_1GuassianLUDecomposition.html#a41ede4bd1f676649bbbf04ccba6e6301',1,'gaussian_lu_decomposition.GuassianLUDecomposition.gen_identity_matrix()'],['../classmatrix__generator_1_1MatrixGenerator.html#a0254ed485e00b3b7218f18533d3f8494',1,'matrix_generator.MatrixGenerator.gen_identity_matrix()']]],
+  ['gen_5flower_5fmatrix',['gen_lower_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#a5e1c2ce4e41c707512168c763eaeb5c0',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5frandom_5fmatrix',['gen_random_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#a538600c69ff3b2a23269065abf4ae7a5',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fscalar_5fmatrix',['gen_scalar_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#a1681c093fa45a6845736f3bb85f809a5',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fsymmetric_5fmatrix',['gen_symmetric_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#ab7a49359ac3e964201e660cff7e6d92d',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fupper_5fmatrix',['gen_upper_matrix',['../classmatrix__generator_1_1MatrixGenerator.html#aef500aec9d508e8dbb00ba28ac87e034',1,'matrix_generator::MatrixGenerator']]],
+  ['gen_5fvector',['gen_vector',['../classmatrix__generator_1_1MatrixGenerator.html#a8bfebfffa92b1f4dee9dded19b27427c',1,'matrix_generator.MatrixGenerator.gen_vector()'],['../classsparse__matrix_1_1SparseMatrix.html#aa10fa9c135606fcd771808cfed9043d0',1,'sparse_matrix.SparseMatrix.gen_vector()']]],
+  ['get_5fd_5fand_5fu',['get_D_and_U',['../classjacobi__serial_1_1SerialJacobi.html#abf0c02f09adca8b0886bd7dafe7e800b',1,'jacobi_serial::SerialJacobi']]],
+  ['get_5fdeterminant',['get_determinant',['../classgaussian__lu__decomposition_1_1GuassianLUDecomposition.html#a7e03274cc0b3d6bac5d131a5f9a09e43',1,'gaussian_lu_decomposition::GuassianLUDecomposition']]],
+  ['get_5ferror',['get_error',['../classjacobi__parallel_1_1JacobiParallel.html#a47aad1e7c1f4e87163b540dc6e30a378',1,'jacobi_parallel.JacobiParallel.get_error()'],['../classjacobi__serial_1_1SerialJacobi.html#a911f4db5ac9497761330a16af61f5e26',1,'jacobi_serial.SerialJacobi.get_error()']]],
+  ['get_5finverse',['get_inverse',['../classjacobi__serial_1_1SerialJacobi.html#a0597383e1ba03d69ab5f677aa19b6a35',1,'jacobi_serial.SerialJacobi.get_inverse()'],['../classgaussian__lu__decomposition_1_1GuassianLUDecomposition.html#a3c000753a75878eb7abf24cfb95efe74',1,'gaussian_lu_decomposition.GuassianLUDecomposition.get_inverse()']]],
+  ['get_5fsolution',['get_solution',['../classgaussian__lu__decomposition_1_1GuassianLUDecomposition.html#abe79886de16d2afd1ed98a7d80a05857',1,'gaussian_lu_decomposition::GuassianLUDecomposition']]]
+];
