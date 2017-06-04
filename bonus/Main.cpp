@@ -12,6 +12,7 @@ int main(){
 	while(cin){
 		int methodNumber;
 		cout << "Solve non lineal equations. Choose a method: \n"
+			  << "\tEquation: e^(-x) -x \n"
 			  << "\t1 ---- Incremental searches \n"
 			  << "\t2 ---- Bisection \n"
 			  << "\t3 ---- False Rule \n"

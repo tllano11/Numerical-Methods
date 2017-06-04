@@ -8,8 +8,8 @@ using namespace std;
 
 double f(double x){
 	//return exp(3*x - 12) + x * cos(3*x) - pow(x, 2) + 4;// Equation 1 example (bisection and false rule)
-	//return exp(-x)- x; // Equation 2 example (Fixed point, Newton and Secant)
-	return pow(x - 3, 3); // Equation 3 example (multiple roots)
+	return exp(-x)- x; // Equation 2 example (Fixed point, Newton and Secant)
+	//return pow(x - 3, 3); // Equation 3 example (multiple roots)
 }
 
 double g(double x){
@@ -17,12 +17,13 @@ double g(double x){
 }
 
 double df(double x){
-	//return -exp(-x) - 1; // Equation 2 example (Fixed point, Newton and Secant)
-	return 3 * pow(x - 3, 2); // Equation 3 example (multiple roots)
+	return -exp(-x) - 1; // Equation 2 example (Fixed point, Newton and Secant)
+	//return 3 * pow(x - 3, 2); // Equation 3 example (multiple roots)
 }
 
 double ddf(double x){
-	return 6 * (x - 3); // Equation 3 example (multiple roots)
+	return exp(-x);
+	//return 6 * (x - 3); // Equation 3 example (multiple roots)
 }
 
 void incrementalSearches(){
@@ -220,7 +221,7 @@ void fixedPoint(){
 		}else if(error < tol){
 			cout << x0 << " is near the root, with tolerance = " << tol << " and error = " << error << endl;
 		}else{
-			cout << "Sorry, it failed in" << niter << "iterations" << endl;
+			cout << "Sorry, it failed in " << niter << "iterations" << endl;
 		}
 	}
 }
