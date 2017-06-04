@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
-"""@package Gauss Jordan
+"""@package GaussJordan
 Solve a system of linear algebraic equations by using
 the Gauss Jordan Elimination method
 """

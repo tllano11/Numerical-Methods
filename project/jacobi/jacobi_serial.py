@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""@package jacobi
+"""@package Jacobi
 Solve a system of linear algebraic equations by using the Jacobi
 Iterative method.
 """

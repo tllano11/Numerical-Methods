@@ -1,4 +1,0 @@
-<map id="gauss_jordan.GaussJordan.start" name="gauss_jordan.GaussJordan.start">
-<area shape="rect" id="node2" href="$classgauss__jordan_1_1GaussJordan.html#adc5ba2943430167012b3986eeb16fb0b" title="Performs Gauss Jordan elimination for each row of a column. " alt="" coords="294,5,529,47"/>
-<area shape="rect" id="node3" href="$classgauss__jordan_1_1GaussJordan.html#ac1ab80b4023b77fd07351f08716c16d2" title="Ensures every diagonal element of the augmented matrix A is set to one. " alt="" coords="280,71,543,98"/>
-</map>
