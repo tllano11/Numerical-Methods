@@ -30,6 +30,8 @@ class SerialLUDecomposition():
             L[k][k] = 1
             # A, P = self.partial_pivot(A, P, k)
             for i in range(k + 1, n):
+                if A[k][k] == 0:
+                    return None, None
                 multiplier = A[i][k] / A[k][k]
                 L[i][k] = multiplier
                 for j in range(k, n):

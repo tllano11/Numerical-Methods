@@ -158,9 +158,7 @@ class SerialJacobi:
             error = self.get_error(x_vector, xant_vector)
             count += 1
 
-        if True in np.isnan(x_vector) or True in np.inf(x_vector):
-                return None, None, None
-        elif count > max_iterations:
-            return None, count, error
-        else:
+        if error < tolerance:
             return x_vector, count, error
+        else:
+            return None, count, error

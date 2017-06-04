@@ -130,20 +130,35 @@ class LUDecompositionTab:
 
         vector_chooser.destroy()
 
-    def thread_start(self):
-        self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
-        print("L=", self.L)
-        print("U=", self.U)
-
     def lu_decomposition(self, widget, data=None):
         self.L, self.U = self.gaussian_lu_decomposition.start(self.A_matrix)
+        if self.L is not None and self.U is not None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "LU decomposition ended successfully")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "LU decomposition failed because of division by zero")
+            dialog.run()
+            dialog.destroy()
         print("L=", self.L)
         print("U=", self.U)
 
     def serial_lu(self, widget, data=None):
-        # self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
-        thread = threading.Thread(None, self.thread_start)
-        thread.start()
+        self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
+        if self.L is not None and self.U is not None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "LU decomposition ended successfully")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                       Gtk.ButtonsType.OK, "LU decomposition failed because of division by zero")
+            dialog.run()
+            dialog.destroy()
+        print("L=", self.L)
+        print("U=", self.U)
 
     def substitution(self, widget, data=None):
         self.x_vector = self.gaussian_lu_decomposition.get_solution(self.L, self.U, self.b_vector.flatten())

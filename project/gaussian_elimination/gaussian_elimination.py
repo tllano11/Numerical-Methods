@@ -18,11 +18,11 @@ import numpy as np
 import csv, sys
 from time import time
 
-#Threads Per Block
+# Threads Per Block
 tpb = 32
 
-class GaussianElimination:
 
+class GaussianElimination:
     @cuda.jit('void(float64[:], int32, int32)', target='gpu', nopython=True)
     def gaussian_elimination(Ab, size, i):
         """ Performs Gaussian elimination for each row of a column.
@@ -41,9 +41,9 @@ class GaussianElimination:
 
         # Thread does nothing when idx or idy are out of the matrix boundaries.
         if idx < size and idy < size:
-            #Indicates which row must be computed by the current thread.
+            # Indicates which row must be computed by the current thread.
             index_r = idx * size
-            #Copy Ab current position's value into shared memory.
+            # Copy Ab current position's value into shared memory.
             sAb = cuda.shared.array(shape=(tpb, tpb), dtype=float64)
             sAb[tx, ty] = Ab[index_r + idy]
             cuda.syncthreads()
@@ -57,7 +57,6 @@ class GaussianElimination:
             Ab[index_r + idy] = sAb[tx, ty]
             cuda.syncthreads()
 
-
     def start(self, A_matrix, b_matrix):
         """Launches parallel Gaussian elimination for a SLAE and returns its answer.
 
@@ -65,6 +64,9 @@ class GaussianElimination:
         A_matrix -- Coefficient matrix of a SLAE.
         b_matrix -- Linearly independent vector of a SLAE.
         """
+        if 0 in A_matrix.diagonal():
+            return None
+
         b = b_matrix.reshape(len(b_matrix), 1)
         A = np.hstack((A_matrix, b))
         A = A.flatten()
@@ -82,7 +84,7 @@ class GaussianElimination:
 
         gpu_A.copy_to_host(A, stream)
 
-        #Restore A and b from augmented matrix Ab
+        # Restore A and b from augmented matrix Ab
         b = A.reshape(n, (n + 1))[:, n]
         A = A.reshape(n, (n + 1))[..., :-1]
 
