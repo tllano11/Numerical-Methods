@@ -1,6 +1,11 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
+"""@package Gauss Jordan
+Solve a system of linear algebraic equations by using
+the Gauss Jordan Elimination method
+"""
+
 """
     File name: gauss_jordan.py
     Authors: Tomás Felipe Llano Ríos,
@@ -23,11 +28,12 @@ class GaussJordan:
     def gauss_jordan(A, size, i):
         """Performs Gauss Jordan elimination for each row of a column.
 
-        Key arguments:
-        A -- Augmented matrix representing a SLAE.
-        size -- Size of coefficiente matrix.
-        i -- Integer representing the current column in which all threads
+        @param A        Augmented matrix representing a SLAE.
+        @param size     Size of coefficiente matrix.
+        @param i        Integer representing the current column in which all threads
         are performing row operations.
+
+        @return None
         """
 
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
@@ -56,9 +62,10 @@ class GaussJordan:
         """Ensures every diagonal element of the augmented matrix A is
         set to one.
 
-        Keyword arguments:
-        A -- Augmented matrix representing a SLAE.
-        size -- Size of coefficiente matrix.
+        @param A        Augmented matrix representing a SLAE.
+        @param size     Size of coefficiente matrix.
+
+        @return None
         """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         idy = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
@@ -75,9 +82,10 @@ class GaussJordan:
         """Launches parallel Gauss Jordan elimination for a SLAE and returns
         its answer.
 
-        Keyword arguments:
-        A_matrix -- Coefficient matrix of a SLAE.
-        b_vector -- Linearly independent vector of a SLAE.
+        @param A_matrix     Coefficient matrix of a SLAE.
+        @param b_vector     Linearly independent vector of a SLAE.
+
+        @return float64[:]
         """
         if 0 in A_matrix.diagonal():
             return None
@@ -104,6 +112,7 @@ class GaussJordan:
 
 
 def main(argv):
+    """For Test purposes"""
     if len(argv) != 3:
         print("Usage: python3.6 gauss_jordan.py <A_matrix> <b_matrix>")
         sys.exit()

@@ -27,7 +27,7 @@ def get_error(x_vector, xant_vector):
     return maximum
 
 
-def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
+def start(a_name, b_name, rows_to_read, n, niter, tol):
     """Launches Jacobi for each set of rows read and returns a
     solution to the system.
 
@@ -39,6 +39,7 @@ def start(a_name, b_name, rows_to_read, matrix_size, niter, tol):
     niter -- Maximum number of iterations to reach before stopping
     jacobi's execution.
     """
+    matrix_size = n*n
     b_file = open(b_name).read().split('\n')[:-1]
     A_file = open(a_name).read().split('\n')[:-1]
     jp = JacobiParallel()

@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""@package Gaussian Elimination
+Solve a system of linear algebraic equations by using
+the Gaussian Elimination method
+"""
+
 """
     File name: serial_gauss_elimination.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
-    Date last modified: 29-May-2017
+    Date last modified: 04-June-2017
     Python Version: 3.6.0
 """
 
@@ -21,9 +26,10 @@ class SerialGaussianElimination:
         """Takes a system of linear equations represented by a matrix and a vector
         and returns the answer applying Gaussian elimination method.
 
-        keyword arguments:
-        A -- The coefficient matrix of the system.
-        b -- The linearly independent vector.
+        @param A    The coefficient matrix of the system.
+        @param b    The linearly independent vector.
+
+        @return     float128[:]
         """
         b = b.flatten()
         n = len(A)
@@ -42,10 +48,11 @@ class SerialGaussianElimination:
     def partial_pivot(self, A, b, k):
         """Applies the partial pivot strategy to a system of linear equations.
 
-        keyword arguments:
-        A -- The coefficient matrix of the system.
-        b -- The linearly independent vector.
-        k -- The current elimination stage.
+        @param A    The coefficient matrix of the system.
+        @param b    The linearly independent vector.
+        @param k    The current elimination stage.
+
+        @return     float128[:,:], float128[:]
         """
         maximum = abs(A[k][k])
         max_row = k

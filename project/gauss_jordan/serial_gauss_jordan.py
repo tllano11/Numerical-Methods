@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""@package Gauss Jordan
+Solve a system of linear algebraic equations by using
+the Gauss Jordan Elimination method
+"""
+
 """
     File name: serial_gauss_jordan.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
              Johan Sebastián Yepes Ríos
-    Date last modified: 29-May-2017
+    Date last modified: 04-June-2017
     Python Version: 3.6.0
 """
 
@@ -20,9 +25,10 @@ class GaussJordanSerial:
         """Takes a system of linear equations represented by a matrix and a vector
         and returns the answer applying Gauss-Jordan method
 
-        keyword arguments:
-        A -- The coefficient matrix of the system.
-        b -- The linearly independent vector.
+        @return A   The coefficient matrix of the system.
+        @return b   The linearly independent vector.
+
+        @return float128[:]
         """
         n = len(A)
         for k in range(0, n):
@@ -41,6 +47,7 @@ class GaussJordanSerial:
 
 
 def main(argv):
+    """For Test purposes"""
     A_name = argv[1]
     b_name = argv[2]
 

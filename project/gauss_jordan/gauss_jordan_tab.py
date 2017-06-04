@@ -82,7 +82,7 @@ class GaussJordanTab:
             with open(filename) as matrix_file:
                 reader = csv.reader(matrix_file, delimiter=' ')
                 matrix = list(reader)
-                self.A_matrix = np.array(matrix).astype("float64")
+                self.A_matrix = np.array(matrix).astype("float128")
 
         matrix_chooser.destroy()
 
@@ -98,7 +98,7 @@ class GaussJordanTab:
             with open(filename) as vector_file:
                 reader = csv.reader(vector_file, delimiter=' ')
                 vector = list(reader)
-                self.b_vector = np.array(vector).astype("float64")
+                self.b_vector = np.array(vector).astype("float128")
 
         vector_chooser.destroy()
 

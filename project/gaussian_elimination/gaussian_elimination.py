@@ -1,6 +1,11 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
+"""@package Gaussian Elimination
+Solve a system of linear algebraic equations by using
+the Gaussian Elimination method
+"""
+
 """
     File name: gaussian_elimination.py
     Authors: Tomás Felipe Llano Ríos,
@@ -27,11 +32,12 @@ class GaussianElimination:
     def gaussian_elimination(Ab, size, i):
         """ Performs Gaussian elimination for each row of a column.
 
-        Keyword arguments:
-        A -- Augmented matrix representing a SLAE.
-        size -- Size of coefficiente matrix.
-        i -- Integer representing the current column in which all threads
+        @param A      Augmented matrix representing a SLAE.
+        @param size   Size of coefficiente matrix.
+        @param i      Integer representing the current column in which all threads
         are performing row operations.
+
+        @return None
         """
         tx = cuda.threadIdx.x
         ty = cuda.threadIdx.y
@@ -60,9 +66,10 @@ class GaussianElimination:
     def start(self, A_matrix, b_matrix):
         """Launches parallel Gaussian elimination for a SLAE and returns its answer.
 
-        Keyword arguments:
-        A_matrix -- Coefficient matrix of a SLAE.
-        b_matrix -- Linearly independent vector of a SLAE.
+        @param A_matrix   Coefficient matrix of a SLAE.
+        @param b_matrix   Linearly independent vector of a SLAE.
+
+        @return None
         """
         if 0 in A_matrix.diagonal():
             return None
@@ -95,6 +102,7 @@ class GaussianElimination:
 
 
 def main(argv):
+    """For Test purposes"""
     if len(argv) != 3:
         print("Usage: python3.6 gauss_jordan.py <A_matrix> <b_matrix>")
         sys.exit()
