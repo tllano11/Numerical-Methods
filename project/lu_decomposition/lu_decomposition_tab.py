@@ -9,7 +9,7 @@ import csv
 import numpy as np
 from gaussian_lu_decomposition import GuassianLUDecomposition
 from serial_decomposition_LU import SerialLUDecomposition
-
+import threading
 
 class LUDecompositionTab:
     def __init__(self):
@@ -130,15 +130,20 @@ class LUDecompositionTab:
 
         vector_chooser.destroy()
 
+    def thread_start(self):
+        self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
+        print("L=", self.L)
+        print("U=", self.U)
+
     def lu_decomposition(self, widget, data=None):
         self.L, self.U = self.gaussian_lu_decomposition.start(self.A_matrix)
         print("L=", self.L)
         print("U=", self.U)
 
     def serial_lu(self, widget, data=None):
-        self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
-        print("L=", self.L)
-        print("U=", self.U)
+        # self.L, self.U = self.serial_lu_decomposition.decomposition_LU(self.A_matrix)
+        thread = threading.Thread(None, self.thread_start)
+        thread.start()
 
     def substitution(self, widget, data=None):
         self.x_vector = self.gaussian_lu_decomposition.get_solution(self.L, self.U, self.b_vector.flatten())
