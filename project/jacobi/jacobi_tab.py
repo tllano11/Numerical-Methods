@@ -132,12 +132,12 @@ class JacobiTab:
         if self.x_vector is None and niter is None and error is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK,
-                                       "Jacobi can be executed because of a division by zero")
+                                       "Jacobi can't be executed because of a division by zero")
             dialog.run()
             dialog.destroy()
         elif self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies" \
+                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies " \
                                                            "the given tolerance in the provided number of iterations")
             dialog.run()
             dialog.destroy()
@@ -165,12 +165,12 @@ class JacobiTab:
         if self.x_vector is None and niter is None and error is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                        Gtk.ButtonsType.OK,
-                                       "Jacobi can be executed because of a zero in the main diagonal")
+                                       "Jacobi can't be executed because of a division by zero")
             dialog.run()
             dialog.destroy()
         elif self.x_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies" \
+                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies " \
                                                            "the given tolerance in the provided number of iterations ")
             dialog.run()
             dialog.destroy()
