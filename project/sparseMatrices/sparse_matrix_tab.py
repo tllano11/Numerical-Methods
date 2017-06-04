@@ -54,8 +54,13 @@ class SparseMatrixTab():
             self.filename = Gtk.FileChooser.get_filename(dialog)
             matrix_length = int(self.matrix_length_entry.get_text())
             density = float(self.matrix_density_entry.get_text())
-            self.sparseMatrix.create_sparse_matrix(self.filename, matrix_length, density)
-
+            matrix_A, CSR_A, vector_x, vector_b = self.sparseMatrix.create_sparse_matrix(self.filename, matrix_length, density)
+            np.savetxt(self.filename+"_A", matrix_A, fmt="%1.9f", delimiter=" ")
+            np.savetxt(self.filename+"_x", vector_x, fmt="%1.9f", delimiter=" ")
+            np.savetxt(self.filename+"_b", vector_b, fmt="%1.9f", delimiter=" ")
+            file = open(self.filename+"_CSR", 'w')
+            file.write(CSR_A)
+            file.close()
         dialog.destroy()
 
     def multiply(self, widget, data=None):
@@ -73,4 +78,4 @@ class SparseMatrixTab():
         vector_chooser.destroy()
 
         sparse_matrix = SparseMatrix()
-        sparse_matrix.multiply(self.filename, vector)
+        sparse_matrix.multiply(self.filename+"_CSR", vector)
