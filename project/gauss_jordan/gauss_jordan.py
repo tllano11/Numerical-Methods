@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
-"""@package Gauss Jordan
+"""@package GaussJordan
 Solve a system of linear algebraic equations by using
 the Gauss Jordan Elimination method
 """
@@ -108,7 +108,11 @@ class GaussJordan:
         gpu_A.copy_to_host(A, stream)
 
         x = A.reshape(n, (n + 1))[:, n]
-        return x
+
+        if True in np.isnan(x) or True in np.isinf(x):
+            return None
+        else:
+            return x
 
 
 def main(argv):

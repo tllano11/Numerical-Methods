@@ -121,12 +121,13 @@ class JacobiTab:
         niter = int(self.niter_entry.get_text())
         tol = float(self.error_entry.get_text())
         rel = self.rel_entry.get_text()
-
+        A_matrix = self.A_matrix.astype(dtype=np.float64)
+        b_vector = self.b_vector.astype(dtype=np.float64)
         if rel == "":
-            self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol)
+            self.x_vector, niter, error = self.jacobiParallel.start(A_matrix, b_vector, niter, tol)
         else:
             rel = float(rel)
-            self.x_vector, niter, error = self.jacobiParallel.start(self.A_matrix, self.b_vector, niter, tol, rel)
+            self.x_vector, niter, error = self.jacobiParallel.start(A_matrix, b_vector, niter, tol, rel)
 
         print(self.x_vector)
         if self.x_vector is None and niter is None and error is None:

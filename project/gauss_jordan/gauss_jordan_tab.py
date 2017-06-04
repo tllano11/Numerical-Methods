@@ -103,7 +103,9 @@ class GaussJordanTab:
         vector_chooser.destroy()
 
     def gaussParallel(self, widget, data=None):
-        self.x_vector = self.gauss_jordan.start(self.A_matrix.copy(), self.b_vector.copy())
+        A_matrix = self.A_matrix.astype(dtype=np.float64)
+        b_vector = self.b_vector.astype(dtype=np.float64)
+        self.x_vector = self.gauss_jordan.start(A_matrix.copy(), b_vector.copy())
         print(self.x_vector)
         if self.x_vector is not None :
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,

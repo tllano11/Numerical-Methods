@@ -15,7 +15,6 @@ Decompuses a matrix A into two matrices L and U.
   Python Version: 3.6.0
 """
 
-import sys
 import numpy as np
 import substitution
 

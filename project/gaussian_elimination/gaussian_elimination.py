@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
-"""@package Gaussian Elimination
+"""@package GaussianElimination
 Solve a system of linear algebraic equations by using
 the Gaussian Elimination method
 """
@@ -21,7 +21,6 @@ from numba import float64
 import substitution
 import numpy as np
 import csv, sys
-from time import time
 
 # Threads Per Block
 tpb = 32
@@ -85,7 +84,6 @@ class GaussianElimination:
             gpu_A = cuda.to_device(A, stream=stream)
             bpg = 1
 
-            start = time()
             for i in range(0, n):
                 self.gaussian_elimination[(bpg, bpg), (tpb, tpb)](gpu_A, n, i)
 
@@ -96,9 +94,11 @@ class GaussianElimination:
         A = A.reshape(n, (n + 1))[..., :-1]
 
         x = substitution.back_substitution(A, b)
-        end = time()
-        print(end - start)
-        return x
+
+        if True in np.isnan(x) or True in np.isinf(x):
+            return None
+        else:
+            return x
 
 
 def main(argv):

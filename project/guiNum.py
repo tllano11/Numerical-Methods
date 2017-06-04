@@ -14,8 +14,8 @@
 import sys
 
 sys.path.append("/usr/lib/python3.6/site-packages/")
-sys.path.append("./sparseMatrices")
-sys.path.append("./matrixGenerator")
+sys.path.append("./sparse_matrices")
+sys.path.append("./matrix_generator")
 sys.path.append("./jacobi")
 sys.path.append("./gauss_jordan")
 sys.path.append("./gaussian_elimination")

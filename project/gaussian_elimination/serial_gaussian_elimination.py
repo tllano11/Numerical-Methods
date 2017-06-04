@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""@package Gaussian Elimination
+"""@package GaussianElimination
 Solve a system of linear algebraic equations by using
 the Gaussian Elimination method
 """
@@ -18,7 +18,6 @@ the Gaussian Elimination method
 import sys
 import numpy as np
 import substitution
-from time import time
 
 
 class SerialGaussianElimination:
