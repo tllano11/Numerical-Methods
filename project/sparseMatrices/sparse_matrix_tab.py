@@ -14,6 +14,7 @@ class SparseMatrixTab():
         self.matrix_length_entry = None
         self.matrix_density_entry = None
         self.filename = None
+        self.res = None
 
     def get_sparse_tab(self):
         sparse_matrix_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -75,9 +76,21 @@ class SparseMatrixTab():
                 reader = csv.reader(vector_file, delimiter=' ')
                 vector = list(reader)
                 vector = np.array(vector).astype("float64")
+            sparse_matrix = SparseMatrix()
+            self.res = sparse_matrix.multiply(self.filename+"_CSR", vector)
         vector_chooser.destroy()
 
-        sparse_matrix = SparseMatrix()
-        res = sparse_matrix.multiply(self.filename+"_CSR", vector)
-        np.savetxt("CSR_result", res, fmt="%1.9f", delimiter=" ")
+        
+
+    def save_matrix(self, widget, data=None):
+        dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                               Gtk.FileChooserAction.SAVE,
+                               (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+        Gtk.FileChooser.set_current_name(dialog, "matrix.txt")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            vector_filename = dialog.get_filename()
+            np.savetxt(vector_filename, self.res, fmt="%1.9f", delimiter=" ")
 
