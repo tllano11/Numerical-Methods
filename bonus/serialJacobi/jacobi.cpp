@@ -157,7 +157,7 @@ void jacobi(int matrixLength, string matrixFile, string bFile, int maxIterations
   	if(error < tolerance){
   		cout << "The solution is: " << endl;
 		printVector(vectorX);
-		cout << cont << " iterations" << endl;
+		cout <<"It takes " << cont << " iterations" << endl;
   	}else{
   		cout << "Sorry, it failed in " << cont << " iterations" << endl;
   	}
