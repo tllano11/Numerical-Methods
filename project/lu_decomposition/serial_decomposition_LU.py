@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-@package lu_decomposition
+@package LuDecomposition
 Decompuses a matrix A into two matrices L and U.
 """
 
