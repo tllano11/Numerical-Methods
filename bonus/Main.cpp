@@ -20,7 +20,7 @@ int main(){
 			  << "\t5 ---- Newton \n"
 			  << "\t6 ---- Secant \n"
 			  << "\t7 ---- Multiple roots \n"
-			  << "Solve system equations. Choose a method:\n"
+			  << "Solve system of linear equations. Choose a method:\n"
 			  << "\t8 ---- Jacobi\n"
 			  << "Types of matrices:\n"
 			  << "\t9 ---- create CSR format (sparse matrices)\n"
