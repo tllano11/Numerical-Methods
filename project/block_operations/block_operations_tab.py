@@ -116,41 +116,63 @@ class BlockTab:
         vector_chooser.destroy()
 
     def jacobi_by_blocks(self, widget, data=None):
-        niter = int(self.niter_entry.get_text())
-        size = int(self.size_entry.get_text())
-        rows_to_read = int(self.rows_entry.get_text())
-        tol = float(self.tol_entry.get_text())
-        self.x_vector, error, count = start(self.A_matrix, self.b_vector, rows_to_read, size, niter, tol)
-        print(self.x_vector)
-        if self.x_vector is None and error is None and count is None:
+        niter = self.niter_entry.get_text()
+        size = self.size_entry.get_text()
+        rows_to_read = self.rows_entry.get_text()
+        tol = self.tol_entry.get_text()
+
+        if self.A_matrix is None or self.b_vector:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK,
-                                       "Jacobi can't be executed because of a division by zero")
+            Gtk.ButtonsType.OK, "Please load a matrix A and vector b first")
             dialog.run()
             dialog.destroy()
-        elif self.x_vector is None:
+        elif niter == "" or size == "" or rows_to_read == "" or tol == "":
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Jacobi Failed")
+            Gtk.ButtonsType.OK, "Please enter a number of iterations, length, number of rows and tolerance first")
             dialog.run()
             dialog.destroy()
         else:
-            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK,
-                                       "Jacobi ended successfully in {} iterations with an error of {}".format(count,
-                                                                                                               error))
-            dialog.run()
-            dialog.destroy()
+            niter = int(niter)
+            size = int(niter)
+            rows_to_read = int(rows_to_read)
+            tol = float(tol)
+            self.x_vector, error, count = start(self.A_matrix, self.b_vector, rows_to_read, size, niter, tol)
+            print(self.x_vector)
+            if self.x_vector is None and error is None and count is None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK,
+                                           "Jacobi can't be executed because of a division by zero")
+                dialog.run()
+                dialog.destroy()
+            elif self.x_vector is None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK, "Jacobi Failed")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK,
+                                           "Jacobi ended successfully in {} iterations with an error of {}".format(count,
+                                                                                                                   error))
+                dialog.run()
+                dialog.destroy()
 
     def save(self, widget, data=None):
-        dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                                       Gtk.FileChooserAction.SAVE,
-                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+        if self.x_vector is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Please execute jacobi first")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                                           Gtk.FileChooserAction.SAVE,
+                                           (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                            Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
-        Gtk.FileChooser.set_current_name(dialog, "x_vector")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            filename = Gtk.FileChooser.get_filename(dialog)
-            np.savetxt(filename, self.x_vector, delimiter=" ")
+            Gtk.FileChooser.set_current_name(dialog, "x_vector")
+            response = dialog.run()
+            if response == Gtk.ResponseType.OK:
+                filename = Gtk.FileChooser.get_filename(dialog)
+                np.savetxt(filename, self.x_vector, delimiter=" ")
 
-        dialog.destroy()
+            dialog.destroy()

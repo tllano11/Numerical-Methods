@@ -115,45 +115,63 @@ class GaussianEliminationTab:
         vector_chooser.destroy()
 
     def gaussParallel(self, widget, data=None):
-        A_matrix = self.A_matrix.astype(dtype=np.float64)
-        b_vector = self.b_vector.astype(dtype=np.float64)
-        self.x_vector = self.gaussian_elimination.start(A_matrix.copy(), b_vector.copy())
-        print(self.x_vector)
-        if self.x_vector is not None:
+        if self.A_matrix is None or self.b_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
+            Gtk.ButtonsType.OK, "Please load a matrix A and vector b first")
             dialog.run()
             dialog.destroy()
         else:
-            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed because of a division by zero")
-            dialog.run()
-            dialog.destroy()
+            A_matrix = self.A_matrix.astype(dtype=np.float64)
+            b_vector = self.b_vector.astype(dtype=np.float64)
+            self.x_vector = self.gaussian_elimination.start(A_matrix.copy(), b_vector.copy())
+            print(self.x_vector)
+            if self.x_vector is not None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK, "Gaussian Elimination failed because of a division by zero")
+                dialog.run()
+                dialog.destroy()
 
     def gaussSerial(self, widget, data=None):
-        self.x_vector = self.serial_gaussian_elimination.elimination(self.A_matrix.copy(), self.b_vector.copy())
-        print(self.x_vector)
-        if self.x_vector is not None:
+        if self.A_matrix is None or self.b_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
+            Gtk.ButtonsType.OK, "Please load a matrix A and vector b first")
             dialog.run()
             dialog.destroy()
         else:
-            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Gaussian Elimination failed because of a division by zero")
-            dialog.run()
-            dialog.destroy()
+            self.x_vector = self.serial_gaussian_elimination.elimination(self.A_matrix.copy(), self.b_vector.copy())
+            print(self.x_vector)
+            if self.x_vector is not None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK, "Gaussian Elimination ended successfully")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK, "Gaussian Elimination failed because of a division by zero")
+                dialog.run()
+                dialog.destroy()
 
     def save(self, widget, data=None):
-        dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                                       Gtk.FileChooserAction.SAVE,
-                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+        if self.x_vector is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Please execute the Gaussian Elimination first")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                                           Gtk.FileChooserAction.SAVE,
+                                           (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                            Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
-        Gtk.FileChooser.set_current_name(dialog, "x_vector.txt")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            filename = Gtk.FileChooser.get_filename(dialog)
-            np.savetxt(filename, self.x_vector, delimiter=" ")
+            Gtk.FileChooser.set_current_name(dialog, "x_vector.txt")
+            response = dialog.run()
+            if response == Gtk.ResponseType.OK:
+                filename = Gtk.FileChooser.get_filename(dialog)
+                np.savetxt(filename, self.x_vector, delimiter=" ")
 
-        dialog.destroy()
+            dialog.destroy()

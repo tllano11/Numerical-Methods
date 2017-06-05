@@ -118,81 +118,112 @@ class JacobiTab:
         vector_chooser.destroy()
 
     def jacobi_parallel(self, widget, data=None):
-        niter = int(self.niter_entry.get_text())
-        tol = float(self.error_entry.get_text())
-        rel = self.rel_entry.get_text()
-        A_matrix = self.A_matrix.astype(dtype=np.float64)
-        b_vector = self.b_vector.astype(dtype=np.float64)
-        if rel == "":
-            self.x_vector, niter, error = self.jacobiParallel.start(A_matrix, b_vector, niter, tol)
-        else:
-            rel = float(rel)
-            self.x_vector, niter, error = self.jacobiParallel.start(A_matrix, b_vector, niter, tol, rel)
+        niter = self.niter_entry.get_text()
+        tol = self.error_entry.get_text()
 
-        print(self.x_vector)
-        if self.x_vector is None and niter is None and error is None:
+        if self.A_matrix is None or self.b_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK,
-                                       "Jacobi can't be executed because of a division by zero")
+            Gtk.ButtonsType.OK, "Please load a matrix A and vector b first")
             dialog.run()
             dialog.destroy()
-        elif self.x_vector is None:
+        elif niter == "" or tol == "":
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies " \
-                                                           "the given tolerance in the provided number of iterations")
+            Gtk.ButtonsType.OK, "Please enter a number of iterations and tolerance first")
             dialog.run()
             dialog.destroy()
         else:
-            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK,
-                                       "Jacobi ended successfully in {} iterations with an error of {}".format(niter,
-                                                                                                               error))
-            dialog.run()
-            dialog.destroy()
+            niter = int(niter)
+            tol = float(tol)
+            rel = self.rel_entry.get_text()
+            A_matrix = self.A_matrix.astype(dtype=np.float64)
+            b_vector = self.b_vector.astype(dtype=np.float64)
+            if rel == "":
+                self.x_vector, niter, error = self.jacobiParallel.start(A_matrix, b_vector, niter, tol)
+            else:
+                rel = float(rel)
+                self.x_vector, niter, error = self.jacobiParallel.start(A_matrix, b_vector, niter, tol, rel)
+
+            print(self.x_vector)
+            if self.x_vector is None and niter is None and error is None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK,
+                                           "Jacobi can't be executed because of a division by zero")
+                dialog.run()
+                dialog.destroy()
+            elif self.x_vector is None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies " \
+                                                               "the given tolerance in the provided number of iterations")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK,
+                                           "Jacobi ended successfully in {} iterations with an error of {}".format(niter,                                                                                                                   error))
+                dialog.run()
+                dialog.destroy()
 
     def jacobi_serial(self, widget, data=None):
-        niter = int(self.niter_entry.get_text())
-        tol = float(self.error_entry.get_text())
-        rel = self.rel_entry.get_text()
+        niter = self.niter_entry.get_text()
+        tol = self.error_entry.get_text()
 
-        if rel == "":
-            self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector, niter, tol)
-        else:
-            rel = float(rel)
-            self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector.flatten(), niter, tol,
-                                                                   rel)
-
-        print(self.x_vector)
-        if self.x_vector is None and niter is None and error is None:
+        if self.A_matrix is None or self.b_vector is None:
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK,
-                                       "Jacobi can't be executed because of a division by zero")
+            Gtk.ButtonsType.OK, "Please load a matrix A and vector b first")
             dialog.run()
             dialog.destroy()
-        elif self.x_vector is None:
+        elif niter == "" or tol == "":
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies " \
-                                                           "the given tolerance in the provided number of iterations ")
+            Gtk.ButtonsType.OK, "Please enter a number of iterations and tolerance first")
             dialog.run()
             dialog.destroy()
         else:
-            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                                       Gtk.ButtonsType.OK,
-                                       "Jacobi ended successfully in {} iterations with an error of {}".format(niter,
-                                                                                                               error))
-            dialog.run()
-            dialog.destroy()
+            niter = int(niter)
+            tol = float(tol)
+            rel = self.rel_entry.get_text()
+            if rel == "":
+                self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector, niter, tol)
+            else:
+                rel = float(rel)
+                self.x_vector, niter, error = self.jacobiSerial.jacobi(self.A_matrix, self.b_vector.flatten(), niter, tol,
+                                                                       rel)
+            print(self.x_vector)
+            if self.x_vector is None and niter is None and error is None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK,
+                                           "Jacobi can't be executed because of a division by zero")
+                dialog.run()
+                dialog.destroy()
+            elif self.x_vector is None:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK, "Jacobi failed to obtain a solution that satisfies " \
+                                                               "the given tolerance in the provided number of iterations ")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                           Gtk.ButtonsType.OK,
+                                           "Jacobi ended successfully in {} iterations with an error of {}".format(niter,
+                                                                                                                   error))
+                dialog.run()
+                dialog.destroy()
 
     def save(self, widget, data=None):
-        dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                                       Gtk.FileChooserAction.SAVE,
-                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+        if self.x_vector is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Please execute Jacobi first")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                                           Gtk.FileChooserAction.SAVE,
+                                           (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                            Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
-        Gtk.FileChooser.set_current_name(dialog, "x_vector")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            filename = Gtk.FileChooser.get_filename(dialog)
-            np.savetxt(filename, self.x_vector, delimiter=" ")
+            Gtk.FileChooser.set_current_name(dialog, "x_vector")
+            response = dialog.run()
+            if response == Gtk.ResponseType.OK:
+                filename = Gtk.FileChooser.get_filename(dialog)
+                np.savetxt(filename, self.x_vector, delimiter=" ")
 
-        dialog.destroy()
+            dialog.destroy()
