@@ -49,18 +49,17 @@ def start(a_name, b_name, rows_to_read, n, niter, tol):
     @param a_name String indicating A's path in the filesystem.
     @param b_name String indicating b's path in the filesystem.
     @param rows_to_read Integer indicating block size (rows to read from A).
-    @param matrix_size Integer indicating N for a NxN matrix A.
+    @param n Integer indicating N for a NxN matrix A.
     @param niter Maximum number of iterations to reach before stopping
     jacobi's execution.
     @return float64[:], float64, int32
     """
-    matrix_size = n*n
     b_file = open(b_name).read().split('\n')[:-1]
     A_file = open(a_name).read().split('\n')[:-1]
     jp = JacobiParallel()
     error = tol + 1
 
-    x_current = np.zeros(matrix_size, dtype=np.float64)
+    x_current = np.zeros(n, dtype=np.float64)
     count = 0
     while error > tol and count < niter:
         x_next = []

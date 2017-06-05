@@ -53,7 +53,7 @@ class BlockTab:
         self.niter_entry = Gtk.Entry()
         main_box.pack_start(self.niter_entry, True, True, 10)
 
-        size_lbl = Gtk.Label("Matrix size")
+        size_lbl = Gtk.Label("Matrix length N")
         main_box.pack_start(size_lbl, True, True, 10)
         self.size_entry = Gtk.Entry()
         main_box.pack_start(self.size_entry, True, True, 10)
