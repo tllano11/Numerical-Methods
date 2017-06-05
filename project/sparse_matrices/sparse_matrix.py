@@ -70,9 +70,9 @@ class SparseMatrix():
                 row.append(val)
             matrix.append(row)
             pointerE.append(pos)
-        vector_x = SparseMatrix.gen_vector(matrix_length)
+        vector_b = SparseMatrix.gen_vector(matrix_length)
         matrix_A = np.matrix(matrix)
-        vector_b = np.dot(matrix_A, vector_x).reshape(matrix_length, 1)
+        vector_res = np.dot(matrix_A, vector_b).reshape(matrix_length, 1)
         data = {"values": values, "columns": columns, "pointerB": pointerB, "pointerE": pointerE}
         CSR_A = json.dumps(data)
         '''
@@ -86,7 +86,7 @@ class SparseMatrix():
         file.close()
         np.savetxt("vector.txt", vector_x, fmt="%1.9f", delimiter=" ")
         '''
-        return matrix_A, CSR_A, vector_x, vector_b
+        return matrix_A, CSR_A, vector_b, vector_res
 
     def load_sparse_matrix(self, filename):
         """Takes a file and get the values array of it.
