@@ -43,7 +43,7 @@ class SparseMatrixTab():
 
         button3 = Gtk.Button("Save result as")
         button3.connect("clicked", self.save_result)
-        sparse_matrix_box.pack_start(button2, True, True, 10)
+        sparse_matrix_box.pack_start(button3, True, True, 10)
 
         return sparse_matrix_box
 
@@ -84,7 +84,7 @@ class SparseMatrixTab():
             self.res = sparse_matrix.multiply(self.filename+"_CSR", vector)
         vector_chooser.destroy()
 
-        
+
 
     def save_result(self, widget, data=None):
         dialog = Gtk.FileChooserDialog("Please choose a file", None,
@@ -97,4 +97,4 @@ class SparseMatrixTab():
         if response == Gtk.ResponseType.OK:
             vector_filename = dialog.get_filename()
             np.savetxt(vector_filename, self.res, fmt="%1.9f", delimiter=" ")
-
+        dialog.destroy()
