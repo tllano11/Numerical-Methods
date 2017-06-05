@@ -46,16 +46,11 @@ class GaussJordan:
         # Thread does nothing when idx or idy are out of the matrix boundaries.
         if idx < size and idy < size:
             # Operates on rows below the diagonal.
-            if idx > i:
+            if idx != i:
                 mul = A[index_r + i] / A[index_p + i]
-                if idy >= i:
+                if idy != i:
                     A[index_r + idy] -= A[index_p + idy] * mul
-            # Operates on rows above the diagonal.
-            elif idx < i:
-                mul = A[index_r + i] / A[index_p + i]
-                if idy >= i:
-                    A[index_r + idy] -= A[index_p + idy] * mul
-                    cuda.syncthreads()
+            cuda.syncthreads()
 
     @cuda.jit
     def normalize(A, size):
