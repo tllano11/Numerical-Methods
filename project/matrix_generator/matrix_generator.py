@@ -94,7 +94,7 @@ class MatrixGenerator:
         return matrix, vector_x, vector_b
 
     @staticmethod
-    def gen_band_matrix(size, k1, k2):
+    def gen_band_matrix(size, k1=2, k2=2):
         """Creates a band matrix given a size.
 
         @param size     Number of rows and columns that the matrix will have.
