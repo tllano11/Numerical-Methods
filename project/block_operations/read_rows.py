@@ -2,12 +2,18 @@
 # -*- coding: utf-8 -*-
 
 """
+@package BlockOperations
+Provides tools to solve large systems of linear algebraic equations 
+by loading submatrices from a coefficient matrices.
+"""
+
+"""
 File name: read_rows.py
 Authors: Tomás Felipe Llano Ríos,
          Juan Diego Ocampo García,
          Johan Sebastián Yepes Ríos
 Date created: 28-May-2017
-Date last modified: 29-May-2017
+Date last modified: 04-June-2017
 Python Version: 3.6.0
 """
 
@@ -18,6 +24,14 @@ from jacobi_parallel_chunks import JacobiParallel
 
 
 def get_error(x_vector, xant_vector):
+    """Returns the norm of two given vectors,
+    which represents the error of the current method.
+
+    @param x_vector     The vector of the current stage of the method.
+    @param xant_vector  The vector of the previous stage of the method.
+
+    @return float128
+    """
     maximum = 0
     size = len(x_vector)
     for i in range(0, size):
@@ -32,12 +46,13 @@ def start(a_name, b_name, rows_to_read, n, niter, tol):
     solution to the system.
 
     Keyword arguments:
-    a_name -- String indicating A's path in the filesystem.
-    b_name -- String indicating b's path in the filesystem.
-    rows_to_read -- Integer indicating block size (rows to read from A).
-    matrix_size -- Integer indicating N for a NxN matrix A.
-    niter -- Maximum number of iterations to reach before stopping
+    @param a_name String indicating A's path in the filesystem.
+    @param b_name String indicating b's path in the filesystem.
+    @param rows_to_read Integer indicating block size (rows to read from A).
+    @param matrix_size Integer indicating N for a NxN matrix A.
+    @param niter Maximum number of iterations to reach before stopping
     jacobi's execution.
+    @return float64[:], float64, int32
     """
     matrix_size = n*n
     b_file = open(b_name).read().split('\n')[:-1]

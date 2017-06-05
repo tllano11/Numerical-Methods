@@ -2,6 +2,12 @@
 # -*- coding: utf-8 -*-
 
 """
+@package BlockOperations
+Provides tools to solve large systems of linear algebraic equations 
+by loading submatrices from a coefficient matrices.
+"""
+
+"""
     File name: block_operations_tab.py
     Authors: Tomás Felipe Llano Ríos,
              Juan Diego Ocampo García,
@@ -20,17 +26,17 @@ class JacobiParallel:
     def jacobi(A, b, x_current, x_next, rows, cols, first_row_block, rel):
         """Performs jacobi for every thread in matrix A boundaries.
 
-        Key arguments:
-        A -- Matrix extracted from the coefficient matrix A.
-        b -- Vector extracted from Linearly independent vector b.
-        x_current -- Current answer's approximation.
-        x_next -- vector in which to store new answer.
-        rows -- Number of rows read (i.e. number of rows in the block).
-        cols -- Number of columns from the original matrix.
-        first_row_block -- Integer indicating the first row of the block by
+        @param A Matrix extracted from the coefficient matrix A.
+        @param b Vector extracted from Linearly independent vector b.
+        @param x_current Current answer's approximation.
+        @param x_next vector in which to store new answer.
+        @param rows Number of rows read (i.e. number of rows in the block).
+        @param cols Number of columns from the original matrix.
+        @param first_row_block Integer indicating the first row of the block by
         using an index from the coefficient matrix A (i.e. What is the
         correspondence between the first block's row and A).
-        rel -- Relaxation coefficient.
+        @param rel Relaxation coefficient.
+        @return None
         """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         current_row = first_row_block + idx
@@ -46,12 +52,36 @@ class JacobiParallel:
 
     @cuda.jit('void(float64[:], float64[:], float64[:], int32)', \
               target='gpu', nopython=True)
+
     def get_error(x_current, x_next, x_error, rows):
+        """Calculates jacobi's maximum error.
+
+        @param x_current Pointer to list representing current
+                         approximation for vector x in a system Ax = b.
+        @param x_next    Pointer to list representing new
+                         approximation for vector x in a system Ax = b.
+        @param x_error   Pointer to list in which an error for each
+                         approximation will be stored.
+        @param rows      Coefficient matrix A number of rows.
+
+        @return None
+        """
         idx = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
         if idx < rows:
             x_error[idx] = abs(x_next[idx] - x_current[idx])
 
     def start(self, A, b, x_current, first_row_block, rel=1):
+        """Launches parallel jacobi solver for a SLAE and returns its answer.
+
+        @param A         Coefficient matrix of a SLAE.
+        @param b         Linearly independent vector of a SLAE.
+        @param x_current Pointer to list representing current
+                         approximation for vector x in a system Ax = b.
+        @param first_row_block Absolute position of the block's row in the complete matrix.
+        @param rel       Relaxation coefficient.
+
+        @return float64[:]
+        """
         rows = len(b)
         col = first_row_block
         for i in range(0, rows):

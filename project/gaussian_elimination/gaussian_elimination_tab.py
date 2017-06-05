@@ -1,11 +1,6 @@
 #!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
-"""@package Gaussian Elimination
-Solve a system of linear algebraic equations by using
-the Gaussian Elimination method
-"""
-
 """
     File name: gaussian_elimination_tab.py
     Authors: Tomás Felipe Llano Ríos,

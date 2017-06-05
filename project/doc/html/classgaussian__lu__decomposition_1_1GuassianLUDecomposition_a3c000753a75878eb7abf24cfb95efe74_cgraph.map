@@ -1,0 +1,4 @@
+<map id="gaussian_lu_decomposition.GuassianLUDecomposition.get_inverse" name="gaussian_lu_decomposition.GuassianLUDecomposition.get_inverse">
+<area shape="rect" id="node2" href="$classgaussian__lu__decomposition_1_1GuassianLUDecomposition.html#a7e03274cc0b3d6bac5d131a5f9a09e43" title="Returns the determinant of a given matrix by means of LU decomposition. " alt="" coords="258,5,461,61"/>
+<area shape="rect" id="node3" href="$classgaussian__lu__decomposition_1_1GuassianLUDecomposition.html#a41ede4bd1f676649bbbf04ccba6e6301" title="Creates an identity matrix given a size. " alt="" coords="256,85,463,141"/>
+</map>

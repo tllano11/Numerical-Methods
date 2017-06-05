@@ -1,0 +1,4 @@
+<map id="jacobi_parallel_chunks.JacobiParallel.get_error" name="jacobi_parallel_chunks.JacobiParallel.get_error">
+<area shape="rect" id="node2" href="$classjacobi__parallel_1_1JacobiParallel.html#a35b5ef23c2760ab4eaf3565ca3b2b8de" title="Launches parallel jacobi solver for a SLAE and returns its answer. " alt="" coords="248,5,467,32"/>
+<area shape="rect" id="node3" href="$classjacobi__serial_1_1SerialJacobi.html#abba1b2d60ffa51bb2274dd7fab32d795" title="Applies Jacobi method to a system of linear equations and returns its answer (except if it was not fo..." alt="" coords="254,56,461,83"/>
+</map>
