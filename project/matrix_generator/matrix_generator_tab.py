@@ -33,7 +33,7 @@ class MatrixGeneratorTab:
         button2.connect("toggled", self.set_generator, "2")
         gen_matrix_box.pack_start(button2, True, True, 10)
 
-        button3 = Gtk.RadioButton.new_with_label_from_widget(button1, "Band")
+        button3 = Gtk.RadioButton.new_with_label_from_widget(button1, "Band (default band is 2)")
         button3.connect("toggled", self.set_generator, "3")
         gen_matrix_box.pack_start(button3, True, True, 10)
 
@@ -65,6 +65,18 @@ class MatrixGeneratorTab:
         button10.connect("toggled", self.set_generator, "10")
         gen_matrix_box.pack_start(button10, True, True, 10)
 
+        band_lbl = Gtk.Label("Horizontal Band")
+        gen_matrix_box.pack_start(band_lbl, True, True, 10)
+        self.hband_entry = Gtk.Entry()
+        self.hband_entry.set_editable(False)
+        gen_matrix_box.pack_start(self.hband_entry, True, True, 10)
+
+        band_lbl = Gtk.Label("Vertical Band")
+        gen_matrix_box.pack_start(band_lbl, True, True, 10)
+        self.vband_entry = Gtk.Entry()
+        self.vband_entry.set_editable(False)
+        gen_matrix_box.pack_start(self.vband_entry, True, True, 10)
+
         image = Gtk.Image(stock=Gtk.STOCK_SAVE_AS)
         gen_button = Gtk.Button(" Save matrices as", image=image)
         gen_button.connect("clicked", self.gen_matrix, None)
@@ -75,6 +87,13 @@ class MatrixGeneratorTab:
     def set_generator(self, button, name):
         if self.selected_generator != int(name):
             self.selected_generator = int(name)
+
+        if self.selected_generator == 3:
+            self.vband_entry.set_editable(True)
+            self.hband_entry.set_editable(True)
+        else:
+            self.vband_entry.set_editable(False)
+            self.hband_entry.set_editable(False)
 
     def gen_matrix(self, widget, data=None):
         length = self.length_entry.get_text()
@@ -100,7 +119,14 @@ class MatrixGeneratorTab:
                 elif self.selected_generator == 2:
                     matrix_A, vector_x, vector_b = MatrixGenerator.gen_symmetric_matrix(length)
                 elif self.selected_generator == 3:
-                    matrix_A, vector_x, vector_b = MatrixGenerator.gen_band_matrix(length)
+                    k1 = self.vband_entry.get_text()
+                    k2 = self.hband_entry.get_text()
+                    if k1 == "" or k2 == "":
+                        matrix_A, vector_x, vector_b = MatrixGenerator.gen_band_matrix(length)
+                    else:
+                        k1 = int(k1)
+                        k2 = int(k2)
+                        matrix_A, vector_x, vector_b = MatrixGenerator.gen_band_matrix(length, k1, k2)
                 elif self.selected_generator == 4:
                     matrix_A, vector_x, vector_b = MatrixGenerator.gen_identity_matrix(length)
                 elif self.selected_generator == 5:
