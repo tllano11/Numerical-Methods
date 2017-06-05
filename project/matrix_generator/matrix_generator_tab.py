@@ -20,7 +20,7 @@ class MatrixGeneratorTab:
     def get_tab(self):
         gen_matrix_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        matrix_length_lbl = Gtk.Label("Matrix and vector length")
+        matrix_length_lbl = Gtk.Label("Matrix and vector length N")
         gen_matrix_box.pack_start(matrix_length_lbl, True, True, 10)
         self.length_entry = Gtk.Entry()
         gen_matrix_box.pack_start(self.length_entry, True, True, 10)

@@ -19,7 +19,7 @@ class SparseMatrixTab():
     def get_sparse_tab(self):
         sparse_matrix_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        matrix_length_lbl = Gtk.Label("Matrix length")
+        matrix_length_lbl = Gtk.Label("Matrix length N")
         sparse_matrix_box.pack_start(matrix_length_lbl, True, True, 10)
         self.matrix_length_entry = Gtk.Entry()
         sparse_matrix_box.pack_start(self.matrix_length_entry, True, True, 10)
