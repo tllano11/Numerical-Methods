@@ -19,7 +19,7 @@ class SparseMatrixTab():
     def get_sparse_tab(self):
         sparse_matrix_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        matrix_length_lbl = Gtk.Label("Matrix length N")
+        matrix_length_lbl = Gtk.Label("Matrix length - N")
         sparse_matrix_box.pack_start(matrix_length_lbl, True, True, 10)
         self.matrix_length_entry = Gtk.Entry()
         sparse_matrix_box.pack_start(self.matrix_length_entry, True, True, 10)
@@ -48,53 +48,72 @@ class SparseMatrixTab():
         return sparse_matrix_box
 
     def create_sparse_matrix(self, widget, data=None):
-        dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                                       Gtk.FileChooserAction.SAVE,
-                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                        Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+        matrix_length = self.matrix_length_entry.get_text()
+        density = self.matrix_density_entry.get_text()
 
-        Gtk.FileChooser.set_current_name(dialog, "matrix.txt")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            self.filename = Gtk.FileChooser.get_filename(dialog)
-            matrix_length = int(self.matrix_length_entry.get_text())
-            density = float(self.matrix_density_entry.get_text())
-            matrix_A, CSR_A, vector_b, vector_res = self.sparseMatrix.create_sparse_matrix(self.filename, matrix_length, density)
-            np.savetxt(self.filename+"_A", matrix_A, fmt="%1.9f", delimiter=" ")
-            np.savetxt(self.filename+"_b", vector_b, fmt="%1.9f", delimiter=" ")
-            np.savetxt(self.filename+"_res", vector_res, fmt="%1.9f", delimiter=" ")
-            file = open(self.filename+"_CSR", 'w')
-            file.write(CSR_A)
-            file.close()
-        dialog.destroy()
+        if matrix_length == "" or density == "":
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Please enter a length and density first")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                                           Gtk.FileChooserAction.SAVE,
+                                           (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                            Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+
+            Gtk.FileChooser.set_current_name(dialog, "matrix.txt")
+            response = dialog.run()
+            if response == Gtk.ResponseType.OK:
+                self.filename = Gtk.FileChooser.get_filename(dialog)
+                matrix_length = int(matrix_length)
+                density = float(density)
+                matrix_A, CSR_A, vector_b, vector_res = self.sparseMatrix.create_sparse_matrix(self.filename, matrix_length, density)
+                np.savetxt(self.filename+"_A", matrix_A, fmt="%1.9f", delimiter=" ")
+                np.savetxt(self.filename+"_b", vector_b, fmt="%1.9f", delimiter=" ")
+                np.savetxt(self.filename+"_res", vector_res, fmt="%1.9f", delimiter=" ")
+                file = open(self.filename+"_CSR", 'w')
+                file.write(CSR_A)
+                file.close()
+            dialog.destroy()
 
     def multiply(self, widget, data=None):
-        vector_chooser = Gtk.FileChooserDialog("Select vector file", None, Gtk.FileChooserAction.OPEN,
-                                               (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                                Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-        response = vector_chooser.run()
-        if response == Gtk.ResponseType.OK:
-            filename = vector_chooser.get_filename()
+        if self.filename is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Please generate a sparse matrix first")
+            dialog.run()
+            dialog.destroy()
+        else:
+            vector_chooser = Gtk.FileChooserDialog("Select vector file", None, Gtk.FileChooserAction.OPEN,
+                                                   (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                                    Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            response = vector_chooser.run()
+            if response == Gtk.ResponseType.OK:
+                filename = vector_chooser.get_filename()
 
-            with open(filename) as vector_file:
-                reader = csv.reader(vector_file, delimiter=' ')
-                vector = list(reader)
-                vector = np.array(vector).astype("float64")
-            sparse_matrix = SparseMatrix()
-            self.res = sparse_matrix.multiply(self.filename+"_CSR", vector)
-        vector_chooser.destroy()
-
-
+                with open(filename) as vector_file:
+                    reader = csv.reader(vector_file, delimiter=' ')
+                    vector = list(reader)
+                    vector = np.array(vector).astype("float64")
+                sparse_matrix = SparseMatrix()
+                self.res = sparse_matrix.multiply(self.filename+"_CSR", vector)
+            vector_chooser.destroy()
 
     def save_result(self, widget, data=None):
-        dialog = Gtk.FileChooserDialog("Please choose a file", None,
-                               Gtk.FileChooserAction.SAVE,
-                               (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+        if self.res is None:
+            dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Please multiply first")
+            dialog.run()
+            dialog.destroy()
+        else:
+            dialog = Gtk.FileChooserDialog("Please choose a file", None,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                    Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
-        Gtk.FileChooser.set_current_name(dialog, "result_CSR.txt")
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            vector_filename = dialog.get_filename()
-            np.savetxt(vector_filename, self.res, fmt="%1.9f", delimiter=" ")
-        dialog.destroy()
+            Gtk.FileChooser.set_current_name(dialog, "result_CSR.txt")
+            response = dialog.run()
+            if response == Gtk.ResponseType.OK:
+                vector_filename = dialog.get_filename()
+                np.savetxt(vector_filename, self.res, fmt="%1.9f", delimiter=" ")
+            dialog.destroy()
